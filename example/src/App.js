@@ -1,10 +1,15 @@
 import React from 'react'
 
-import { ExampleComponent } from 'onuii-time-table'
+import { OnuiiTimeTable } from 'onuii-time-table'
 import 'onuii-time-table/dist/index.css'
 
 const App = () => {
-  return <ExampleComponent text="Create React Library Example 😄" />
+  return (
+    <>
+      <span>테스트환경</span>
+      <OnuiiTimeTable text='Create React Library Example 😄' />
+    </>
+  )
 }
 
 export default App
