@@ -51,6 +51,9 @@
     "dist"
   ],
   "dependencies": {
-    "lodash": "^4.17.21"
+    "lodash": "^4.17.21",
+    "moment": "^2.29.3",
+    "react-cursor-follow": "^2.0.0",
+    "styled-components": "^5.3.5"
   }
 }
