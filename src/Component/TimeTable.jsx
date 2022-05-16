@@ -52,6 +52,9 @@ const Layout = styled.div`
         vertical-align: middle;
         width: 10%;
         position: relative;
+        padding: 0;
+        border-spacing: 0;
+        font-size: 12px;
     }
     td:hover {
         background: #cfcfcf;
@@ -430,7 +433,7 @@ function TimeTable({ mode, areaData, itemData }) {
                                                                     handleDragEnter={handleItemDragEnter}
                                                                     handleClick={handleItemClick}
                                                                     itemGroupData={master.getItemGruopData()}
-                                                                    itemLectureName={master.getLectureName(idx)}
+                                                                    itemLectureName={master.getLectureNameByIdx(idx)}
                                                                     timeList={timeList}
                                                                     itemObj={objItem}
                                                                 />

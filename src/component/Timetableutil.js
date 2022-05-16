@@ -57,7 +57,10 @@ export function Table() {
     this.getLectureId = idx => {
         return _.find(this.getItemData(), { block_group_No: idx })?.lecture_subject_Id;
     };
-    this.getLectureName = idx => {
+    this.getLectureName = id => {
+        return getLectureName(id);
+    };
+    this.getLectureNameByIdx = idx => {
         return getLectureName(this.getLectureId(idx));
     };
     this.isFillArea = idx => {
