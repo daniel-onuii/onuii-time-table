@@ -2,18 +2,18 @@ import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import _ from 'lodash';
 import Cursor from 'react-cursor-follow';
-import FollowCursor from './FollowCursor';
 import FixedItem from './FixedItem';
 import { schedule, Table } from './Timetableutil';
 import { ToastOption } from './ToastOption';
 import { toast } from 'react-toastify';
+import { useDispatch, useSelector } from 'react-redux';
+import { codeSend } from '../store/reducer/test.reducer';
 
 // import React, { useEffect, useRef, useState } from 'react';
 // import styled from 'styled-components';
 // import _ from 'lodash';
 // import { getLectureName } from 'src/util/lib';
 // import { toast } from 'react-toastify';
-// import FollowCursor from '../cursor/FollowCursor';
 // import ToastOption from 'src/components/common/toastOption';
 // import FixedItem from './FixedItem';
 // import Area from './Area';
@@ -145,6 +145,9 @@ const Layout = styled.div`
         margin: 6px 3px;
         width: 60px;
     }
+    #cursor {
+        z-index: 9999;
+    }
 `;
 function checkValidSchedule(endTime, startTime, itemRowData, itemLectureId) {
     if (
@@ -194,6 +197,14 @@ function timeCalc(data) {
 const timeList = schedule.getTimeList();
 const master = new Table();
 function TimeTable({ mode, areaData, itemData }) {
+    const dispatch = useDispatch();
+    const { test } = useSelector(state => state.schedule);
+    useEffect(() => {
+        console.log(test);
+        dispatch(codeSend('aaa'));
+    }, []);
+    const tableRef = useRef();
+
     const [isAreaClickDown, setIsAreaClickDown] = useState(false); //영역 클릭 상태
     const [isAreaAppend, setIsAreaAppend] = useState(false); //영역 추가, 삭제 여부
 
@@ -206,14 +217,9 @@ function TimeTable({ mode, areaData, itemData }) {
     const [grabbedAreaData, setGrabbedAreaData] = useState([]); //드래그중인 영역 데이터
 
     const [activeAreaType, setActiveAreaType] = useState(); //선택된 과목값
-    const tableRef = useRef();
-
-    const InitScroll = () => {
-        tableRef.current.scrollTo(0, 673);
-    };
 
     useEffect(() => {
-        InitScroll();
+        master.setInitScroll(tableRef, 681);
         master.init({ mode: mode, area: areaData.concat(itemData), item: itemData });
         setItemRowData(itemData);
         setAreaRowData(areaData.concat(itemData));
@@ -348,8 +354,7 @@ function TimeTable({ mode, areaData, itemData }) {
         <React.Fragment>
             <Layout>
                 {isAreaClickDown && (
-                    // <FollowCursor duration={0} size={0}>
-                    <Cursor duration={0} size={0}>
+                    <Cursor duration={0} size={0} style={{ border: '1px solid red' }}>
                         {isAreaAppend ? (
                             <Tooltip style={{ background: 'red', width: '50px', textAlign: 'center' }}>삭제</Tooltip>
                         ) : (

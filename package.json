@@ -1,6 +1,6 @@
 {
     "name": "onuii-time-table",
-    "version": "1.0.3",
+    "version": "1.0.4",
     "description": "Made with create-react-library",
     "author": "onuii",
     "license": "MIT",
@@ -21,7 +21,8 @@
         "test:unit": "cross-env CI=1 react-scripts test --env=jsdom",
         "test:watch": "react-scripts test --env=jsdom",
         "predeploy": "cd example && yarn install && yarn run build",
-        "deploy": "gh-pages -d example/build"
+        "deploy": "gh-pages -d example/build",
+        "watch": "npm-watch"
     },
     "peerDependencies": {
         "react": "^17.0.2"
@@ -51,9 +52,16 @@
         "dist"
     ],
     "dependencies": {
+        "@reduxjs/toolkit": "^1.8.1",
         "lodash": "^4.17.21",
         "moment": "^2.29.3",
+        "npm-watch": "^0.11.0",
         "react-cursor-follow": "^2.0.0",
+        "react-redux": "^8.0.1",
+        "redux-logger": "^3.0.6",
         "styled-components": "^5.3.5"
+    },
+    "watch": {
+        "build": "src/"
     }
 }

@@ -18,6 +18,7 @@ const Layout = styled.div`
 function FixedItem({ master, idx, itemlectureid, itemLectureName, handleClick, handleDragStart, handleDragEnter, itemGroupData, timeList, itemObj }) {
     useEffect(() => {
         console.log(master);
+        console.log(timeList);
         // console.log(_.filter(itemGroupData, { startIdx: idx }));
     }, []);
     return (
@@ -46,7 +47,7 @@ function FixedItem({ master, idx, itemlectureid, itemLectureName, handleClick, h
                 <br />
                 {itemGroupData.map(y => {
                     //과외시간
-                    return idx == y.startIdx && `${timeList[y.startTimeIdx]}~${timeList[y.endTimeIdx + 1]}`;
+                    return idx == y.startIdx && `${timeList[y.startTimeIdx]}~${timeList[y.endTimeIdx + 1]} ${y.endTimeIdx}`;
                 })}
             </div>
             {itemObj.isShow && itemObj.idx === idx && <FixedItemDetail idx={idx} itemLectureName={itemLectureName} itemGroupData={itemGroupData} timeList={timeList} />}

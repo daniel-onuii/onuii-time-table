@@ -1,14 +1,12 @@
 import React, { useEffect } from 'react';
-import styles from './styles.module.css';
-import TimeTable from './component/TimeTable';
-// import 'react-toastify/dist/ReactToastify.css';
-import { ToastContainer } from 'react-toastify';
+import App from './App';
+import { store } from './store/config';
+import { Provider } from 'react-redux';
 
 export const OnuiiTimeTable = ({ areaData, itemData }) => {
     return (
-        <div>
-            <ToastContainer />
-            <TimeTable areaData={areaData} itemData={itemData} />
-        </div>
+        <Provider store={store}>
+            <App areaData={areaData} itemData={itemData} />;
+        </Provider>
     );
 };

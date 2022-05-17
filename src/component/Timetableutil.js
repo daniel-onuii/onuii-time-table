@@ -71,6 +71,9 @@ export function Table() {
         this.data.item = item;
     };
 }
+Table.prototype.setInitScroll = function (tableRef, point) {
+    tableRef.current.scrollTo(0, point);
+};
 // Table.prototype.init = function ({ mode, area, item }) {
 //     this.mode = mode;
 //     this.data = {
