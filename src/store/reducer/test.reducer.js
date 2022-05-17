@@ -8,7 +8,6 @@ const slice = createSlice({
     reducers: {
         codeSend(state, action) {
             //인증코드 전송
-            console.log(action);
             state.isSendCode = action.payload;
         },
     },

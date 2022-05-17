@@ -7,17 +7,8 @@ import { schedule, Table } from './Timetableutil';
 import { ToastOption } from './ToastOption';
 import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
-import { codeSend } from '../store/reducer/test.reducer';
-
-// import React, { useEffect, useRef, useState } from 'react';
-// import styled from 'styled-components';
-// import _ from 'lodash';
-// import { getLectureName } from 'src/util/lib';
-// import { toast } from 'react-toastify';
-// import ToastOption from 'src/components/common/toastOption';
-// import FixedItem from './FixedItem';
-// import Area from './Area';
-// import { schedule, Table } from './timetableutil';
+import { setAreaData, setItemData, setItemGroupData } from '../store/reducer/schedule.reducer';
+import { setAreaObj, setItemObj, setAreaGrabbedObj, setIsAreaClickDown, setIsAreaAppend, setAreaActiveType } from '../store/reducer/trigger.reducer';
 
 const Tooltip = styled.div`
     position: absolute;
@@ -196,63 +187,45 @@ function timeCalc(data) {
 }
 const timeList = schedule.getTimeList();
 const master = new Table();
-function TimeTable({ mode, areaData, itemData }) {
-    const dispatch = useDispatch();
-    const { test } = useSelector(state => state.schedule);
-    useEffect(() => {
-        console.log(test);
-        dispatch(codeSend('aaa'));
-    }, []);
+function TimeTable() {
     const tableRef = useRef();
-
-    const [isAreaClickDown, setIsAreaClickDown] = useState(false); //영역 클릭 상태
-    const [isAreaAppend, setIsAreaAppend] = useState(false); //영역 추가, 삭제 여부
-
-    const [areaRowData, setAreaRowData] = useState([]); //영역 데이터
-    const [itemRowData, setItemRowData] = useState([]); //아이템 데이터
-    const [itemGroupData, setItemGroupData] = useState([]); //아이템 그룹 데이터
-
-    const [objArea, setObjArea] = useState({}); //영역 핸들링 데이터
-    const [objItem, setObjItem] = useState({}); //아이템 핸들링 데이터
-    const [grabbedAreaData, setGrabbedAreaData] = useState([]); //드래그중인 영역 데이터
-
-    const [activeAreaType, setActiveAreaType] = useState(); //선택된 과목값
+    const dispatch = useDispatch();
+    const { areaData, itemData, itemGroupData } = useSelector(state => state.schedule);
+    const { areaObj, itemObj, areaGrabbedObj, isAreaClickDown, isAreaAppend, areaActiveType } = useSelector(state => state.trigger);
 
     useEffect(() => {
         master.setInitScroll(tableRef, 681);
-        master.init({ mode: mode, area: areaData.concat(itemData), item: itemData });
-        setItemRowData(itemData);
-        setAreaRowData(areaData.concat(itemData));
+        master.init({ area: areaData.concat(itemData), item: itemData });
     }, []);
 
     useEffect(() => {
-        master.update({ area: areaRowData, item: itemRowData });
-    }, [itemRowData, areaRowData]);
+        master.update({ area: areaData, item: itemData });
+    }, [itemData, areaData]);
 
     useEffect(() => {
-        //아이템 변경시 그룹 업데이트
-        setItemGroupData(timeCalc(itemRowData));
-    }, [itemRowData]);
+        dispatch(setItemGroupData(timeCalc(itemData)));
+    }, [itemData]);
 
     const handleAreaDown = e => {
         const idx = Number(e.target.getAttribute('idx'));
-        setIsAreaAppend(master.isFillArea(idx));
+        dispatch(setIsAreaAppend(master.isFillArea(idx)));
+        dispatch(
+            setAreaObj({
+                idx: idx,
+                startOverIdx: schedule.getTimeIdx(idx),
+                endOverIdx: schedule.getTimeIdx(idx + 1),
+                startOverDayIdx: schedule.getWeekIdx(idx),
+                endOverDayIdx: schedule.getWeekIdx(idx),
+            }),
+        );
 
-        setObjArea({
-            idx: idx,
-            startOverIdx: schedule.getTimeIdx(idx),
-            endOverIdx: schedule.getTimeIdx(idx + 1),
-            startOverDayIdx: schedule.getWeekIdx(idx),
-            endOverDayIdx: schedule.getWeekIdx(idx),
-        });
-
-        setIsAreaClickDown(true);
-        master.isFillArea(idx) ? setAreaRowData(_.reject(areaRowData, { block_group_No: idx })) : setAreaRowData([...areaRowData, { block_group_No: idx, activeAreaType: activeAreaType }]);
+        dispatch(setIsAreaClickDown(true));
+        master.isFillArea(idx) ? dispatch(setAreaData(_.reject(areaData, { block_group_No: idx }))) : dispatch(setAreaData([...areaData, { block_group_No: idx, areaActiveType: areaActiveType }]));
     };
     const handleAreaOver = e => {
         if (isAreaClickDown) {
             const idx = Number(e.target.getAttribute('idx'));
-            const startOverIdx = objArea.idx; //start target
+            const startOverIdx = areaObj.idx; //start target
             const endOverIdx = idx; //end target
             const startOverDayIdx = schedule.getWeekIdx(startOverIdx); //[0,1,2...]월,화,수...
             const endOverDayIdx = schedule.getWeekIdx(endOverIdx);
@@ -262,73 +235,56 @@ function TimeTable({ mode, areaData, itemData }) {
             const selectedInfo = intervalDay.reduce((result, e) => {
                 result.push(
                     _.range(e * 96 + 36 + startRange, e * 96 + 36 + endRange + (startRange < endRange ? 1 : -1)).map(ee => {
-                        return { block_group_No: ee, activeAreaType: activeAreaType };
+                        return { block_group_No: ee, areaActiveType: areaActiveType };
                     }),
                 );
                 return result;
             }, []);
-            setGrabbedAreaData(_.flattenDeep(selectedInfo));
-
-            setObjArea({
-                ...objArea,
-                startOverIdx: startRange < endRange ? startRange : endRange,
-                endOverIdx: startRange > endRange ? startRange + 1 : endRange + 1,
-                startOverDayIdx: startOverDayIdx < endOverDayIdx ? startOverDayIdx : endOverDayIdx,
-                endOverDayIdx: startOverDayIdx > endOverDayIdx ? startOverDayIdx : endOverDayIdx,
-            });
+            // setGrabbedAreaData(_.flattenDeep(selectedInfo));
+            dispatch(setAreaGrabbedObj(_.flattenDeep(selectedInfo)));
+            dispatch(
+                setAreaObj({
+                    ...areaObj,
+                    startOverIdx: startRange < endRange ? startRange : endRange,
+                    endOverIdx: startRange > endRange ? startRange + 1 : endRange + 1,
+                    startOverDayIdx: startOverDayIdx < endOverDayIdx ? startOverDayIdx : endOverDayIdx,
+                    endOverDayIdx: startOverDayIdx > endOverDayIdx ? startOverDayIdx : endOverDayIdx,
+                }),
+            );
         }
     };
 
     const handleAreaUp = e => {
-        setIsAreaClickDown(false);
-        const removeResult = _.reject(areaRowData, o => {
-            return grabbedAreaData.some(item => item.block_group_No === o.block_group_No);
+        dispatch(setIsAreaClickDown(false));
+        const removeResult = _.reject(areaData, o => {
+            return areaGrabbedObj.some(item => item.block_group_No === o.block_group_No);
         });
-        isAreaAppend ? setAreaRowData(removeResult) : setAreaRowData([...areaRowData, ...grabbedAreaData]);
-        setGrabbedAreaData([]);
-        setObjItem({});
+        isAreaAppend ? dispatch(setAreaData(removeResult)) : dispatch(setAreaData([...areaData, ...areaGrabbedObj]));
+
+        // setGrabbedAreaData([]);
+
+        dispatch(setAreaGrabbedObj([]));
+        dispatch(setItemObj({}));
     };
 
     const handleAreaEnter = e => {
         const targetItemIdx = Number(e.target.getAttribute('idx'));
-        setObjItem({ ...objItem, target: targetItemIdx });
-    };
-
-    const handleItemClick = e => {
-        setObjItem({
-            idx: Number(e.target.getAttribute('itemidx')),
-            lectureId: Number(e.target.getAttribute('itemlectureid')),
-            time: Number(e.target.getAttribute('time')),
-            isShow: objItem.isShow ? false : true,
-        });
-    };
-
-    function handleItemDrag(e) {
-        setIsAreaClickDown(false);
-        setObjItem({
-            idx: Number(e.target.getAttribute('itemidx')),
-            lectureId: Number(e.target.getAttribute('itemlectureid')),
-            time: Number(e.target.getAttribute('time')),
-        });
-    }
-
-    const handleItemDragEnter = () => {
-        setObjItem({ ...objItem, target: null });
+        dispatch(setItemObj({ ...itemObj, target: targetItemIdx }));
     };
 
     const handleItemDrop = e => {
         e.preventDefault();
-        setObjItem({});
-        const itemIdx = objItem.idx;
-        const itemLectureId = objItem.lectureId;
-        const time = objItem.time;
+        dispatch(setItemObj({}));
+        const itemIdx = itemObj.idx;
+        const itemLectureId = itemObj.lectureId;
+        const time = itemObj.time;
         const targetItemIdx = Number(e.target.getAttribute('idx'));
         const endTime = targetItemIdx + time - 1;
-        if (!checkValidSchedule(endTime, targetItemIdx, itemRowData, itemLectureId)) {
+        if (!checkValidSchedule(endTime, targetItemIdx, itemData, itemLectureId)) {
             return false;
         }
         if (targetItemIdx != 0) {
-            const removedLecture = _.reject([...itemRowData], function (o) {
+            const removedLecture = _.reject([...itemData], function (o) {
                 //이전 과목 시간은 삭제
                 return (o.block_group_No >= itemIdx && o.block_group_No < itemIdx + time) || (o.block_group_No >= targetItemIdx && o.block_group_No < targetItemIdx + time);
             });
@@ -337,7 +293,7 @@ function TimeTable({ mode, areaData, itemData }) {
                 result.push({ block_group_No: e, lecture_subject_Id: itemLectureId });
                 return result;
             }, []);
-            setItemRowData([...removedLecture, ...addLecture]);
+            dispatch(setItemData([...removedLecture, ...addLecture]));
         }
     };
 
@@ -347,7 +303,8 @@ function TimeTable({ mode, areaData, itemData }) {
 
     const handleClickActiveAreaType = e => {
         return () => {
-            setActiveAreaType(e);
+            // setActiveAreaType(e);
+            dispatch(setAreaActiveType(e));
         };
     };
     return (
@@ -358,11 +315,11 @@ function TimeTable({ mode, areaData, itemData }) {
                         {isAreaAppend ? (
                             <Tooltip style={{ background: 'red', width: '50px', textAlign: 'center' }}>삭제</Tooltip>
                         ) : (
-                            <Tooltip className={`lecture_${activeAreaType ? `${activeAreaType}` : 'all'}`}>
-                                <span>{activeAreaType == null ? '상관없음' : master.getLectureName(activeAreaType)}</span>
+                            <Tooltip className={`lecture_${areaActiveType ? `${areaActiveType}` : 'all'}`}>
+                                <span>{areaActiveType == null ? '상관없음' : master.getLectureName(areaActiveType)}</span>
                                 <br />
-                                <span>{`${schedule.getWeekText(objArea.startOverDayIdx)} ${schedule.getTime(objArea.startOverIdx)}`}</span> {` ~ `}
-                                <span>{`${schedule.getWeekText(objArea.endOverDayIdx)} ${schedule.getTime(objArea.endOverIdx)}`}</span>
+                                <span>{`${schedule.getWeekText(areaObj.startOverDayIdx)} ${schedule.getTime(areaObj.startOverIdx)}`}</span> {` ~ `}
+                                <span>{`${schedule.getWeekText(areaObj.endOverDayIdx)} ${schedule.getTime(areaObj.endOverIdx)}`}</span>
                             </Tooltip>
                         )}
                     </Cursor>
@@ -412,7 +369,7 @@ function TimeTable({ mode, areaData, itemData }) {
                                                 const idx = getIdBlock(e, i);
                                                 return (
                                                     <td key={ii} className={`${e >= 6 ? 'weekend' : ''}`}>
-                                                        <div //과외 가능 시간 데이터
+                                                        <div //과외 가능 시간 데이터 ./.... Area 관련 컴퍼넌트 개발 핸들러 리팩토링
                                                             idx={idx}
                                                             onMouseOver={handleAreaOver}
                                                             onMouseUp={handleAreaUp}
@@ -420,28 +377,17 @@ function TimeTable({ mode, areaData, itemData }) {
                                                             onDrop={handleItemDrop}
                                                             onDragOver={handleItemDragOver}
                                                             onDragEnter={handleAreaEnter}
-                                                            className={`item ${areaRowData.some(item => item.block_group_No === idx) ? 'active' : ''} 
-                                                            ${objItem.target <= idx && objItem.target + objItem?.time > idx ? 'over' : ''} 
-                                                            ${grabbedAreaData.some(item => item.block_group_No === idx) ? 'dragging' : ''}
-                                                            lecture_${_.find(areaRowData, o => o.block_group_No === idx)?.activeAreaType}`}
+                                                            className={`item ${areaData.some(item => item.block_group_No === idx) ? 'active' : ''} 
+                                                            ${itemObj.target <= idx && itemObj.target + itemObj?.time > idx ? 'over' : ''} 
+                                                            ${areaGrabbedObj.some(item => item.block_group_No === idx) ? 'dragging' : ''}
+                                                            lecture_${_.find(areaData, o => o.block_group_No === idx)?.areaActiveType}`}
                                                         >
                                                             {idx}
                                                         </div>
                                                         {/* <Area /> */}
                                                         {itemGroupData.some(y => y.startIdx === idx) && (
                                                             <React.Fragment>
-                                                                <FixedItem
-                                                                    master={master}
-                                                                    idx={idx}
-                                                                    itemlectureid={master.getLectureId(idx) ? master.getLectureId(idx) : ''}
-                                                                    handleDragStart={handleItemDrag}
-                                                                    handleDragEnter={handleItemDragEnter}
-                                                                    handleClick={handleItemClick}
-                                                                    itemGroupData={master.getItemGruopData()}
-                                                                    itemLectureName={master.getLectureNameByIdx(idx)}
-                                                                    timeList={timeList}
-                                                                    itemObj={objItem}
-                                                                />
+                                                                <FixedItem idx={idx} timeList={timeList} />
                                                             </React.Fragment>
                                                         )}
                                                     </td>

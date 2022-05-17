@@ -74,21 +74,7 @@ export function Table() {
 Table.prototype.setInitScroll = function (tableRef, point) {
     tableRef.current.scrollTo(0, point);
 };
-// Table.prototype.init = function ({ mode, area, item }) {
-//     this.mode = mode;
-//     this.data = {
-//         area: area,
-//         item: item,
-//     };
-// };
 
-// Table.prototype.getAreaData = function () {
-//     return this.data.area;
-// };
-
-// Table.prototype.getItemData = function () {
-//     return this.data.item;
-// };
 Table.prototype.test = function () {
     console.log(this.data.area);
 };
@@ -97,7 +83,7 @@ Table.prototype.areaOnClick = function () {
     console.log(this.data.area);
 };
 
-function getLectureName(id) {
+export function getLectureName(id) {
     const subjectList = [
         '수학',
         '국어',
