@@ -1,4 +1,7 @@
 import React, { useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import { lecture } from '../util/lecture';
+import { schedule } from '../util/schedule';
 
 import styled from 'styled-components';
 const Layout = styled.div`
@@ -16,8 +19,9 @@ const Layout = styled.div`
         z-index: 5;
     }
 `;
-function FixedItemDetail({ idx, itemLectureName, itemGroupData, timeList }) {
-    useEffect(() => {}, []);
+function FixedItemDetail({ idx }) {
+    const { itemData, itemGroupData, timeListData } = useSelector(state => state.schedule);
+    const itemLectureName = lecture.getLectureNameByIdx(itemData, idx);
     return (
         <Layout>
             <div className={'detailItem'}>
@@ -54,9 +58,9 @@ function FixedItemDetail({ idx, itemLectureName, itemGroupData, timeList }) {
                                 <div style={{ margin: '5px' }}></div>
                                 <br />
 
-                                <input type="text" value={timeList[y.startTimeIdx]} />
+                                <input type="text" value={schedule.getTime(y.startTimeIdx)} />
                                 {` ~ `}
-                                <input type="text" value={timeList[y.endTimeIdx + 1]} />
+                                <input type="text" value={schedule.getTime(y.endTimeIdx + 1)} />
                                 <div style={{ borderTop: '1px solid #cdcdcd', marginTop: '10px' }}></div>
                                 <button
                                     style={{

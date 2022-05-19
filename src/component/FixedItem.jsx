@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import FixedItemDetail from './FixedItemDetail';
 import { setItemObj, setIsAreaClickDown } from '../store/reducer/trigger.reducer';
-import { getLectureName } from './Timetableutil';
+import { lecture } from '../util/lecture';
+import { schedule } from '../util/schedule';
 import _ from 'lodash';
 const Layout = styled.div`
     .lectureItem {
@@ -18,41 +19,28 @@ const Layout = styled.div`
         padding-top: 4px;
     }
 `;
-const getLectureId = (data, idx) => {
-    ///이러한 함수들이 계속 사용될 가능성이 있으므로 캡슐화
-    return _.find(data, { block_group_No: idx })?.lecture_subject_Id;
-};
-const getLectureNameByIdx = (data, idx) => {
-    return getLectureName(getLectureId(data, idx));
-};
-const getLectureRunningTime = (data, idx) => {
-    const obj = _.find(data, { startIdx: idx });
-    return obj.endTimeIdx - obj.startTimeIdx + 1;
-};
-
-function FixedItem({ idx, timeList }) {
+function FixedItem({ idx }) {
     const dispatch = useDispatch();
-    const { areaData, itemData, itemGroupData } = useSelector(state => state.schedule);
-    const { areaObj, itemObj, areaGrabbedObj, isAreaClickDown, isAreaAppend, areaActiveType } = useSelector(state => state.trigger);
-    const itemLectureName = getLectureNameByIdx(itemData, idx);
+    const { itemData, itemGroupData, timeListData } = useSelector(state => state.schedule);
+    const { itemObj } = useSelector(state => state.trigger);
+    const itemLectureName = lecture.getLectureNameByIdx(itemData, idx);
     const handleClick = () => {
         dispatch(
             setItemObj({
                 idx: idx,
-                lectureId: getLectureId(itemData, idx),
-                time: getLectureRunningTime(itemGroupData, idx),
+                lectureId: lecture.getLectureId(itemData, idx),
+                time: lecture.getLectureRunningTime(itemGroupData, idx),
                 isShow: itemObj.isShow ? false : true,
             }),
         );
     };
-
     const handleDragStart = () => {
         dispatch(setIsAreaClickDown(false));
         dispatch(
             setItemObj({
                 idx: idx,
-                lectureId: getLectureId(itemData, idx),
-                time: getLectureRunningTime(itemGroupData, idx),
+                lectureId: lecture.getLectureId(itemData, idx),
+                time: lecture.getLectureRunningTime(itemGroupData, idx),
             }),
         );
     };
@@ -79,10 +67,10 @@ function FixedItem({ idx, timeList }) {
                 {itemLectureName}
                 <br />
                 {itemGroupData.map(y => {
-                    return idx == y.startIdx && `${timeList[y.startTimeIdx]}~${timeList[y.endTimeIdx + 1]} ${y.endTimeIdx}`;
+                    return idx == y.startIdx && `${schedule.getTime(y.startTimeIdx)}~${schedule.getTime(y.endTimeIdx + 1)} `;
                 })}
             </div>
-            {itemObj.isShow && itemObj.idx === idx && <FixedItemDetail idx={idx} itemLectureName={itemLectureName} itemGroupData={itemGroupData} timeList={timeList} />}
+            {itemObj.isShow && itemObj.idx === idx && <FixedItemDetail idx={idx} />}
         </Layout>
     );
 }

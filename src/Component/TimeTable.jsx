@@ -1,14 +1,16 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import _ from 'lodash';
 import Cursor from 'react-cursor-follow';
 import FixedItem from './FixedItem';
-import { schedule, Table } from './Timetableutil';
-import { ToastOption } from './ToastOption';
-import { toast } from 'react-toastify';
+import Area from './Area';
+
+import { schedule } from '../util/schedule';
+import { table } from '../util/table';
+import { lecture } from '../util/lecture';
 import { useDispatch, useSelector } from 'react-redux';
-import { setAreaData, setItemData, setItemGroupData } from '../store/reducer/schedule.reducer';
-import { setAreaObj, setItemObj, setAreaGrabbedObj, setIsAreaClickDown, setIsAreaAppend, setAreaActiveType } from '../store/reducer/trigger.reducer';
+import { setAreaData, setItemData, setItemGroupData, setTimeListData } from '../store/reducer/schedule.reducer';
+import { setAreaActiveType, setAreaGrabbedObj, setAreaObj, setIsAreaAppend, setIsAreaClickDown, setItemObj } from '../store/reducer/trigger.reducer';
 
 const Tooltip = styled.div`
     position: absolute;
@@ -140,183 +142,34 @@ const Layout = styled.div`
         z-index: 9999;
     }
 `;
-function checkValidSchedule(endTime, startTime, itemRowData, itemLectureId) {
-    if (
-        (endTime > 101 && endTime < 132) ||
-        (endTime > 197 && endTime < 228) ||
-        (endTime > 293 && endTime < 324) ||
-        (endTime > 389 && endTime < 420) ||
-        (endTime > 485 && endTime < 516) ||
-        (endTime > 581 && endTime < 612) ||
-        endTime > 677
-    ) {
-        toast.error('유효하지않은 범위입니다.', ToastOption);
-        return false;
-    } else {
-        const isInvalidEndtime = itemRowData.some(item => item.lecture_subject_Id !== itemLectureId && (item.block_group_No === endTime || item.block_group_No === endTime + 2));
-        const isInvalidStart = itemRowData.some(item => item.lecture_subject_Id !== itemLectureId && item.block_group_No === startTime - 2);
-        if (isInvalidEndtime || isInvalidStart) {
-            toast.error('강의 사이에 최소 30분의 시간이 필요합니다.', ToastOption);
-            return false;
-        } else {
-            return true;
-        }
-    }
-}
 
-function timeCalc(data) {
-    let seq = 0;
-    const rowData = _.sortBy(data, 'block_group_No').reduce((result, e) => {
-        const isCheckSeq = result.slice(-1)[0]?.block_group_No === e.block_group_No - 1; //연속성 체크
-        result.push({ week: schedule.getWeekIdx(e.block_group_No), block_group_No: e.block_group_No, lecture_subject_Id: e.lecture_subject_Id, seq: isCheckSeq ? seq : (seq += 1) });
-        return result;
-    }, []);
-    const possibleObj = _(rowData)
-        .groupBy(x => x.seq)
-        .map((value, key) => ({
-            seq: key,
-            week: value[0]?.week,
-            lecture_subject_Id: value[0]?.lecture_subject_Id,
-            startIdx: value.slice(0, 1)[0]?.block_group_No,
-            endIdx: value.slice(-1)[0]?.block_group_No,
-            startTimeIdx: schedule.getTimeIdx(value.slice(0, 1)[0]?.block_group_No),
-            endTimeIdx: schedule.getTimeIdx(value.slice(-1)[0]?.block_group_No),
-        }))
-        .value();
-    return possibleObj;
-}
-const timeList = schedule.getTimeList();
-const master = new Table();
 function TimeTable() {
     const tableRef = useRef();
     const dispatch = useDispatch();
-    const { areaData, itemData, itemGroupData } = useSelector(state => state.schedule);
-    const { areaObj, itemObj, areaGrabbedObj, isAreaClickDown, isAreaAppend, areaActiveType } = useSelector(state => state.trigger);
+    const { areaData, itemData, itemGroupData, timeListData } = useSelector(state => state.schedule);
+    const { areaGrabbedObj, itemObj, areaObj, isAreaClickDown, isAreaAppend, areaActiveType } = useSelector(state => state.trigger);
 
     useEffect(() => {
-        master.setInitScroll(tableRef, 681);
-        master.init({ area: areaData.concat(itemData), item: itemData });
-    }, []);
-
-    useEffect(() => {
-        master.update({ area: areaData, item: itemData });
-    }, [itemData, areaData]);
-
-    useEffect(() => {
-        dispatch(setItemGroupData(timeCalc(itemData)));
+        dispatch(setTimeListData(schedule.getTimeList()));
+        dispatch(setItemGroupData(lecture.getGroupByLectureTime(itemData)));
     }, [itemData]);
-
-    const handleAreaDown = e => {
-        const idx = Number(e.target.getAttribute('idx'));
-        dispatch(setIsAreaAppend(master.isFillArea(idx)));
-        dispatch(
-            setAreaObj({
-                idx: idx,
-                startOverIdx: schedule.getTimeIdx(idx),
-                endOverIdx: schedule.getTimeIdx(idx + 1),
-                startOverDayIdx: schedule.getWeekIdx(idx),
-                endOverDayIdx: schedule.getWeekIdx(idx),
-            }),
-        );
-
-        dispatch(setIsAreaClickDown(true));
-        master.isFillArea(idx) ? dispatch(setAreaData(_.reject(areaData, { block_group_No: idx }))) : dispatch(setAreaData([...areaData, { block_group_No: idx, areaActiveType: areaActiveType }]));
-    };
-    const handleAreaOver = e => {
-        if (isAreaClickDown) {
-            const idx = Number(e.target.getAttribute('idx'));
-            const startOverIdx = areaObj.idx; //start target
-            const endOverIdx = idx; //end target
-            const startOverDayIdx = schedule.getWeekIdx(startOverIdx); //[0,1,2...]월,화,수...
-            const endOverDayIdx = schedule.getWeekIdx(endOverIdx);
-            const startRange = schedule.getTimeIdx(startOverIdx);
-            const endRange = schedule.getTimeIdx(endOverIdx);
-            const intervalDay = _.range(startOverDayIdx < endOverDayIdx ? startOverDayIdx : endOverDayIdx, startOverDayIdx > endOverDayIdx ? startOverDayIdx + 1 : endOverDayIdx + 1);
-            const selectedInfo = intervalDay.reduce((result, e) => {
-                result.push(
-                    _.range(e * 96 + 36 + startRange, e * 96 + 36 + endRange + (startRange < endRange ? 1 : -1)).map(ee => {
-                        return { block_group_No: ee, areaActiveType: areaActiveType };
-                    }),
-                );
-                return result;
-            }, []);
-            // setGrabbedAreaData(_.flattenDeep(selectedInfo));
-            dispatch(setAreaGrabbedObj(_.flattenDeep(selectedInfo)));
-            dispatch(
-                setAreaObj({
-                    ...areaObj,
-                    startOverIdx: startRange < endRange ? startRange : endRange,
-                    endOverIdx: startRange > endRange ? startRange + 1 : endRange + 1,
-                    startOverDayIdx: startOverDayIdx < endOverDayIdx ? startOverDayIdx : endOverDayIdx,
-                    endOverDayIdx: startOverDayIdx > endOverDayIdx ? startOverDayIdx : endOverDayIdx,
-                }),
-            );
-        }
-    };
-
-    const handleAreaUp = e => {
-        dispatch(setIsAreaClickDown(false));
-        const removeResult = _.reject(areaData, o => {
-            return areaGrabbedObj.some(item => item.block_group_No === o.block_group_No);
-        });
-        isAreaAppend ? dispatch(setAreaData(removeResult)) : dispatch(setAreaData([...areaData, ...areaGrabbedObj]));
-
-        // setGrabbedAreaData([]);
-
-        dispatch(setAreaGrabbedObj([]));
-        dispatch(setItemObj({}));
-    };
-
-    const handleAreaEnter = e => {
-        const targetItemIdx = Number(e.target.getAttribute('idx'));
-        dispatch(setItemObj({ ...itemObj, target: targetItemIdx }));
-    };
-
-    const handleItemDrop = e => {
-        e.preventDefault();
-        dispatch(setItemObj({}));
-        const itemIdx = itemObj.idx;
-        const itemLectureId = itemObj.lectureId;
-        const time = itemObj.time;
-        const targetItemIdx = Number(e.target.getAttribute('idx'));
-        const endTime = targetItemIdx + time - 1;
-        if (!checkValidSchedule(endTime, targetItemIdx, itemData, itemLectureId)) {
-            return false;
-        }
-        if (targetItemIdx != 0) {
-            const removedLecture = _.reject([...itemData], function (o) {
-                //이전 과목 시간은 삭제
-                return (o.block_group_No >= itemIdx && o.block_group_No < itemIdx + time) || (o.block_group_No >= targetItemIdx && o.block_group_No < targetItemIdx + time);
-            });
-            const addLecture = _.range(targetItemIdx, targetItemIdx + time).reduce((result, e) => {
-                //드롭된 위치에 새롭게 생성
-                result.push({ block_group_No: e, lecture_subject_Id: itemLectureId });
-                return result;
-            }, []);
-            dispatch(setItemData([...removedLecture, ...addLecture]));
-        }
-    };
-
-    function handleItemDragOver(e) {
-        e.preventDefault();
-    }
 
     const handleClickActiveAreaType = e => {
         return () => {
-            // setActiveAreaType(e);
             dispatch(setAreaActiveType(e));
         };
     };
+
     return (
         <React.Fragment>
             <Layout>
                 {isAreaClickDown && (
-                    <Cursor duration={0} size={0} style={{ border: '1px solid red' }}>
+                    <Cursor duration={0} size={0}>
                         {isAreaAppend ? (
                             <Tooltip style={{ background: 'red', width: '50px', textAlign: 'center' }}>삭제</Tooltip>
                         ) : (
                             <Tooltip className={`lecture_${areaActiveType ? `${areaActiveType}` : 'all'}`}>
-                                <span>{areaActiveType == null ? '상관없음' : master.getLectureName(areaActiveType)}</span>
+                                <span>{areaActiveType == null ? '상관없음' : lecture.getLectureName(areaActiveType)}</span>
                                 <br />
                                 <span>{`${schedule.getWeekText(areaObj.startOverDayIdx)} ${schedule.getTime(areaObj.startOverIdx)}`}</span> {` ~ `}
                                 <span>{`${schedule.getWeekText(areaObj.endOverDayIdx)} ${schedule.getTime(areaObj.endOverIdx)}`}</span>
@@ -324,22 +177,23 @@ function TimeTable() {
                         )}
                     </Cursor>
                 )}
+
+                <button style={{ background: '#4eb6ac' }} onClick={handleClickActiveAreaType(null)}>
+                    상관없음
+                </button>
+                <button style={{ background: 'cornflowerblue' }} onClick={handleClickActiveAreaType(9168)}>
+                    국어
+                </button>
+                <button style={{ background: 'yellowgreen' }} onClick={handleClickActiveAreaType(9169)}>
+                    영어
+                </button>
+                <button style={{ background: 'coral' }} onClick={handleClickActiveAreaType(8906)}>
+                    수학
+                </button>
+                <button style={{ background: 'plum' }} onClick={handleClickActiveAreaType(9812)}>
+                    중학과학
+                </button>
                 <div className="head">
-                    <button style={{ background: '#4eb6ac' }} onClick={handleClickActiveAreaType(null)}>
-                        상관없음
-                    </button>
-                    <button style={{ background: 'cornflowerblue' }} onClick={handleClickActiveAreaType(9168)}>
-                        국어
-                    </button>
-                    <button style={{ background: 'yellowgreen' }} onClick={handleClickActiveAreaType(9169)}>
-                        영어
-                    </button>
-                    <button style={{ background: 'coral' }} onClick={handleClickActiveAreaType(8906)}>
-                        수학
-                    </button>
-                    <button style={{ background: 'plum' }} onClick={handleClickActiveAreaType(9812)}>
-                        중학과학
-                    </button>
                     <table>
                         <thead>
                             <tr>
@@ -358,18 +212,18 @@ function TimeTable() {
                 <div className="contents" ref={tableRef}>
                     <table>
                         <tbody>
-                            {timeList.map((e, i) => {
+                            {timeListData.map((e, i) => {
                                 const isOntime = i % 4 === 0; //정시조건
-                                const getIdBlock = (rowIdx, i) => rowIdx * 96 + 36 + i; //스케줄 db값
                                 return (
                                     <React.Fragment key={i}>
                                         <tr className={isOntime ? 'tr_parent' : ''}>
                                             {isOntime ? <th rowSpan="4">{e}</th> : null}
                                             {_.range(0, 7).map((e, ii) => {
-                                                const idx = getIdBlock(e, i);
+                                                const idx = table.getBlockId(e, i);
                                                 return (
+                                                    //map 테이블 데이터를 state 생성해서 해당 부분만 업데이트
                                                     <td key={ii} className={`${e >= 6 ? 'weekend' : ''}`}>
-                                                        <div //과외 가능 시간 데이터 ./.... Area 관련 컴퍼넌트 개발 핸들러 리팩토링
+                                                        {/* <div //과외 가능 시간 데이터 ./.... Area 관련 컴퍼넌트 개발 핸들러 리팩토링
                                                             idx={idx}
                                                             onMouseOver={handleAreaOver}
                                                             onMouseUp={handleAreaUp}
@@ -383,13 +237,19 @@ function TimeTable() {
                                                             lecture_${_.find(areaData, o => o.block_group_No === idx)?.areaActiveType}`}
                                                         >
                                                             {idx}
-                                                        </div>
-                                                        {/* <Area /> */}
-                                                        {itemGroupData.some(y => y.startIdx === idx) && (
-                                                            <React.Fragment>
-                                                                <FixedItem idx={idx} timeList={timeList} />
-                                                            </React.Fragment>
-                                                        )}
+                                                        </div> */}
+                                                        <Area
+                                                            idx={idx}
+                                                            areaData={areaData}
+                                                            itemData={itemData}
+                                                            areaObj={areaObj}
+                                                            itemObj={itemObj}
+                                                            areaGrabbedObj={areaGrabbedObj}
+                                                            isAreaClickDown={isAreaClickDown}
+                                                            isAreaAppend={isAreaAppend}
+                                                            areaActiveType={areaActiveType}
+                                                        />
+                                                        {itemGroupData.some(y => y.startIdx === idx) && <FixedItem idx={idx} />}
                                                     </td>
                                                 );
                                             })}
@@ -405,4 +265,4 @@ function TimeTable() {
     );
 }
 
-export default React.memo(TimeTable);
+export default TimeTable;

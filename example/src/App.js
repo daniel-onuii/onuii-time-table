@@ -16,6 +16,14 @@ const App = () => {
         { block_group_No: 99, lecture_subject_Id: 9812 },
         { block_group_No: 100, lecture_subject_Id: 9812 },
         { block_group_No: 101, lecture_subject_Id: 9812 },
+        { block_group_No: 135, lecture_subject_Id: 8906 },
+        { block_group_No: 136, lecture_subject_Id: 8906 },
+        { block_group_No: 137, lecture_subject_Id: 8906 },
+        { block_group_No: 138, lecture_subject_Id: 8906 },
+        { block_group_No: 160, lecture_subject_Id: 8906 },
+        { block_group_No: 161, lecture_subject_Id: 8906 },
+        { block_group_No: 162, lecture_subject_Id: 8906 },
+        { block_group_No: 163, lecture_subject_Id: 8906 },
     ];
 
     return (

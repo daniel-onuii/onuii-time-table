@@ -9,6 +9,10 @@ const slice = createSlice({
     name: 'schedule',
     initialState,
     reducers: {
+        initData(state, action) {
+            state.areaData = action.payload.areaData;
+            state.itemData = action.payload.itemData;
+        },
         setAreaData(state, action) {
             state.areaData = action.payload;
         },
@@ -25,5 +29,5 @@ const slice = createSlice({
 });
 
 const { actions, reducer } = slice;
-export const { setAreaData, setItemData, setItemGroupData, setTimeListData } = actions;
+export const { initData, setAreaData, setItemData, setItemGroupData, setTimeListData } = actions;
 export default reducer;
