@@ -3,6 +3,7 @@ import { ToastContainer } from 'react-toastify';
 import MainContainer from './container/MainContainer';
 import { useDispatch } from 'react-redux';
 import { initData } from './store/reducer/schedule.reducer';
+import { schedule } from './util/schedule';
 const App = ({ areaData, itemData }) => {
     const dispatch = useDispatch();
     useEffect(() => {
@@ -12,6 +13,7 @@ const App = ({ areaData, itemData }) => {
             initData({
                 areaData: areaRowData,
                 itemData: itemRowData,
+                timeListData: schedule.getTimeList(),
             }),
         );
     }, []);

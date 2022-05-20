@@ -5,36 +5,16 @@ import { setAreaData, setItemData, setItemGroupData } from '../store/reducer/sch
 import { schedule } from '../util/schedule';
 import { table } from '../util/table';
 import _ from 'lodash';
-function checkValidSchedule(endTime, startTime, itemRowData, itemLectureId) {
-    if (
-        (endTime > 101 && endTime < 132) ||
-        (endTime > 197 && endTime < 228) ||
-        (endTime > 293 && endTime < 324) ||
-        (endTime > 389 && endTime < 420) ||
-        (endTime > 485 && endTime < 516) ||
-        (endTime > 581 && endTime < 612) ||
-        endTime > 677
-    ) {
-        toast.error('유효하지않은 범위입니다.', ToastOption);
-        return false;
-    } else {
-        const isInvalidEndtime = itemRowData.some(item => item.lecture_subject_Id !== itemLectureId && (item.block_group_No === endTime || item.block_group_No === endTime + 2));
-        const isInvalidStart = itemRowData.some(item => item.lecture_subject_Id !== itemLectureId && item.block_group_No === startTime - 2);
-        if (isInvalidEndtime || isInvalidStart) {
-            toast.error('강의 사이에 최소 30분의 시간이 필요합니다.', ToastOption);
-            return false;
-        } else {
-            return true;
-        }
-    }
-}
-
-function Area({ idx, areaData, itemData, areaObj, itemObj, areaGrabbedObj, isAreaClickDown, isAreaAppend, areaActiveType }) {
+import { toast } from 'react-toastify';
+import { ToastOption } from './ToastOption';
+function Area({ idx, areaData, itemData, areaObj, itemObj, areaGrabbedObj }) {
     // function Area({ idx }) {
     const dispatch = useDispatch();
     // const { areaData, itemData } = useSelector(state => state.schedule);
     // const { areaObj, itemObj, areaGrabbedObj, isAreaClickDown, isAreaAppend, areaActiveType } = useSelector(state => state.trigger);
-
+    const isAreaClickDown = useSelector(state => state.trigger.isAreaClickDown);
+    const isAreaAppend = useSelector(state => state.trigger.isAreaAppend);
+    const areaActiveType = useSelector(state => state.trigger.areaActiveType);
     const handleAreaDown = () => {
         dispatch(setIsAreaAppend(table.isFillArea(areaData, idx)));
         dispatch(
@@ -92,13 +72,12 @@ function Area({ idx, areaData, itemData, areaObj, itemObj, areaGrabbedObj, isAre
         dispatch(setItemObj({}));
     };
     const handleItemDrop = e => {
-        e.preventDefault();
         dispatch(setItemObj({}));
         const itemIdx = itemObj.idx;
         const itemLectureId = itemObj.lectureId;
         const time = itemObj.time;
         const endTime = idx + time - 1;
-        if (!checkValidSchedule(endTime, idx, itemData, itemLectureId)) {
+        if (!schedule.checkValidSchedule(endTime, idx, itemData, itemLectureId)) {
             return false;
         }
         if (idx != 0) {
@@ -114,9 +93,7 @@ function Area({ idx, areaData, itemData, areaObj, itemObj, areaGrabbedObj, isAre
             dispatch(setItemData([...removedLecture, ...addLecture]));
         }
     };
-    const handleItemDragOver = e => {
-        e.preventDefault();
-    };
+
     const handleAreaEnter = () => {
         dispatch(setItemObj({ ...itemObj, target: idx }));
     };
@@ -126,7 +103,7 @@ function Area({ idx, areaData, itemData, areaObj, itemObj, areaGrabbedObj, isAre
             onMouseOver={handleAreaOver}
             onMouseUp={handleAreaUp}
             onDrop={handleItemDrop}
-            onDragOver={handleItemDragOver}
+            onDragOver={e => e.preventDefault()}
             onDragEnter={handleAreaEnter}
             className={`item ${areaData.some(item => item.block_group_No === idx) ? 'active' : ''}
             ${itemObj.target <= idx && itemObj.target + itemObj?.time > idx ? 'over' : ''}

@@ -19,10 +19,10 @@ const Layout = styled.div`
         padding-top: 4px;
     }
 `;
-function FixedItem({ idx }) {
+function FixedItem({ idx, itemData, itemGroupData, itemObj }) {
     const dispatch = useDispatch();
-    const { itemData, itemGroupData, timeListData } = useSelector(state => state.schedule);
-    const { itemObj } = useSelector(state => state.trigger);
+    // const { itemData, itemGroupData } = useSelector(state => state.schedule);
+    // const { itemObj } = useSelector(state => state.trigger);
     const itemLectureName = lecture.getLectureNameByIdx(itemData, idx);
     const handleClick = () => {
         dispatch(
@@ -34,6 +34,7 @@ function FixedItem({ idx }) {
             }),
         );
     };
+
     const handleDragStart = () => {
         dispatch(setIsAreaClickDown(false));
         dispatch(

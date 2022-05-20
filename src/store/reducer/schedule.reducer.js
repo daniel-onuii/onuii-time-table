@@ -12,6 +12,7 @@ const slice = createSlice({
         initData(state, action) {
             state.areaData = action.payload.areaData;
             state.itemData = action.payload.itemData;
+            state.timeListData = action.payload.timeListData;
         },
         setAreaData(state, action) {
             state.areaData = action.payload;
@@ -22,12 +23,9 @@ const slice = createSlice({
         setItemGroupData(state, action) {
             state.itemGroupData = action.payload;
         },
-        setTimeListData(state, action) {
-            state.timeListData = action.payload;
-        },
     },
 });
 
 const { actions, reducer } = slice;
-export const { initData, setAreaData, setItemData, setItemGroupData, setTimeListData } = actions;
+export const { initData, setAreaData, setItemData, setItemGroupData } = actions;
 export default reducer;
