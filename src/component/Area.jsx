@@ -5,13 +5,12 @@ import { setAreaData, setItemData, setItemGroupData } from '../store/reducer/sch
 import { schedule } from '../util/schedule';
 import { table } from '../util/table';
 import _ from 'lodash';
-import { toast } from 'react-toastify';
-import { ToastOption } from './ToastOption';
-function Area({ idx, areaData, itemData, areaObj, itemObj, areaGrabbedObj }) {
+function Area({ idx, itemData, areaObj, itemObj, areaGrabbedObj }) {
     // function Area({ idx }) {
     const dispatch = useDispatch();
     // const { areaData, itemData } = useSelector(state => state.schedule);
     // const { areaObj, itemObj, areaGrabbedObj, isAreaClickDown, isAreaAppend, areaActiveType } = useSelector(state => state.trigger);
+    const areaData = useSelector(state => state.schedule.areaData);
     const isAreaClickDown = useSelector(state => state.trigger.isAreaClickDown);
     const isAreaAppend = useSelector(state => state.trigger.isAreaAppend);
     const areaActiveType = useSelector(state => state.trigger.areaActiveType);

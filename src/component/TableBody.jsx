@@ -1,14 +1,16 @@
 import React, { useEffect, useRef } from 'react';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
-import { setItemGroupData } from '../store/reducer/schedule.reducer';
+import { setItemGroupData, setTableData } from '../store/reducer/schedule.reducer';
 import { lecture } from '../util/lecture';
 import _ from 'lodash';
 import { table } from '../util/table';
 import Area from './Area';
 import FixedItem from './FixedItem';
+import { schedule } from '../util/schedule';
 function TableBody() {
     const tableRef = useRef();
     const dispatch = useDispatch();
+    const tableData = useSelector(state => state.schedule.tableData);
     const itemData = useSelector(state => state.schedule.itemData);
     const itemGroupData = useSelector(state => state.schedule.itemGroupData);
     const timeListData = useSelector(state => state.schedule.timeListData);
@@ -18,7 +20,20 @@ function TableBody() {
     const areaGrabbedObj = useSelector(state => state.trigger.areaGrabbedObj);
 
     useEffect(() => {
-        console.log(areaData, itemData, timeListData);
+        const flatData = _.flatten(tableData);
+        const testA = flatData.reduce((result, e) => {
+            _.find(areaData, { block_group_No: e.block_group_No }) ? result.push({ ...e, isActiveArea: true }) : result.push(e);
+            return result;
+        }, []);
+        const testB = testA.reduce((result, e) => {
+            _.find(itemData, { block_group_No: e.block_group_No }) ? result.push({ ...e, isActiveLecture: true }) : result.push(e);
+            return result;
+        }, []);
+        const testC = _(testB)
+            .groupBy(x => x.rowNum)
+            .value();
+        // dispatch(setTableData(_.values(testC)));
+        console.log(_.values(testC));
     }, [areaData]);
 
     useEffect(() => {

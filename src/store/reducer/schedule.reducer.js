@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
+    tableData: [],
     areaData: null,
     itemData: null,
     itemGroupData: [],
@@ -13,6 +14,10 @@ const slice = createSlice({
             state.areaData = action.payload.areaData;
             state.itemData = action.payload.itemData;
             state.timeListData = action.payload.timeListData;
+            state.tableData = action.payload.tableData;
+        },
+        setTableData(state, action) {
+            state.tableData = action.payload;
         },
         setAreaData(state, action) {
             state.areaData = action.payload;
@@ -27,5 +32,5 @@ const slice = createSlice({
 });
 
 const { actions, reducer } = slice;
-export const { initData, setAreaData, setItemData, setItemGroupData } = actions;
+export const { initData, setTableData, setAreaData, setItemData, setItemGroupData } = actions;
 export default reducer;
