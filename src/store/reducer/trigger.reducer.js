@@ -6,6 +6,7 @@ const initialState = {
     isAreaAppend: false,
     isAreaClickDown: false,
     areaActiveType: null,
+    startGrabIdx: null,
 };
 const slice = createSlice({
     name: 'trigger',
@@ -26,6 +27,9 @@ const slice = createSlice({
         setIsAreaClickDown(state, action) {
             state.isAreaClickDown = action.payload;
         },
+        setStartGrabIdx(state, action) {
+            state.startGrabIdx = action.payload;
+        },
         setAreaActiveType(state, action) {
             state.areaActiveType = action.payload;
         },
@@ -33,5 +37,5 @@ const slice = createSlice({
 });
 
 const { actions, reducer } = slice;
-export const { setAreaObj, setItemObj, setAreaGrabbedObj, setIsAreaAppend, setIsAreaClickDown, setAreaActiveType } = actions;
+export const { setAreaObj, setItemObj, setAreaGrabbedObj, setIsAreaAppend, setIsAreaClickDown, setAreaActiveType, setStartGrabIdx } = actions;
 export default reducer;

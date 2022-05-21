@@ -20,6 +20,7 @@ function TableBody() {
     const areaGrabbedObj = useSelector(state => state.trigger.areaGrabbedObj);
 
     useEffect(() => {
+        ///이쪽 코드 리팩토링
         const flatData = _.flatten(tableData);
         const testA = flatData.reduce((result, e) => {
             _.find(areaData, { block_group_No: e.block_group_No }) ? result.push({ ...e, isActiveArea: true }) : result.push(e);
@@ -32,9 +33,12 @@ function TableBody() {
         const testC = _(testB)
             .groupBy(x => x.rowNum)
             .value();
-        // dispatch(setTableData(_.values(testC)));
-        console.log(_.values(testC));
+        dispatch(setTableData(_.values(testC)));
     }, [areaData]);
+
+    // useEffect(() => {
+    //     console.log(tableData);
+    // }, [tableData]);
 
     useEffect(() => {
         dispatch(setItemGroupData(lecture.getGroupByLectureTime(itemData)));
@@ -43,7 +47,7 @@ function TableBody() {
         <div className="contents" ref={tableRef}>
             <table>
                 <tbody>
-                    {timeListData.map((e, i) => {
+                    {/* {timeListData.map((e, i) => {
                         const isOntime = i % 4 === 0; //정시조건
                         return (
                             <tr key={i} className={isOntime ? 'tr_parent' : ''}>
@@ -54,6 +58,31 @@ function TableBody() {
                                         <td key={idx} className={`${e >= 6 ? 'weekend' : ''}`}>
                                             <Area idx={idx} areaData={areaData} itemData={itemData} areaObj={areaObj} itemObj={itemObj} areaGrabbedObj={areaGrabbedObj} />
                                             {itemGroupData.some(y => y.startIdx === idx) && <FixedItem idx={idx} itemData={itemData} itemGroupData={itemGroupData} itemObj={itemObj} />}
+                                        </td>
+                                    );
+                                })}
+                            </tr>
+                        );
+                    })} */}
+
+                    {tableData.map((row, i) => {
+                        const isOntime = i % 4 === 0; //정시조건
+                        return (
+                            <tr key={i} className={isOntime ? 'tr_parent' : ''}>
+                                {isOntime ? <th rowSpan="4">{row[0].rowNum}</th> : null}
+                                {_.range(0, 7).map(seq => {
+                                    const idx = row[seq].block_group_No;
+                                    // console.log(idx, i, seq, row, row[seq]);
+                                    return (
+                                        <td key={idx} className={`${seq == 6 ? 'weekend' : ''}`}>
+                                            <Area
+                                                tableData={tableData}
+                                                idx={idx}
+                                                isGrabbed={row[seq].isGrabbed}
+                                                isActiveArea={row[seq].isActiveArea}
+                                                areaType={row[seq].areaType}
+                                                lectureType={''}
+                                            />
                                         </td>
                                     );
                                 })}
