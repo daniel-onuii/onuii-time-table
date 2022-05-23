@@ -4,18 +4,18 @@ import { OnuiiTimeTable } from 'onuii-time-table';
 import 'onuii-time-table/dist/index.css';
 
 const App = () => {
-    const areaData = [{ block_group_No: 36 }, { block_group_No: 37 }];
+    const areaData = [{ block_group_No: 36, areaActiveType: [8906, 9168] }, { block_group_No: 37 }];
     const itemData = [
-        { block_group_No: 36, lecture_subject_Id: 9812 },
-        { block_group_No: 37, lecture_subject_Id: 9812 },
-        { block_group_No: 38, lecture_subject_Id: 9812 },
-        { block_group_No: 39, lecture_subject_Id: 9812 },
-        { block_group_No: 40, lecture_subject_Id: 9812 },
-        { block_group_No: 41, lecture_subject_Id: 9812 },
-        { block_group_No: 98, lecture_subject_Id: 9812 },
-        { block_group_No: 99, lecture_subject_Id: 9812 },
-        { block_group_No: 100, lecture_subject_Id: 9812 },
-        { block_group_No: 101, lecture_subject_Id: 9812 },
+        { block_group_No: 36, lecture_subject_Id: 9171 },
+        { block_group_No: 37, lecture_subject_Id: 9171 },
+        { block_group_No: 38, lecture_subject_Id: 9171 },
+        { block_group_No: 39, lecture_subject_Id: 9171 },
+        { block_group_No: 40, lecture_subject_Id: 9171 },
+        { block_group_No: 41, lecture_subject_Id: 9171 },
+        { block_group_No: 98, lecture_subject_Id: 9171 },
+        { block_group_No: 99, lecture_subject_Id: 9171 },
+        { block_group_No: 100, lecture_subject_Id: 9171 },
+        { block_group_No: 101, lecture_subject_Id: 9171 },
         { block_group_No: 135, lecture_subject_Id: 8906 },
         { block_group_No: 136, lecture_subject_Id: 8906 },
         { block_group_No: 137, lecture_subject_Id: 8906 },

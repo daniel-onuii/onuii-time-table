@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import _ from 'lodash';
 const Layout = styled.div`
@@ -29,21 +29,28 @@ const Layout = styled.div`
     }
 `;
 function SelectLecture({ isAreaAppend, position, handleConfirm, handleCancel }) {
+    const [lecture, setLecture] = useState([]);
+    const handleExtendConfirm = () => {
+        handleConfirm(lecture);
+    };
+    const handleLecture = e => {
+        setLecture([...lecture, e.target.value]);
+    };
     return (
         <Layout>
             <div className={'modalLectureBox'} style={{ left: position.x, top: position.y }}>
                 {!isAreaAppend ? (
                     <React.Fragment>
                         <div style={{ display: 'flex' }}>
-                            <input type="checkbox" /> <span>상관없음</span>
-                            <input type="checkbox" /> <span>국어</span>
-                            <input type="checkbox" /> <span>수학</span>
-                            <input type="checkbox" /> <span>사회</span>
-                            <input type="checkbox" /> <span>과학</span>
+                            <input type="checkbox" value={'all'} onClick={handleLecture} /> <span>상관없음</span>
+                            <input type="checkbox" value={9168} onClick={handleLecture} /> <span>국어</span>
+                            <input type="checkbox" value={9169} onClick={handleLecture} /> <span>영어</span>
+                            <input type="checkbox" value={8906} onClick={handleLecture} /> <span>수학</span>
+                            <input type="checkbox" value={9171} onClick={handleLecture} /> <span>과학</span>
                         </div>
                         <br />
                         <div>
-                            <button onClick={handleConfirm}>확인</button>
+                            <button onClick={handleExtendConfirm}>확인</button>
                             <button onClick={handleCancel}>취소</button>
                         </div>
                     </React.Fragment>
