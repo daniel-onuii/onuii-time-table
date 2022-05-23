@@ -7,6 +7,9 @@ import { table } from '../util/table';
 import Area from './Area';
 import FixedItem from './FixedItem';
 import styled from 'styled-components';
+import Distribution from './Distribution';
+import { distData } from '../mock/distData';
+import _ from 'lodash';
 const Layout = styled.div`
     .contents {
         height: 504px;
@@ -50,27 +53,20 @@ const Layout = styled.div`
     .weekend {
         background: #fef0f7;
     }
-    .droptarget {
-        float: left;
-        width: 100px;
-        height: 35px;
-        margin: 15px;
-        padding: 10px;
-        border: 1px solid #aaaaaa;
+    .active.over {
+        background: none;
     }
     .over {
-        background: red !important;
-        opacity: 0.5;
+        background: #fa8072 !important;
         position: absolute;
         width: 100%;
         top: 0;
-        // z-index: 999;
     }
     .time4 {
-        height: 80px;
+        height: 84px;
     }
     .time6 {
-        height: 120px;
+        height: 127px;
     }
     input {
         width: 64px !important;
@@ -124,6 +120,7 @@ function TableBody() {
                                         {isOntime ? <th rowSpan="4">{e}</th> : null}
                                         {_.range(0, 7).map((e, ii) => {
                                             const idx = table.getBlockId(e, i);
+                                            const level = _.find(distData, { block_group_No: idx })?.level;
                                             return (
                                                 <td key={ii} className={`${e >= 6 ? 'weekend' : ''}`}>
                                                     <Area
@@ -138,6 +135,7 @@ function TableBody() {
                                                         areaActiveType={areaActiveType}
                                                     />
                                                     {itemGroupData.some(y => y.startIdx === idx) && <FixedItem idx={idx} />}
+                                                    {level && <Distribution level={level} />}
                                                 </td>
                                             );
                                         })}

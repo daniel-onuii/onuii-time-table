@@ -45,16 +45,12 @@ function FixedItem({ idx }) {
         );
     };
 
-    const handleDragEnter = () => {
-        dispatch(setItemObj({ ...itemObj, target: null }));
-    };
     return (
         <Layout>
             <div
                 className={`lectureItem`}
                 draggable={true}
                 onDragStart={handleDragStart}
-                onDragEnter={handleDragEnter}
                 onClick={handleClick}
                 style={{
                     zIndex: 2,
@@ -64,11 +60,13 @@ function FixedItem({ idx }) {
                     }, [])}`,
                 }}
             >
-                {itemLectureName}
-                <br />
-                {itemGroupData.map(y => {
-                    return idx == y.startIdx && `${schedule.getTime(y.startTimeIdx)}~${schedule.getTime(y.endTimeIdx + 1)} `;
-                })}
+                <div style={{ padding: '5px' }}>
+                    {itemLectureName}
+                    <br />
+                    {itemGroupData.map(y => {
+                        return idx == y.startIdx && `${schedule.getTime(y.startTimeIdx)}~${schedule.getTime(y.endTimeIdx + 1)} `;
+                    })}
+                </div>
             </div>
             {itemObj.isShow && itemObj.idx === idx && <FixedItemDetail idx={idx} />}
         </Layout>

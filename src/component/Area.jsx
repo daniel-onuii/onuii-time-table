@@ -4,6 +4,8 @@ import { setAreaGrabbedObj, setAreaObj, setIsAreaAppend, setIsAreaClickDown, set
 import { setAreaData, setItemData, setItemGroupData } from '../store/reducer/schedule.reducer';
 import { schedule } from '../util/schedule';
 import { table } from '../util/table';
+import { toast } from 'react-toastify';
+import { ToastOption } from './ToastOption';
 import _ from 'lodash';
 function checkValidSchedule(endTime, startTime, itemRowData, itemLectureId) {
     if (
@@ -90,11 +92,11 @@ function Area({ idx, areaData, itemData, areaObj, itemObj, areaGrabbedObj, isAre
         isAreaAppend ? dispatch(setAreaData(removeResult)) : dispatch(setAreaData([...areaData, ...areaGrabbedObj]));
         dispatch(setAreaGrabbedObj([]));
         dispatch(setItemObj({}));
+        console.log('up');
     };
     const handleItemDrop = e => {
         e.preventDefault();
-        e.target.classList.remove(`over`);
-        e.target.classList.remove(`time${itemObj.time}`);
+        offHover(e);
         dispatch(setItemObj({}));
         const itemIdx = itemObj.idx;
         const itemLectureId = itemObj.lectureId;
@@ -120,10 +122,17 @@ function Area({ idx, areaData, itemData, areaObj, itemObj, areaGrabbedObj, isAre
         e.preventDefault();
     };
     const handleAreaEnter = e => {
+        onHover(e);
+    };
+    const handleAreaLeave = e => {
+        offHover(e);
+    };
+
+    const onHover = e => {
         e.target.classList.add(`over`);
         e.target.classList.add(`time${itemObj.time}`);
     };
-    const handleAreaLeave = e => {
+    const offHover = e => {
         e.target.classList.remove(`over`);
         e.target.classList.remove(`time${itemObj.time}`);
     };
