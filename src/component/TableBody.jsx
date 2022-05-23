@@ -1,97 +1,157 @@
 import React, { useEffect, useRef } from 'react';
-import { shallowEqual, useDispatch, useSelector } from 'react-redux';
-import { setItemGroupData, setTableData } from '../store/reducer/schedule.reducer';
+import { useDispatch, useSelector } from 'react-redux';
+import { setItemGroupData, setTimeListData } from '../store/reducer/schedule.reducer';
 import { lecture } from '../util/lecture';
-import _ from 'lodash';
+import { schedule } from '../util/schedule';
 import { table } from '../util/table';
 import Area from './Area';
 import FixedItem from './FixedItem';
-import { schedule } from '../util/schedule';
+import styled from 'styled-components';
+import Distribution from './Distribution';
+import { distData } from '../mock/distData';
+import _ from 'lodash';
+const Layout = styled.div`
+    .contents {
+        height: 504px;
+        overflow-y: scroll;
+    }
+    .onTime {
+        border-top: 1px solid #cdcdcd;
+    }
+    .onTime th {
+        font-size: 15px;
+        color: #757575;
+    }
+    th,
+    td {
+        border-left: 1px solid #cdcdcd;
+        text-align: center;
+        height: 21px;
+        vertical-align: middle;
+        width: 10%;
+        position: relative;
+        padding: 0;
+        border-spacing: 0;
+        font-size: 12px;
+    }
+    td:hover {
+        background: #cfcfcf;
+        cursor: cell;
+    }
+    .item {
+        height: 100%;
+        color: #b3b3b3;
+    }
+    .active {
+        cursor: cell;
+        width: 100%;
+        height: 100%;
+        background: #4eb6ac;
+        color: white;
+        z-index: 0;
+    }
+    .weekend {
+        background: #fef0f7;
+    }
+    .active.over {
+        background: none;
+    }
+    .over {
+        background: #fa8072 !important;
+        position: absolute;
+        width: 100%;
+        top: 0;
+    }
+    .time4 {
+        height: 84px;
+    }
+    .time6 {
+        height: 127px;
+    }
+    input {
+        width: 64px !important;
+        margin: 0px !important;
+        height: 16px !important;
+        padding: 5px !important;
+        font-size: 12px !important;
+    }
+    .dragging {
+        background: #01a8fe !important;
+        color: white;
+    }
+    .lecture_all {
+        background: #4eb6ac;
+    }
+    .lecture_8906 {
+        background: coral;
+    }
+    .lecture_9168 {
+        background: cornflowerblue;
+    }
+    .lecture_9169 {
+        background: yellowgreen;
+    }
+    .lecture_9812 {
+        background: plum;
+    }
+`;
+
 function TableBody() {
     const tableRef = useRef();
     const dispatch = useDispatch();
-    const tableData = useSelector(state => state.schedule.tableData);
-    const itemData = useSelector(state => state.schedule.itemData);
-    const itemGroupData = useSelector(state => state.schedule.itemGroupData);
-    const timeListData = useSelector(state => state.schedule.timeListData);
-    const areaData = useSelector(state => state.schedule.areaData);
-    const itemObj = useSelector(state => state.trigger.itemObj);
-    const areaObj = useSelector(state => state.trigger.areaObj, shallowEqual);
-    const areaGrabbedObj = useSelector(state => state.trigger.areaGrabbedObj);
+    const { areaData, itemData, itemGroupData, timeListData } = useSelector(state => state.schedule);
+    const { areaGrabbedObj, itemObj, areaObj, isAreaClickDown, isAreaAppend, areaActiveType } = useSelector(state => state.trigger);
 
     useEffect(() => {
-        ///이쪽 코드 리팩토링
-        const flatData = _.flatten(tableData);
-        const testA = flatData.reduce((result, e) => {
-            _.find(areaData, { block_group_No: e.block_group_No }) ? result.push({ ...e, isActiveArea: true }) : result.push(e);
-            return result;
-        }, []);
-        const testB = testA.reduce((result, e) => {
-            _.find(itemData, { block_group_No: e.block_group_No }) ? result.push({ ...e, isActiveLecture: true }) : result.push(e);
-            return result;
-        }, []);
-        const testC = _(testB)
-            .groupBy(x => x.rowNum)
-            .value();
-        dispatch(setTableData(_.values(testC)));
-    }, [areaData]);
-
-    // useEffect(() => {
-    //     console.log(tableData);
-    // }, [tableData]);
-
-    useEffect(() => {
+        dispatch(setTimeListData(schedule.getTimeList()));
         dispatch(setItemGroupData(lecture.getGroupByLectureTime(itemData)));
     }, [itemData]);
-    return (
-        <div className="contents" ref={tableRef}>
-            <table>
-                <tbody>
-                    {/* {timeListData.map((e, i) => {
-                        const isOntime = i % 4 === 0; //정시조건
-                        return (
-                            <tr key={i} className={isOntime ? 'tr_parent' : ''}>
-                                {isOntime ? <th rowSpan="4">{e}</th> : null}
-                                {_.range(0, 7).map((e, ii) => {
-                                    const idx = table.getBlockId(e, i);
-                                    return (
-                                        <td key={idx} className={`${e >= 6 ? 'weekend' : ''}`}>
-                                            <Area idx={idx} areaData={areaData} itemData={itemData} areaObj={areaObj} itemObj={itemObj} areaGrabbedObj={areaGrabbedObj} />
-                                            {itemGroupData.some(y => y.startIdx === idx) && <FixedItem idx={idx} itemData={itemData} itemGroupData={itemGroupData} itemObj={itemObj} />}
-                                        </td>
-                                    );
-                                })}
-                            </tr>
-                        );
-                    })} */}
+    useEffect(() => {
+        setTimeout(() => {
+            tableRef.current.scrollTo(0, 681);
+        }, 0);
+    }, []);
 
-                    {tableData.map((row, i) => {
-                        const isOntime = i % 4 === 0; //정시조건
-                        return (
-                            <tr key={i} className={isOntime ? 'tr_parent' : ''}>
-                                {isOntime ? <th rowSpan="4">{row[0].rowNum}</th> : null}
-                                {_.range(0, 7).map(seq => {
-                                    const idx = row[seq].block_group_No;
-                                    // console.log(idx, i, seq, row, row[seq]);
-                                    return (
-                                        <td key={idx} className={`${seq == 6 ? 'weekend' : ''}`}>
-                                            <Area
-                                                tableData={tableData}
-                                                idx={idx}
-                                                isGrabbed={row[seq].isGrabbed}
-                                                isActiveArea={row[seq].isActiveArea}
-                                                areaType={row[seq].areaType}
-                                                lectureType={''}
-                                            />
-                                        </td>
-                                    );
-                                })}
-                            </tr>
-                        );
-                    })}
-                </tbody>
-            </table>
-        </div>
+    return (
+        <Layout>
+            <div className="contents" ref={tableRef}>
+                <table>
+                    <tbody>
+                        {timeListData.map((e, i) => {
+                            const isOntime = i % 4 === 0; //정시조건
+                            return (
+                                <React.Fragment key={i}>
+                                    <tr className={isOntime ? 'onTime' : ''}>
+                                        {isOntime ? <th rowSpan="4">{e}</th> : null}
+                                        {_.range(0, 7).map((e, ii) => {
+                                            const idx = table.getBlockId(e, i);
+                                            const level = _.find(distData, { block_group_No: idx })?.level;
+                                            return (
+                                                <td key={ii} className={`${e >= 6 ? 'weekend' : ''}`}>
+                                                    <Area
+                                                        idx={idx}
+                                                        areaData={areaData}
+                                                        itemData={itemData}
+                                                        areaObj={areaObj}
+                                                        itemObj={itemObj}
+                                                        areaGrabbedObj={areaGrabbedObj}
+                                                        isAreaClickDown={isAreaClickDown}
+                                                        isAreaAppend={isAreaAppend}
+                                                        areaActiveType={areaActiveType}
+                                                    />
+                                                    {itemGroupData.some(y => y.startIdx === idx) && <FixedItem idx={idx} />}
+                                                    {level && <Distribution level={level} />}
+                                                </td>
+                                            );
+                                        })}
+                                    </tr>
+                                </React.Fragment>
+                            );
+                        })}
+                    </tbody>
+                </table>
+            </div>
+        </Layout>
     );
 }
 

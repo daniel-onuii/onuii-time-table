@@ -19,10 +19,10 @@ const Layout = styled.div`
         padding-top: 4px;
     }
 `;
-function FixedItem({ idx, itemData, itemGroupData, itemObj }) {
+function FixedItem({ idx }) {
     const dispatch = useDispatch();
-    // const { itemData, itemGroupData } = useSelector(state => state.schedule);
-    // const { itemObj } = useSelector(state => state.trigger);
+    const { itemData, itemGroupData } = useSelector(state => state.schedule);
+    const { itemObj } = useSelector(state => state.trigger);
     const itemLectureName = lecture.getLectureNameByIdx(itemData, idx);
     const handleClick = () => {
         dispatch(
@@ -34,7 +34,6 @@ function FixedItem({ idx, itemData, itemGroupData, itemObj }) {
             }),
         );
     };
-
     const handleDragStart = () => {
         dispatch(setIsAreaClickDown(false));
         dispatch(
@@ -46,16 +45,12 @@ function FixedItem({ idx, itemData, itemGroupData, itemObj }) {
         );
     };
 
-    const handleDragEnter = () => {
-        dispatch(setItemObj({ ...itemObj, target: null }));
-    };
     return (
         <Layout>
             <div
                 className={`lectureItem`}
                 draggable={true}
                 onDragStart={handleDragStart}
-                onDragEnter={handleDragEnter}
                 onClick={handleClick}
                 style={{
                     zIndex: 2,
@@ -65,11 +60,13 @@ function FixedItem({ idx, itemData, itemGroupData, itemObj }) {
                     }, [])}`,
                 }}
             >
-                {itemLectureName}
-                <br />
-                {itemGroupData.map(y => {
-                    return idx == y.startIdx && `${schedule.getTime(y.startTimeIdx)}~${schedule.getTime(y.endTimeIdx + 1)} `;
-                })}
+                <div style={{ padding: '5px' }}>
+                    {itemLectureName}
+                    <br />
+                    {itemGroupData.map(y => {
+                        return idx == y.startIdx && `${schedule.getTime(y.startTimeIdx)}~${schedule.getTime(y.endTimeIdx + 1)} `;
+                    })}
+                </div>
             </div>
             {itemObj.isShow && itemObj.idx === idx && <FixedItemDetail idx={idx} />}
         </Layout>
