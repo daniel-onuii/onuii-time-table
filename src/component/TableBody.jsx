@@ -91,13 +91,12 @@ const Layout = styled.div`
     .lecture_9169 {
         background: yellowgreen;
     }
-    .lecture_9812 {
+    .lecture_9171 {
         background: plum;
     }
 `;
 
 function TableBody() {
-    //
     const tableRef = useRef();
     const dispatch = useDispatch();
     const { areaData, itemData, itemGroupData, timeListData } = useSelector(state => state.schedule);

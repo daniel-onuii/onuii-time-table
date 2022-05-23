@@ -8,6 +8,7 @@ import { toast } from 'react-toastify';
 import { ToastOption } from './ToastOption';
 import _ from 'lodash';
 import SelectLecture from './modal/SelectLecture';
+import { lecture } from '../util/lecture';
 function checkValidSchedule(endTime, startTime, itemRowData, itemLectureId) {
     if (
         (endTime > 101 && endTime < 132) ||
@@ -46,13 +47,23 @@ function Area({ idx, areaData, itemData, areaObj, itemObj, areaGrabbedObj, isAre
         e.target.classList.remove(`time${itemObj.time}`);
     };
 
-    const update = () => {
+    const init = () => {
+        dispatch(setAreaGrabbedObj([]));
+        setLectureModal(false);
+    };
+
+    const updateConfirm = items => {
         const removeResult = _.reject(areaData, o => {
             return areaGrabbedObj.some(item => item.block_group_No === o.block_group_No);
         });
-        isAreaAppend ? dispatch(setAreaData(removeResult)) : dispatch(setAreaData([...areaData, ...areaGrabbedObj]));
-        dispatch(setAreaGrabbedObj([]));
-        setLectureModal(false);
+        const bindLecture = areaGrabbedObj.map(e => {
+            return { ...e, areaActiveType: items };
+        });
+        isAreaAppend ? dispatch(setAreaData(removeResult)) : dispatch(setAreaData([...areaData, ...bindLecture]));
+        init();
+    };
+    const updateCancel = () => {
+        init();
     };
 
     const handleAreaDown = () => {
@@ -82,7 +93,8 @@ function Area({ idx, areaData, itemData, areaObj, itemObj, areaGrabbedObj, isAre
             const selectedInfo = intervalDay.reduce((result, e) => {
                 result.push(
                     _.range(e * 96 + 36 + startRange, e * 96 + 36 + endRange + (startRange < endRange ? 1 : -1)).map(ee => {
-                        return { block_group_No: ee, areaActiveType: areaActiveType };
+                        // return { block_group_No: ee, areaActiveType: areaActiveType };
+                        return { block_group_No: ee };
                     }),
                 );
                 return result;
@@ -105,7 +117,7 @@ function Area({ idx, areaData, itemData, areaObj, itemObj, areaGrabbedObj, isAre
             setModalPosition({ x: e.clientX, y: e.clientY });
             setLectureModal(true);
         }
-        // update();
+        // updateConfirm();
     };
     const handleItemDrop = e => {
         e.preventDefault();
@@ -154,11 +166,18 @@ function Area({ idx, areaData, itemData, areaObj, itemObj, areaGrabbedObj, isAre
                 className={`item 
             ${areaData.some(item => item.block_group_No === idx) ? 'active' : ''}
             ${areaGrabbedObj.some(item => item.block_group_No === idx) ? 'dragging' : ''}
-            lecture_${_.find(areaData, o => o.block_group_No === idx)?.areaActiveType}`}
+            `}
+                // lecture_${_.find(areaData, o => o.block_group_No === idx)?.areaActiveType}
             >
-                {idx}
+                {_.find(areaData, { block_group_No: idx })?.areaActiveType?.map((e, i) => {
+                    return (
+                        <span key={i} className={`lecture_${e}`}>
+                            {e === 'all' ? '상관없음' : lecture.getLectureName(e).slice(0, 1)}
+                        </span>
+                    );
+                })}
             </div>
-            {lectureModal && <SelectLecture isAreaAppend={isAreaAppend} position={modalPosition} setLectureModal={setLectureModal} update={update} />}
+            {lectureModal && <SelectLecture isAreaAppend={isAreaAppend} position={modalPosition} handleConfirm={updateConfirm} handleCancel={updateCancel} />}
         </React.Fragment>
     );
 }

@@ -67,8 +67,8 @@ function FollowCursor() {
             <button style={{ background: 'coral' }} onClick={handleClickActiveAreaType(8906)}>
                 수학
             </button>
-            <button style={{ background: 'plum' }} onClick={handleClickActiveAreaType(9812)}>
-                중학과학
+            <button style={{ background: 'plum' }} onClick={handleClickActiveAreaType(9171)}>
+                과학
             </button>
         </Layout>
     );

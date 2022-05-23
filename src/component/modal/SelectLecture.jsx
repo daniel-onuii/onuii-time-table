@@ -1,8 +1,5 @@
-import React, { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { setAreaData } from '../../store/reducer/schedule.reducer';
-import { setAreaGrabbedObj, setItemObj } from '../../store/reducer/trigger.reducer';
 import _ from 'lodash';
 const Layout = styled.div`
     position: fixed;
@@ -31,16 +28,13 @@ const Layout = styled.div`
         padding-right: 10px;
     }
 `;
-function SelectLecture({ isAreaAppend, position, setLectureModal, update }) {
-    const dispatch = useDispatch();
-
-    const handleConfirm = () => {
-        update();
+function SelectLecture({ isAreaAppend, position, handleConfirm, handleCancel }) {
+    const [lecture, setLecture] = useState([]);
+    const handleExtendConfirm = () => {
+        handleConfirm(lecture);
     };
-
-    const handleCancel = () => {
-        dispatch(setAreaGrabbedObj([]));
-        setLectureModal(false);
+    const handleLecture = e => {
+        setLecture([...lecture, e.target.value]);
     };
     return (
         <Layout>
@@ -48,21 +42,22 @@ function SelectLecture({ isAreaAppend, position, setLectureModal, update }) {
                 {!isAreaAppend ? (
                     <React.Fragment>
                         <div style={{ display: 'flex' }}>
-                            <input type="checkbox" /> <span>상관없음</span>
-                            <input type="checkbox" /> <span>국어</span>
-                            <input type="checkbox" /> <span>수학</span>
-                            <input type="checkbox" /> <span>사회</span>
-                            <input type="checkbox" /> <span>과학</span>
+                            <input type="checkbox" value={'all'} onClick={handleLecture} /> <span>상관없음</span>
+                            <input type="checkbox" value={9168} onClick={handleLecture} /> <span>국어</span>
+                            <input type="checkbox" value={9169} onClick={handleLecture} /> <span>영어</span>
+                            <input type="checkbox" value={8906} onClick={handleLecture} /> <span>수학</span>
+                            <input type="checkbox" value={9171} onClick={handleLecture} /> <span>과학</span>
                         </div>
                         <br />
                         <div>
-                            <button onClick={handleConfirm}>확인</button>
+                            <button onClick={handleExtendConfirm}>확인</button>
                             <button onClick={handleCancel}>취소</button>
                         </div>
                     </React.Fragment>
                 ) : (
                     <div>
                         <button onClick={handleConfirm}>삭제하기</button>
+                        <button onClick={handleCancel}>취소</button>
                     </div>
                 )}
             </div>

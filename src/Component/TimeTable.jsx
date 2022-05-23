@@ -35,7 +35,7 @@ const Layout = styled.div`
     .lecture_9169 {
         background: yellowgreen;
     }
-    .lecture_9812 {
+    .lecture_9171 {
         background: plum;
     }
 `;
@@ -44,7 +44,7 @@ function TimeTable() {
     return (
         <React.Fragment>
             <Layout>
-                <FollowCursor />
+                {/* <FollowCursor /> */}
                 <TableHead />
                 <TableBody />
             </Layout>

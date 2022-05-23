@@ -23,7 +23,6 @@ const slice = createSlice({
             state.itemGroupData = action.payload;
         },
         setTimeListData(state, action) {
-            //
             state.timeListData = action.payload;
         },
     },

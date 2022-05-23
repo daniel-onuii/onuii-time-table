@@ -81,7 +81,7 @@ export const lecture = {
             8906, 9168, 9169, 9812, 9813, 9798, 9799, 9800, 9801, 9802, 9803, 9804, 9805, 9171, 9810, 9811, 9788, 9789, 9790, 9791, 9792, 9793, 9794, 9795, 9796, 9797, 9170, 9826, 9827, 9828, 9829,
             9830, 9831, 9832, 9833, 9834, 18492,
         ];
-        let index = subjectIdList.indexOf(id);
+        let index = subjectIdList.indexOf(Number(id));
         return subjectList[index];
     },
 };
