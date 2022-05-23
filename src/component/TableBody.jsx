@@ -97,7 +97,6 @@ const Layout = styled.div`
 `;
 
 function TableBody() {
-    //
     const tableRef = useRef();
     const dispatch = useDispatch();
     const { areaData, itemData, itemGroupData, timeListData } = useSelector(state => state.schedule);

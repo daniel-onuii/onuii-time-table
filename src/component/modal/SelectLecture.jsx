@@ -1,8 +1,5 @@
 import React, { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
-import { setAreaData } from '../../store/reducer/schedule.reducer';
-import { setAreaGrabbedObj, setItemObj } from '../../store/reducer/trigger.reducer';
 import _ from 'lodash';
 const Layout = styled.div`
     position: fixed;
@@ -31,17 +28,7 @@ const Layout = styled.div`
         padding-right: 10px;
     }
 `;
-function SelectLecture({ isAreaAppend, position, setLectureModal, update }) {
-    const dispatch = useDispatch();
-
-    const handleConfirm = () => {
-        update();
-    };
-
-    const handleCancel = () => {
-        dispatch(setAreaGrabbedObj([]));
-        setLectureModal(false);
-    };
+function SelectLecture({ isAreaAppend, position, handleConfirm, handleCancel }) {
     return (
         <Layout>
             <div className={'modalLectureBox'} style={{ left: position.x, top: position.y }}>
@@ -63,6 +50,7 @@ function SelectLecture({ isAreaAppend, position, setLectureModal, update }) {
                 ) : (
                     <div>
                         <button onClick={handleConfirm}>삭제하기</button>
+                        <button onClick={handleCancel}>취소</button>
                     </div>
                 )}
             </div>

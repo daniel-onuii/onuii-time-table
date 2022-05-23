@@ -46,13 +46,19 @@ function Area({ idx, areaData, itemData, areaObj, itemObj, areaGrabbedObj, isAre
         e.target.classList.remove(`time${itemObj.time}`);
     };
 
-    const update = () => {
+    const init = () => {
+        dispatch(setAreaGrabbedObj([]));
+        setLectureModal(false);
+    };
+    const updateConfirm = () => {
         const removeResult = _.reject(areaData, o => {
             return areaGrabbedObj.some(item => item.block_group_No === o.block_group_No);
         });
         isAreaAppend ? dispatch(setAreaData(removeResult)) : dispatch(setAreaData([...areaData, ...areaGrabbedObj]));
-        dispatch(setAreaGrabbedObj([]));
-        setLectureModal(false);
+        init();
+    };
+    const updateCancel = () => {
+        init();
     };
 
     const handleAreaDown = () => {
@@ -105,7 +111,7 @@ function Area({ idx, areaData, itemData, areaObj, itemObj, areaGrabbedObj, isAre
             setModalPosition({ x: e.clientX, y: e.clientY });
             setLectureModal(true);
         }
-        // update();
+        // updateConfirm();
     };
     const handleItemDrop = e => {
         e.preventDefault();
@@ -158,7 +164,7 @@ function Area({ idx, areaData, itemData, areaObj, itemObj, areaGrabbedObj, isAre
             >
                 {idx}
             </div>
-            {lectureModal && <SelectLecture isAreaAppend={isAreaAppend} position={modalPosition} setLectureModal={setLectureModal} update={update} />}
+            {lectureModal && <SelectLecture isAreaAppend={isAreaAppend} position={modalPosition} handleConfirm={updateConfirm} handleCancel={updateCancel} />}
         </React.Fragment>
     );
 }
