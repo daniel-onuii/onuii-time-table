@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { setAreaGrabbedObj, setAreaObj, setIsAreaAppend, setIsAreaClickDown, setItemObj } from '../store/reducer/trigger.reducer';
-import { setAreaData, setItemData, setItemGroupData } from '../store/reducer/schedule.reducer';
+import { setAreaData, setItemData } from '../store/reducer/schedule.reducer';
 import { schedule } from '../util/schedule';
 import { table } from '../util/table';
 import { toast } from 'react-toastify';
@@ -33,13 +33,9 @@ function checkValidSchedule(endTime, startTime, itemRowData, itemLectureId) {
 }
 
 function Area({ idx, areaData, itemData, areaObj, itemObj, areaGrabbedObj, isAreaClickDown, isAreaAppend, areaActiveType }) {
-    // function Area({ idx }) {
     const dispatch = useDispatch();
-    // const { areaData, itemData } = useSelector(state => state.schedule);
-    // const { areaObj, itemObj, areaGrabbedObj, isAreaClickDown, isAreaAppend, areaActiveType } = useSelector(state => state.trigger);
-
     const [lectureModal, setLectureModal] = useState(false);
-    const [modalPostition, setModalPostition] = useState(null);
+    const [modalPosition, setModalPosition] = useState(null);
 
     const onHover = e => {
         e.target.classList.add(`over`);
@@ -50,10 +46,19 @@ function Area({ idx, areaData, itemData, areaObj, itemObj, areaGrabbedObj, isAre
         e.target.classList.remove(`time${itemObj.time}`);
     };
 
+    const update = () => {
+        const removeResult = _.reject(areaData, o => {
+            return areaGrabbedObj.some(item => item.block_group_No === o.block_group_No);
+        });
+        isAreaAppend ? dispatch(setAreaData(removeResult)) : dispatch(setAreaData([...areaData, ...areaGrabbedObj]));
+        dispatch(setAreaGrabbedObj([]));
+        setLectureModal(false);
+    };
+
     const handleAreaDown = () => {
-        // const isFill = table.isFillArea(areaData, idx);
-        // if (!isFill) {
-        dispatch(setIsAreaAppend(table.isFillArea(areaData, idx)));
+        const isFill = table.isFillArea(areaData, idx);
+        dispatch(setIsAreaClickDown(true)); //클릭 상태
+        dispatch(setIsAreaAppend(isFill)); //대상이 빈칸인지
         dispatch(
             setAreaObj({
                 idx: idx,
@@ -63,12 +68,6 @@ function Area({ idx, areaData, itemData, areaObj, itemObj, areaGrabbedObj, isAre
                 endOverDayIdx: schedule.getWeekIdx(idx),
             }),
         );
-
-        dispatch(setIsAreaClickDown(true));
-        table.isFillArea(areaData, idx)
-            ? dispatch(setAreaData(_.reject(areaData, { block_group_No: idx })))
-            : dispatch(setAreaData([...areaData, { block_group_No: idx, areaActiveType: areaActiveType }]));
-        // }
     };
 
     const handleAreaOver = () => {
@@ -88,7 +87,6 @@ function Area({ idx, areaData, itemData, areaObj, itemObj, areaGrabbedObj, isAre
                 );
                 return result;
             }, []);
-            console.log(_.flatten(selectedInfo));
             dispatch(setAreaGrabbedObj(_.flatten(selectedInfo)));
             dispatch(
                 setAreaObj({
@@ -103,16 +101,11 @@ function Area({ idx, areaData, itemData, areaObj, itemObj, areaGrabbedObj, isAre
     };
     const handleAreaUp = e => {
         dispatch(setIsAreaClickDown(false));
-        const removeResult = _.reject(areaData, o => {
-            return areaGrabbedObj.some(item => item.block_group_No === o.block_group_No);
-        });
-        isAreaAppend ? dispatch(setAreaData(removeResult)) : dispatch(setAreaData([...areaData, ...areaGrabbedObj]));
-        dispatch(setAreaGrabbedObj([]));
-        dispatch(setItemObj({}));
-        if (!lectureModal) {
-            setModalPostition({ x: e.clientX, y: e.clientY });
+        if (areaGrabbedObj.length > 0) {
+            setModalPosition({ x: e.clientX, y: e.clientY });
             setLectureModal(true);
         }
+        // update();
     };
     const handleItemDrop = e => {
         e.preventDefault();
@@ -149,22 +142,24 @@ function Area({ idx, areaData, itemData, areaObj, itemObj, areaGrabbedObj, isAre
     };
 
     return (
-        <div
-            onMouseDown={handleAreaDown}
-            onMouseOver={handleAreaOver}
-            onMouseUp={handleAreaUp}
-            onDrop={handleItemDrop}
-            onDragOver={handleItemDragOver}
-            onDragEnter={handleAreaEnter}
-            onDragLeave={handleAreaLeave}
-            className={`item 
+        <React.Fragment>
+            <div
+                onMouseDown={handleAreaDown}
+                onMouseOver={handleAreaOver}
+                onMouseUp={handleAreaUp}
+                onDrop={handleItemDrop}
+                onDragOver={handleItemDragOver}
+                onDragEnter={handleAreaEnter}
+                onDragLeave={handleAreaLeave}
+                className={`item 
             ${areaData.some(item => item.block_group_No === idx) ? 'active' : ''}
             ${areaGrabbedObj.some(item => item.block_group_No === idx) ? 'dragging' : ''}
             lecture_${_.find(areaData, o => o.block_group_No === idx)?.areaActiveType}`}
-        >
-            {idx}
-            {/* {lectureModal && <SelectLecture position={modalPostition} />} */}
-        </div>
+            >
+                {idx}
+            </div>
+            {lectureModal && <SelectLecture isAreaAppend={isAreaAppend} position={modalPosition} setLectureModal={setLectureModal} update={update} />}
+        </React.Fragment>
     );
 }
 

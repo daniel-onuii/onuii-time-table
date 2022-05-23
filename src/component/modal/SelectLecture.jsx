@@ -1,5 +1,9 @@
 import React, { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
+import { setAreaData } from '../../store/reducer/schedule.reducer';
+import { setAreaGrabbedObj, setItemObj } from '../../store/reducer/trigger.reducer';
+import _ from 'lodash';
 const Layout = styled.div`
     position: fixed;
     width: 100vw;
@@ -7,13 +11,14 @@ const Layout = styled.div`
     top: 0;
     left: 0;
     z-index: 3;
-
+    background: rgb(0, 0, 0, 0.2);
     .modalLectureBox {
         position: absolute;
         padding: 15px;
         z-index: 9999999;
         background: white;
-        border: 1px solid black;
+        border: 1px solid #cdcdcd;
+        border-radius: 4px;
         top: 20px;
         background: white;
         color: black;
@@ -26,25 +31,40 @@ const Layout = styled.div`
         padding-right: 10px;
     }
 `;
-function SelectLecture({ position }) {
-    useEffect(() => {
-        console.log(position);
-    }, []);
-    const handleClick = e => {
-        // e.preventDefault();
-        console.log('!!!');
+function SelectLecture({ isAreaAppend, position, setLectureModal, update }) {
+    const dispatch = useDispatch();
+
+    const handleConfirm = () => {
+        update();
+    };
+
+    const handleCancel = () => {
+        dispatch(setAreaGrabbedObj([]));
+        setLectureModal(false);
     };
     return (
         <Layout>
-            <div className={'modalLectureBox'} onClick={handleClick} style={{ left: position.x, top: position.y }}>
-                <div style={{ display: 'flex' }}>
-                    <input type="checkbox" /> <span>상관없음</span>
-                    <input type="checkbox" /> <span>수학</span>
-                </div>
-                <div>
-                    <button>확인</button>
-                    <button>취소</button>
-                </div>
+            <div className={'modalLectureBox'} style={{ left: position.x, top: position.y }}>
+                {!isAreaAppend ? (
+                    <React.Fragment>
+                        <div style={{ display: 'flex' }}>
+                            <input type="checkbox" /> <span>상관없음</span>
+                            <input type="checkbox" /> <span>국어</span>
+                            <input type="checkbox" /> <span>수학</span>
+                            <input type="checkbox" /> <span>사회</span>
+                            <input type="checkbox" /> <span>과학</span>
+                        </div>
+                        <br />
+                        <div>
+                            <button onClick={handleConfirm}>확인</button>
+                            <button onClick={handleCancel}>취소</button>
+                        </div>
+                    </React.Fragment>
+                ) : (
+                    <div>
+                        <button onClick={handleConfirm}>삭제하기</button>
+                    </div>
+                )}
             </div>
         </Layout>
     );
