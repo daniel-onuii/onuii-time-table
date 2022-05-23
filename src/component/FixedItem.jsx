@@ -21,7 +21,7 @@ const Layout = styled.div`
 `;
 function FixedItem({ idx }) {
     const dispatch = useDispatch();
-    const { itemData, itemGroupData, timeListData } = useSelector(state => state.schedule);
+    const { itemData, itemGroupData } = useSelector(state => state.schedule);
     const { itemObj } = useSelector(state => state.trigger);
     const itemLectureName = lecture.getLectureNameByIdx(itemData, idx);
     const handleClick = () => {

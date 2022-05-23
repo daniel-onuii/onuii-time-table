@@ -93,6 +93,7 @@ function Area({ idx, areaData, itemData, areaObj, itemObj, areaGrabbedObj, isAre
     };
     const handleItemDrop = e => {
         e.preventDefault();
+        e.target.classList.remove(`over${itemObj.time}`);
         dispatch(setItemObj({}));
         const itemIdx = itemObj.idx;
         const itemLectureId = itemObj.lectureId;
@@ -117,8 +118,14 @@ function Area({ idx, areaData, itemData, areaObj, itemObj, areaGrabbedObj, isAre
     const handleItemDragOver = e => {
         e.preventDefault();
     };
-    const handleAreaEnter = () => {
-        dispatch(setItemObj({ ...itemObj, target: idx }));
+    const handleAreaEnter = e => {
+        // console.log('enter');
+        // console.log(e.target);
+        e.target.classList.add(`over${itemObj.time}`);
+        // dispatch(setItemObj({ ...itemObj, target: idx }));
+    };
+    const handleAreaLeave = e => {
+        e.target.classList.remove(`over${itemObj.time}`);
     };
     return (
         <div
@@ -128,8 +135,8 @@ function Area({ idx, areaData, itemData, areaObj, itemObj, areaGrabbedObj, isAre
             onDrop={handleItemDrop}
             onDragOver={handleItemDragOver}
             onDragEnter={handleAreaEnter}
+            onDragLeave={handleAreaLeave}
             className={`item ${areaData.some(item => item.block_group_No === idx) ? 'active' : ''}
-            ${itemObj.target <= idx && itemObj.target + itemObj?.time > idx ? 'over' : ''}
             ${areaGrabbedObj.some(item => item.block_group_No === idx) ? 'dragging' : ''}
             lecture_${_.find(areaData, o => o.block_group_No === idx)?.areaActiveType}`}
         >
