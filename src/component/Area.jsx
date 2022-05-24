@@ -52,17 +52,21 @@ function Area({ idx, areaData, itemData, areaObj, itemObj, areaGrabbedObj, isAre
         setLectureModal(false);
     };
 
-    const updateConfirm = items => {
-        const removeResult = _.reject(areaData, o => {
-            return areaGrabbedObj.some(item => item.block_group_No === o.block_group_No);
-        });
+    const update = items => {
         const bindLecture = areaGrabbedObj.map(e => {
             return { ...e, areaActiveType: items };
         });
-        isAreaAppend ? dispatch(setAreaData(removeResult)) : dispatch(setAreaData([...areaData, ...bindLecture]));
+        dispatch(setAreaData([...areaData, ...bindLecture]));
         init();
     };
-    const updateCancel = () => {
+    const remove = () => {
+        const removeResult = _.reject(areaData, o => {
+            return areaGrabbedObj.some(item => item.block_group_No === o.block_group_No);
+        });
+        dispatch(setAreaData(removeResult));
+        init();
+    };
+    const cancel = () => {
         init();
     };
 
@@ -117,7 +121,6 @@ function Area({ idx, areaData, itemData, areaObj, itemObj, areaGrabbedObj, isAre
             setModalPosition({ x: e.clientX, y: e.clientY });
             setLectureModal(true);
         }
-        // updateConfirm();
     };
     const handleItemDrop = e => {
         e.preventDefault();
@@ -167,7 +170,6 @@ function Area({ idx, areaData, itemData, areaObj, itemObj, areaGrabbedObj, isAre
             ${areaData.some(item => item.block_group_No === idx) ? 'active' : ''}
             ${areaGrabbedObj.some(item => item.block_group_No === idx) ? 'dragging' : ''}
             `}
-                // lecture_${_.find(areaData, o => o.block_group_No === idx)?.areaActiveType}
             >
                 {_.find(areaData, { block_group_No: idx })?.areaActiveType?.map((e, i) => {
                     return (
@@ -177,7 +179,7 @@ function Area({ idx, areaData, itemData, areaObj, itemObj, areaGrabbedObj, isAre
                     );
                 })}
             </div>
-            {lectureModal && <SelectLecture isAreaAppend={isAreaAppend} position={modalPosition} handleConfirm={updateConfirm} handleCancel={updateCancel} />}
+            {lectureModal && <SelectLecture position={modalPosition} handleConfirm={update} handleRemove={remove} handleCancel={cancel} />}
         </React.Fragment>
     );
 }
