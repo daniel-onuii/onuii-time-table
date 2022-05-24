@@ -6,6 +6,8 @@ import FollowCursor from './FollowCursor';
 import TableBody from './TableBody';
 
 const Layout = styled.div`
+    width: 800px;
+    margin: auto;
     body::-webkit-scrollbar {
         display: none;
     }
@@ -24,7 +26,7 @@ const Layout = styled.div`
         width: 12%;
     }
     .lecture_all {
-        background: #4eb6ac;
+        background: #d0ece7;
     }
     .lecture_8906 {
         background: coral;
