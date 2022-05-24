@@ -46,7 +46,7 @@ const Layout = styled.div`
         cursor: cell;
         width: 100%;
         height: 100%;
-        background: #4eb6ac;
+        background: #d0ece7;
         color: white;
         z-index: 0;
     }
@@ -80,7 +80,7 @@ const Layout = styled.div`
         color: white;
     }
     .lecture_all {
-        background: #4eb6ac;
+        background: #d0ece7;
     }
     .lecture_8906 {
         background: coral;

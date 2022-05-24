@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import _ from 'lodash';
 const Layout = styled.div`
@@ -29,6 +29,8 @@ const Layout = styled.div`
     }
 `;
 function SelectLecture({ isAreaAppend, position, handleConfirm, handleCancel }) {
+    const [dynamicX, setDynamicX] = useState();
+    const boxRef = useRef();
     const [lecture, setLecture] = useState([]);
     const handleExtendConfirm = () => {
         handleConfirm(lecture);
@@ -36,9 +38,12 @@ function SelectLecture({ isAreaAppend, position, handleConfirm, handleCancel }) 
     const handleLecture = e => {
         setLecture([...lecture, e.target.value]);
     };
+    useEffect(() => {
+        position.x + boxRef.current.clientWidth >= document.body.clientWidth ? setDynamicX(document.body.clientWidth - boxRef.current.clientWidth - 2) : setDynamicX(position.x);
+    }, []);
     return (
         <Layout>
-            <div className={'modalLectureBox'} style={{ left: position.x, top: position.y }}>
+            <div ref={boxRef} className={'modalLectureBox'} style={{ left: dynamicX, top: position.y }}>
                 {!isAreaAppend ? (
                     <React.Fragment>
                         <div style={{ display: 'flex' }}>

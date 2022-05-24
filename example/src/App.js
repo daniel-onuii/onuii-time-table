@@ -28,7 +28,8 @@ const App = () => {
 
     return (
         <>
-            <span>테스트환경</span>
+            <h1 style={{ marginLeft: '20px' }}>타임테이블</h1>
+            <div style={{ height: '20px' }}></div>
             <OnuiiTimeTable areaData={areaData} itemData={itemData} />
         </>
     );

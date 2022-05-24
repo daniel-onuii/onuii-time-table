@@ -55,7 +55,7 @@ function FollowCursor() {
                 </Cursor>
             )}
 
-            <button style={{ background: '#4eb6ac' }} onClick={handleClickActiveAreaType(null)}>
+            <button style={{ background: '#D0ECE7' }} onClick={handleClickActiveAreaType(null)}>
                 상관없음
             </button>
             <button style={{ background: 'cornflowerblue' }} onClick={handleClickActiveAreaType(9168)}>
