@@ -54,9 +54,15 @@ function Area({ idx, areaData, itemData, areaObj, itemObj, areaGrabbedObj, isAre
 
     const update = items => {
         const bindLecture = areaGrabbedObj.map(e => {
+            //드래그 한 영역
             return { ...e, areaActiveType: items };
         });
-        dispatch(setAreaData([...areaData, ...bindLecture]));
+        const newAreaData = areaData.reduce((result, e) => {
+            //드래그 한 영역 - 기존 영역
+            !bindLecture.some(item => item.block_group_No === e.block_group_No) && result.push(e);
+            return result;
+        }, []);
+        dispatch(setAreaData([...newAreaData, ...bindLecture]));
         init();
     };
     const remove = () => {
@@ -179,7 +185,7 @@ function Area({ idx, areaData, itemData, areaObj, itemObj, areaGrabbedObj, isAre
                     );
                 })}
             </div>
-            {lectureModal && <SelectLecture position={modalPosition} handleConfirm={update} handleRemove={remove} handleCancel={cancel} />}
+            {lectureModal && <SelectLecture areaGrabbedObj={areaGrabbedObj} areaData={areaData} position={modalPosition} handleConfirm={update} handleRemove={remove} handleCancel={cancel} />}
         </React.Fragment>
     );
 }
