@@ -3,7 +3,6 @@ import { ToastContainer } from 'react-toastify';
 import { useDispatch } from 'react-redux';
 import { initData } from './store/reducer/schedule.reducer';
 import MainContainer from './container/MainContainer';
-import DebugContainer from './container/DebugContainer';
 // import 'react-toastify/dist/ReactToastify.css';
 
 const App = ({ areaData, itemData }) => {
@@ -22,7 +21,6 @@ const App = ({ areaData, itemData }) => {
         <div>
             <ToastContainer />
             <MainContainer />
-            <DebugContainer />
         </div>
     );
 };
