@@ -6,7 +6,7 @@ export const lecture = {
     },
     getLectureNameByIdx: function (data, idx) {
         //idx에 해당하는 과목id로 과목명 찾기
-        return this.getLectureName(this.getLectureId(data, idx).toString());
+        return this.getLectureName(this.getLectureId(data, idx)?.toString());
     },
     getLectureRunningTime: function (data, idx) {
         //idx에 해당하는 과목 강의시간 찾기
