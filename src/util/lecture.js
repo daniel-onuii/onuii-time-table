@@ -6,7 +6,7 @@ export const lecture = {
     },
     getLectureNameByIdx: function (data, idx) {
         //idx에 해당하는 과목id로 과목명 찾기
-        return this.getLectureName(this.getLectureId(data, idx));
+        return this.getLectureName(this.getLectureId(data, idx).toString());
     },
     getLectureRunningTime: function (data, idx) {
         //idx에 해당하는 과목 강의시간 찾기
@@ -19,7 +19,12 @@ export const lecture = {
         let seq = 0;
         const rowData = _.sortBy(data, 'block_group_No').reduce((result, e) => {
             const isCheckSeq = result.slice(-1)[0]?.block_group_No === e.block_group_No - 1; //연속성 체크
-            result.push({ week: schedule.getWeekIdx(e.block_group_No), block_group_No: e.block_group_No, lecture_subject_Id: e.lecture_subject_Id, seq: isCheckSeq ? seq : (seq += 1) });
+            result.push({
+                week: schedule.getWeekIdx(e.block_group_No),
+                block_group_No: e.block_group_No,
+                lecture_subject_Id: e.lecture_subject_Id,
+                seq: isCheckSeq ? seq : (seq += 1),
+            });
             return result;
         }, []);
         const possibleObj = _(rowData)

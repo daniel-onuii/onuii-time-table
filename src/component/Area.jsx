@@ -4,34 +4,9 @@ import { setAreaGrabbedObj, setAreaObj, setIsAreaAppend, setIsAreaClickDown, set
 import { setAreaData, setItemData } from '../store/reducer/schedule.reducer';
 import { schedule } from '../util/schedule';
 import { table } from '../util/table';
-import { toast } from 'react-toastify';
-import { ToastOption } from './ToastOption';
 import _ from 'lodash';
 import SelectLecture from './modal/SelectLecture';
 import { lecture } from '../util/lecture';
-function checkValidSchedule(endTime, startTime, itemRowData, itemLectureId) {
-    if (
-        (endTime > 101 && endTime < 132) ||
-        (endTime > 197 && endTime < 228) ||
-        (endTime > 293 && endTime < 324) ||
-        (endTime > 389 && endTime < 420) ||
-        (endTime > 485 && endTime < 516) ||
-        (endTime > 581 && endTime < 612) ||
-        endTime > 677
-    ) {
-        toast.error('유효하지않은 범위입니다.', ToastOption);
-        return false;
-    } else {
-        const isInvalidEndtime = itemRowData.some(item => item.lecture_subject_Id !== itemLectureId && (item.block_group_No === endTime || item.block_group_No === endTime + 2));
-        const isInvalidStart = itemRowData.some(item => item.lecture_subject_Id !== itemLectureId && item.block_group_No === startTime - 2);
-        if (isInvalidEndtime || isInvalidStart) {
-            toast.error('강의 사이에 최소 30분의 시간이 필요합니다.', ToastOption);
-            return false;
-        } else {
-            return true;
-        }
-    }
-}
 
 function Area({ idx, areaData, itemData, areaObj, itemObj, areaGrabbedObj, isAreaClickDown, isAreaAppend, areaActiveType }) {
     const dispatch = useDispatch();
@@ -119,7 +94,10 @@ function Area({ idx, areaData, itemData, areaObj, itemObj, areaGrabbedObj, isAre
             const endOverDayIdx = schedule.getWeekIdx(endOverIdx);
             const startRange = schedule.getTimeIdx(startOverIdx);
             const endRange = schedule.getTimeIdx(endOverIdx);
-            const intervalDay = _.range(startOverDayIdx < endOverDayIdx ? startOverDayIdx : endOverDayIdx, startOverDayIdx > endOverDayIdx ? startOverDayIdx + 1 : endOverDayIdx + 1);
+            const intervalDay = _.range(
+                startOverDayIdx < endOverDayIdx ? startOverDayIdx : endOverDayIdx,
+                startOverDayIdx > endOverDayIdx ? startOverDayIdx + 1 : endOverDayIdx + 1,
+            );
             const selectedInfo = intervalDay.reduce((result, e) => {
                 result.push(
                     _.range(e * 96 + 36 + startRange, e * 96 + 36 + endRange + (startRange < endRange ? 1 : -1)).map(ee => {
@@ -156,13 +134,15 @@ function Area({ idx, areaData, itemData, areaObj, itemObj, areaGrabbedObj, isAre
         const itemLectureId = itemObj.lectureId;
         const time = itemObj.time;
         const endTime = idx + time - 1;
-        if (!checkValidSchedule(endTime, idx, itemData, itemLectureId)) {
+        if (!schedule.checkValidSchedule(endTime, idx, itemData, itemLectureId)) {
             return false;
         }
         if (idx != 0) {
             const removedLecture = _.reject([...itemData], function (o) {
                 //이전 과목 시간은 삭제
-                return (o.block_group_No >= itemIdx && o.block_group_No < itemIdx + time) || (o.block_group_No >= idx && o.block_group_No < idx + time);
+                return (
+                    (o.block_group_No >= itemIdx && o.block_group_No < itemIdx + time) || (o.block_group_No >= idx && o.block_group_No < idx + time)
+                );
             });
             const addLecture = _.range(idx, idx + time).reduce((result, e) => {
                 //드롭된 위치에 새롭게 생성
@@ -205,7 +185,16 @@ function Area({ idx, areaData, itemData, areaObj, itemObj, areaGrabbedObj, isAre
                     );
                 })}
             </div>
-            {lectureModal && <SelectLecture areaGrabbedObj={areaGrabbedObj} areaData={areaData} position={modalPosition} handleConfirm={update} handleRemove={remove} handleCancel={cancel} />}
+            {lectureModal && (
+                <SelectLecture
+                    areaGrabbedObj={areaGrabbedObj}
+                    areaData={areaData}
+                    position={modalPosition}
+                    handleConfirm={update}
+                    handleRemove={remove}
+                    handleCancel={cancel}
+                />
+            )}
         </React.Fragment>
     );
 }
