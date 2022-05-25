@@ -52,18 +52,38 @@ function Area({ idx, areaData, itemData, areaObj, itemObj, areaGrabbedObj, isAre
         setLectureModal(false);
     };
 
-    const update = items => {
+    const update = (type, items) => {
         const bindLecture = areaGrabbedObj.map(e => {
-            //드래그 한 영역
             return { ...e, areaActiveType: items };
         });
-        const newAreaData = areaData.reduce((result, e) => {
-            //드래그 한 영역 - 기존 영역
-            !bindLecture.some(item => item.block_group_No === e.block_group_No) && result.push(e);
-            return result;
-        }, []);
-        dispatch(setAreaData([...newAreaData, ...bindLecture]));
-        init();
+        if (type === 'overlap') {
+            //덮어쓰기
+            const newAreaData = areaData.reduce((result, e) => {
+                !bindLecture.some(item => item.block_group_No === e.block_group_No) && result.push(e);
+                return result;
+            }, []);
+            dispatch(setAreaData([...newAreaData, ...bindLecture]));
+            init();
+        } else if (type === 'add') {
+            //추가하기
+            const newAreaData = areaData.reduce((result, e) => {
+                const target = _.find(bindLecture, { block_group_No: e.block_group_No });
+                const beforLecture = e.areaActiveType ? e.areaActiveType : [];
+                target ? result.push({ ...target, areaActiveType: _.uniq([...beforLecture, ...items]) }) : result.push(e);
+                return result;
+            }, []);
+            dispatch(setAreaData([...newAreaData, ...bindLecture]));
+            init();
+        } else if (type === 'pop') {
+            const newAreaData = areaData.reduce((result, e) => {
+                const target = _.find(bindLecture, { block_group_No: e.block_group_No });
+                const beforLecture = e.areaActiveType ? e.areaActiveType : [];
+                target ? result.push({ ...target, areaActiveType: _.without(beforLecture, ...items) }) : result.push(e);
+                return result;
+            }, []);
+            dispatch(setAreaData([...newAreaData]));
+            init();
+        }
     };
     const remove = () => {
         const removeResult = _.reject(areaData, o => {
