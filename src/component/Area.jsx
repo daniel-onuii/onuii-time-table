@@ -52,17 +52,47 @@ function Area({ idx, areaData, itemData, areaObj, itemObj, areaGrabbedObj, isAre
         setLectureModal(false);
     };
 
-    const updateConfirm = items => {
-        const removeResult = _.reject(areaData, o => {
-            return areaGrabbedObj.some(item => item.block_group_No === o.block_group_No);
-        });
+    const update = (type, items) => {
         const bindLecture = areaGrabbedObj.map(e => {
             return { ...e, areaActiveType: items };
         });
-        isAreaAppend ? dispatch(setAreaData(removeResult)) : dispatch(setAreaData([...areaData, ...bindLecture]));
+        if (type === 'overlap') {
+            //덮어쓰기
+            const newAreaData = areaData.reduce((result, e) => {
+                !bindLecture.some(item => item.block_group_No === e.block_group_No) && result.push(e);
+                return result;
+            }, []);
+            dispatch(setAreaData([...newAreaData, ...bindLecture]));
+            init();
+        } else if (type === 'add') {
+            //추가하기
+            const newAreaData = areaData.reduce((result, e) => {
+                const target = _.find(bindLecture, { block_group_No: e.block_group_No });
+                const beforLecture = e.areaActiveType ? e.areaActiveType : [];
+                target ? result.push({ ...target, areaActiveType: _.uniq([...beforLecture, ...items]) }) : result.push(e);
+                return result;
+            }, []);
+            dispatch(setAreaData([...newAreaData, ...bindLecture]));
+            init();
+        } else if (type === 'pop') {
+            const newAreaData = areaData.reduce((result, e) => {
+                const target = _.find(bindLecture, { block_group_No: e.block_group_No });
+                const beforLecture = e.areaActiveType ? e.areaActiveType : [];
+                target ? result.push({ ...target, areaActiveType: _.without(beforLecture, ...items) }) : result.push(e);
+                return result;
+            }, []);
+            dispatch(setAreaData([...newAreaData]));
+            init();
+        }
+    };
+    const remove = () => {
+        const removeResult = _.reject(areaData, o => {
+            return areaGrabbedObj.some(item => item.block_group_No === o.block_group_No);
+        });
+        dispatch(setAreaData(removeResult));
         init();
     };
-    const updateCancel = () => {
+    const cancel = () => {
         init();
     };
 
@@ -117,7 +147,6 @@ function Area({ idx, areaData, itemData, areaObj, itemObj, areaGrabbedObj, isAre
             setModalPosition({ x: e.clientX, y: e.clientY });
             setLectureModal(true);
         }
-        // updateConfirm();
     };
     const handleItemDrop = e => {
         e.preventDefault();
@@ -167,7 +196,6 @@ function Area({ idx, areaData, itemData, areaObj, itemObj, areaGrabbedObj, isAre
             ${areaData.some(item => item.block_group_No === idx) ? 'active' : ''}
             ${areaGrabbedObj.some(item => item.block_group_No === idx) ? 'dragging' : ''}
             `}
-                // lecture_${_.find(areaData, o => o.block_group_No === idx)?.areaActiveType}
             >
                 {_.find(areaData, { block_group_No: idx })?.areaActiveType?.map((e, i) => {
                     return (
@@ -177,7 +205,7 @@ function Area({ idx, areaData, itemData, areaObj, itemObj, areaGrabbedObj, isAre
                     );
                 })}
             </div>
-            {lectureModal && <SelectLecture isAreaAppend={isAreaAppend} position={modalPosition} handleConfirm={updateConfirm} handleCancel={updateCancel} />}
+            {lectureModal && <SelectLecture areaGrabbedObj={areaGrabbedObj} areaData={areaData} position={modalPosition} handleConfirm={update} handleRemove={remove} handleCancel={cancel} />}
         </React.Fragment>
     );
 }

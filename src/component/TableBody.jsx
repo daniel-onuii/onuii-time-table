@@ -106,11 +106,11 @@ function TableBody() {
         dispatch(setTimeListData(schedule.getTimeList()));
         dispatch(setItemGroupData(lecture.getGroupByLectureTime(itemData)));
     }, [itemData]);
-    useEffect(() => {
-        setTimeout(() => {
-            tableRef.current.scrollTo(0, 681);
-        }, 0);
-    }, []);
+    // useEffect(() => {
+    //     setTimeout(() => {
+    //         tableRef.current.scrollTo(0, 681);
+    //     }, 0);
+    // }, []);
 
     return (
         <Layout>

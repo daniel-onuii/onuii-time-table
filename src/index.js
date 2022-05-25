@@ -6,7 +6,7 @@ import { Provider } from 'react-redux';
 export const OnuiiTimeTable = ({ areaData, itemData }) => {
     return (
         <Provider store={store}>
-            <App areaData={areaData} itemData={itemData} />;
+            <App areaData={areaData} itemData={itemData} />
         </Provider>
     );
 };
