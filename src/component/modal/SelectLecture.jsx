@@ -30,7 +30,7 @@ const Layout = styled.div`
         padding-right: 10px;
     }
 `;
-function SelectLecture({ position, handleConfirm, handleRemove, handleCancel, areaGrabbedObj, areaData }) {
+function SelectLecture({ position, handleConfirm, handleRemove, handleCancel }) {
     const [dynamicX, setDynamicX] = useState();
     const boxRef = useRef();
     const [lecture, setLecture] = useState([]);
@@ -80,7 +80,9 @@ function SelectLecture({ position, handleConfirm, handleRemove, handleCancel, ar
     }, [lecture]);
 
     useEffect(() => {
-        position.x + boxRef.current.clientWidth >= document.body.clientWidth ? setDynamicX(document.body.clientWidth - boxRef.current.clientWidth - 2) : setDynamicX(position.x);
+        position.x + boxRef.current.clientWidth >= document.body.clientWidth
+            ? setDynamicX(document.body.clientWidth - boxRef.current.clientWidth - 2)
+            : setDynamicX(position.x);
     }, []);
     return (
         <Layout>

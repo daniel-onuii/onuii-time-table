@@ -38,27 +38,30 @@ function Area({ idx, areaData, itemData, areaObj, itemObj, areaGrabbedObj, isAre
                 return result;
             }, []);
             dispatch(setAreaData([...newAreaData, ...bindLecture]));
-            init();
         } else if (type === 'add') {
             //추가하기
             const newAreaData = areaData.reduce((result, e) => {
                 const target = _.find(bindLecture, { block_group_No: e.block_group_No });
                 const beforLecture = e.areaActiveType ? e.areaActiveType : [];
-                target ? result.push({ ...target, areaActiveType: _.uniq([...beforLecture, ...items]) }) : result.push(e);
+                const addData = _.uniq([...beforLecture, ...items]);
+                // const addData = _.isEmpty(beforLecture) ? items : _.without(_.uniq([...beforLecture, ...items]), 'all');
+                target ? result.push({ ...target, areaActiveType: addData }) : result.push(e);
                 return result;
             }, []);
             dispatch(setAreaData([...newAreaData, ...bindLecture]));
-            init();
         } else if (type === 'pop') {
+            //빼기
             const newAreaData = areaData.reduce((result, e) => {
                 const target = _.find(bindLecture, { block_group_No: e.block_group_No });
                 const beforLecture = e.areaActiveType ? e.areaActiveType : [];
-                target ? result.push({ ...target, areaActiveType: _.without(beforLecture, ...items) }) : result.push(e);
+                const popData = _.without(beforLecture, ...items);
+                target ? !_.isEmpty(popData) && result.push({ ...target, areaActiveType: popData }) : result.push(e);
+                // target ? result.push({ ...target, areaActiveType: _.isEmpty(popData) ? ['all'] : popData }) : result.push(e);
                 return result;
             }, []);
-            dispatch(setAreaData([...newAreaData]));
-            init();
+            dispatch(setAreaData(newAreaData));
         }
+        init();
     };
     const remove = () => {
         const removeResult = _.reject(areaData, o => {
@@ -185,16 +188,7 @@ function Area({ idx, areaData, itemData, areaObj, itemObj, areaGrabbedObj, isAre
                     );
                 })}
             </div>
-            {lectureModal && (
-                <SelectLecture
-                    areaGrabbedObj={areaGrabbedObj}
-                    areaData={areaData}
-                    position={modalPosition}
-                    handleConfirm={update}
-                    handleRemove={remove}
-                    handleCancel={cancel}
-                />
-            )}
+            {lectureModal && <SelectLecture position={modalPosition} handleConfirm={update} handleRemove={remove} handleCancel={cancel} />}
         </React.Fragment>
     );
 }
