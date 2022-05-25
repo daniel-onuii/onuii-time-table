@@ -45,6 +45,7 @@ function Area({ idx, areaData, itemData, areaObj, itemObj, areaGrabbedObj, isAre
                 const beforLecture = e.areaActiveType ? e.areaActiveType : [];
                 const addData = _.uniq([...beforLecture, ...items]);
                 // const addData = _.isEmpty(beforLecture) ? items : _.without(_.uniq([...beforLecture, ...items]), 'all');
+                //
                 target ? result.push({ ...target, areaActiveType: addData }) : result.push(e);
                 return result;
             }, []);
@@ -57,6 +58,7 @@ function Area({ idx, areaData, itemData, areaObj, itemObj, areaGrabbedObj, isAre
                 const popData = _.without(beforLecture, ...items);
                 target ? !_.isEmpty(popData) && result.push({ ...target, areaActiveType: popData }) : result.push(e);
                 // target ? result.push({ ...target, areaActiveType: _.isEmpty(popData) ? ['all'] : popData }) : result.push(e);
+                //
                 return result;
             }, []);
             dispatch(setAreaData(newAreaData));
