@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import _ from 'lodash';
+import Button from '../../module/button/Button';
 const Layout = styled.div`
     position: fixed;
     width: 100vw;
@@ -58,7 +59,7 @@ function SelectLecture({ position, handleConfirm, handleRemove, handleCancel }) 
         const inputKey = e => {
             switch (e.key) {
                 case 'Enter':
-                    handleConfirmExtend();
+                    handleConfirmExtend('overlap');
                     break;
                 case 'Backspace':
                     handleRemove();
@@ -100,6 +101,7 @@ function SelectLecture({ position, handleConfirm, handleRemove, handleCancel }) 
                     </div>
                     <br />
                     <div>
+                        <Button title={'덮어쓰기'} handleClick={handleConfirmExtend('overlap')} />
                         <button onClick={handleConfirmExtend('overlap')}>덮어쓰기</button>
                         <button onClick={handleRemove}>삭제하기</button>
                         <button onClick={handleConfirmExtend('add')}>+</button>
