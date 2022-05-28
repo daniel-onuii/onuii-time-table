@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import _ from 'lodash';
 import Button from '../../module/button/Button';
+import Input from '../../module/input/Input';
 const Layout = styled.div`
     position: fixed;
     width: 100vw;
@@ -20,6 +21,7 @@ const Layout = styled.div`
         top: 20px;
         background: white;
         color: black;
+        width: 400px;
     }
     .modalLectureBox input {
         width: 15px !important;
@@ -29,6 +31,9 @@ const Layout = styled.div`
         cursor: pointer;
         padding-left: 10px;
         padding-right: 10px;
+    }
+    .buttons div {
+        margin-right: 5px;
     }
 `;
 function SelectLecture({ position, handleConfirm, handleRemove, handleCancel }) {
@@ -93,20 +98,20 @@ function SelectLecture({ position, handleConfirm, handleRemove, handleCancel }) 
                         {lectureList.map((e, i) => {
                             return (
                                 <React.Fragment key={i}>
-                                    <input type="checkbox" id={e.key} value={e.key} onChange={handleLecture} checked={lecture.includes(e.key)} />
-                                    <label htmlFor={e.key}>{e.value}</label>
+                                    {/* <input type="checkbox" id={e.key} value={e.key} onChange={handleLecture} checked={lecture.includes(e.key)} />
+                                    <label htmlFor={e.key}>{e.value}</label> */}
+                                    <Input text={e.value} id={e.key} value={e.key} checked={lecture.includes(e.key)} handleChange={handleLecture} />
                                 </React.Fragment>
                             );
                         })}
                     </div>
                     <br />
-                    <div>
-                        <Button title={'덮어쓰기'} handleClick={handleConfirmExtend('overlap')} />
-                        <button onClick={handleConfirmExtend('overlap')}>덮어쓰기</button>
-                        <button onClick={handleRemove}>삭제하기</button>
-                        <button onClick={handleConfirmExtend('add')}>+</button>
-                        <button onClick={handleConfirmExtend('pop')}>-</button>
-                        <button onClick={handleCancel}>취소</button>
+                    <div className={'buttons'}>
+                        <Button text={'덮어쓰기'} handleClick={handleConfirmExtend('overlap')} />
+                        <Button text={'삭제하기'} handleClick={handleRemove} />
+                        <Button text={'+'} handleClick={handleConfirmExtend('add')} />
+                        <Button text={'-'} handleClick={handleConfirmExtend('pop')} />
+                        <Button text={'취소'} handleClick={handleCancel} />
                     </div>
                 </React.Fragment>
             </div>

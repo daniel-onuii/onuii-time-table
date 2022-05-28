@@ -13,8 +13,7 @@
         "onuii-time-table": "link:..",
         "react": "link:../node_modules/react",
         "react-dom": "link:../node_modules/react-dom",
-        "react-scripts": "link:../node_modules/react-scripts",
-        "react-toastify": "^9.0.1"
+        "react-scripts": "link:../node_modules/react-scripts"
     },
     "devDependencies": {
         "@babel/plugin-syntax-object-rest-spread": "^7.8.3"
