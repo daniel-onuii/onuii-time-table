@@ -34,12 +34,18 @@ const Layout = styled.div`
     }
     .buttons div {
         margin-right: 5px;
+        margin-top: 5px;
+    }
+    .message {
+        text-align: left;
+        color: red;
     }
 `;
 function SelectLecture({ position, handleConfirm, handleRemove, handleCancel }) {
-    const [dynamicX, setDynamicX] = useState();
     const boxRef = useRef();
+    const [dynamicX, setDynamicX] = useState();
     const [lecture, setLecture] = useState([]);
+    const [message, setMessage] = useState('');
     const lectureList = [
         { key: 'all', value: '상관없음' },
         { key: '9168', value: '국어' },
@@ -48,9 +54,7 @@ function SelectLecture({ position, handleConfirm, handleRemove, handleCancel }) 
         { key: '9171', value: '과학' },
     ];
     const handleConfirmExtend = type => {
-        return () => {
-            lecture.length === 0 ? alert('과목 선택 안함') : handleConfirm(type, lecture);
-        };
+        lecture.length === 0 ? setMessage(`${type}과목 선택 안함`) : handleConfirm(type, lecture);
     };
     const handleLecture = e => {
         const value = e.target.value;
@@ -61,8 +65,10 @@ function SelectLecture({ position, handleConfirm, handleRemove, handleCancel }) 
         }
     };
     useEffect(() => {
+        setMessage('');
         const inputKey = e => {
-            switch (e.key) {
+            e.preventDefault();
+            switch (e.code) {
                 case 'Enter':
                     handleConfirmExtend('overlap');
                     break;
@@ -74,6 +80,12 @@ function SelectLecture({ position, handleConfirm, handleRemove, handleCancel }) 
                     break;
                 case 'Escape':
                     handleCancel();
+                    break;
+                case 'KeyA':
+                    handleConfirmExtend('add');
+                    break;
+                case 'KeyD':
+                    handleConfirmExtend('pop');
                     break;
                 default:
                     null;
@@ -93,27 +105,27 @@ function SelectLecture({ position, handleConfirm, handleRemove, handleCancel }) 
     return (
         <Layout>
             <div ref={boxRef} className={'modalLectureBox'} style={{ left: dynamicX, top: position.y }}>
-                <React.Fragment>
-                    <div style={{ display: 'flex' }}>
-                        {lectureList.map((e, i) => {
-                            return (
-                                <React.Fragment key={i}>
-                                    {/* <input type="checkbox" id={e.key} value={e.key} onChange={handleLecture} checked={lecture.includes(e.key)} />
+                <div style={{ display: 'flex' }}>
+                    {lectureList.map((e, i) => {
+                        return (
+                            <React.Fragment key={i}>
+                                {/* <input type="checkbox" id={e.key} value={e.key} onChange={handleLecture} checked={lecture.includes(e.key)} />
                                     <label htmlFor={e.key}>{e.value}</label> */}
-                                    <Input text={e.value} id={e.key} value={e.key} checked={lecture.includes(e.key)} handleChange={handleLecture} />
-                                </React.Fragment>
-                            );
-                        })}
-                    </div>
+                                <Input text={e.value} id={e.key} value={e.key} checked={lecture.includes(e.key)} handleChange={handleLecture} />
+                            </React.Fragment>
+                        );
+                    })}
+                </div>
+                <br />
+                <div className={'message'}>{message}</div>
+                <div className={'buttons'}>
+                    <Button text={'덮어쓰기 enter'} handleClick={() => handleConfirmExtend('overlap')} />
+                    <Button text={'삭제하기 del backspace'} handleClick={handleRemove} />
                     <br />
-                    <div className={'buttons'}>
-                        <Button text={'덮어쓰기'} handleClick={handleConfirmExtend('overlap')} />
-                        <Button text={'삭제하기'} handleClick={handleRemove} />
-                        <Button text={'+'} handleClick={handleConfirmExtend('add')} />
-                        <Button text={'-'} handleClick={handleConfirmExtend('pop')} />
-                        <Button text={'취소'} handleClick={handleCancel} />
-                    </div>
-                </React.Fragment>
+                    <Button text={'선택 추가 a'} handleClick={() => handleConfirmExtend('add')} />
+                    <Button text={'선택 삭제 d'} handleClick={() => handleConfirmExtend('pop')} />
+                    <Button text={'취소 esc'} handleClick={handleCancel} />
+                </div>
             </div>
         </Layout>
     );

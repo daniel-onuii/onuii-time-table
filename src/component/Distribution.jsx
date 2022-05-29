@@ -1,6 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
-const Layout = styled.div`
+const Layout = styled.div.attrs({
+    className: 'ignoreEnter',
+})`
     display: flex;
     position: absolute;
     top: 0px;

@@ -19,7 +19,7 @@ const Layout = styled.div`
     text-decoration: none;
     font-family: Roboto, Helvetica, Arial, sans-serif;
     font-weight: 500;
-    font-size: 0.875rem;
+    font-size: 0.775rem;
     line-height: 1.75;
     letter-spacing: 0.02857em;
     text-transform: uppercase;

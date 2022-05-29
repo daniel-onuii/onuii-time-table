@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="18px" height="18px" viewBox="0 0 18 18" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.5 (67469) - http://www.bohemiancoding.com/sketch -->
+    <title>btn_radio_s</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Symbols-Utilities" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="btn/radio/circle/on/green">
+            <g id="btn_radio/on">
+                <circle id="Oval-31" stroke="#3C396D" stroke-width="0.5" fill="#5C55F7" cx="9" cy="9" r="8.75"></circle>
+                <path d="M9,13 C11.209139,13 13,11.209139 13,9 C13,6.790861 11.209139,5 9,5 C6.790861,5 5,6.790861 5,9 C5,11.209139 6.790861,13 9,13 Z" id="Oval-49" fill="#FFFFFF"></path>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="18px" height="18px" viewBox="0 0 18 18" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.5 (67469) - http://www.bohemiancoding.com/sketch -->
+    <title>btn_checkbox_s</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Symbols-Utilities" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="btn/checkbox/on/green">
+            <g id="btn_checkbox/on" transform="translate(1.000000, 1.000000)">
+                <rect id="Rectangle-16" stroke="#3C396D" stroke-width="0.5" fill="#5C55F7" x="0.25" y="0.25" width="15.5" height="15.5" rx="2"></rect>
+                <polyline id="Page-1" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" points="12.1818182 5.81818182 6.04545455 11.5454545 4 9.5"></polyline>
+            </g>
+        </g>
+    </g>
+</svg>

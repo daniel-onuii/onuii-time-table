@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { setAreaGrabbedObj, setAreaObj, setIsAreaAppend, setIsAreaClickDown, setItemObj } from '../store/reducer/trigger.reducer';
 import { setAreaData, setItemData } from '../store/reducer/schedule.reducer';
@@ -7,24 +7,43 @@ import { table } from '../util/table';
 import _ from 'lodash';
 import SelectLecture from './modal/SelectLecture';
 import { lecture } from '../util/lecture';
+import AreaMenu from './contextMenu/AreaMenu';
 
-function Area({ idx, areaData, itemData, areaObj, itemObj, areaGrabbedObj, isAreaClickDown, isAreaAppend, areaActiveType }) {
+function Area({ children, idx, areaData, itemData, areaObj, itemObj, areaGrabbedObj, isAreaClickDown }) {
     const dispatch = useDispatch();
-    const [lectureModal, setLectureModal] = useState(false);
+    const [showLectureModal, setShowLectureModal] = useState(false); //과목정보 모달
     const [modalPosition, setModalPosition] = useState(null);
+    const [areaContextPosition, setAreaContextPosition] = useState(null);
+    const [showAreaContext, setShowAreaContext] = useState(false);
 
     const onHover = e => {
-        e.target.classList.add(`over`);
-        e.target.classList.add(`time${itemObj.time}`);
+        const $this = e.currentTarget;
+        console.log($this);
+        // if (e.target === e.currentTarget) {
+        $this.classList.add(`over`);
+        $this.classList.add(`time${itemObj.time}`);
+        // } else {
+        // console.log(e.target.parentNode.parentNode);
+        // e.target.parentNode.parentNode.classList.add(`over`);
+        // e.target.parentNode.parentNode.classList.add(`time${itemObj.time}`);
+        // }
     };
     const offHover = e => {
-        e.target.classList.remove(`over`);
-        e.target.classList.remove(`time${itemObj.time}`);
+        const $this = e.currentTarget;
+        // console.log($this, itemObj);
+        // if (e.target !== e.currentTarget) {
+        //     e.target.parentNode.classList.remove(`over`);
+        //     e.target.parentNode.classList.remove(`time${itemObj.time}`);
+        // } else {
+        $this.classList.remove(`over`);
+        $this.classList.remove(`time${itemObj.time}`);
+        // }
     };
 
     const init = () => {
         dispatch(setAreaGrabbedObj([]));
-        setLectureModal(false);
+        setShowLectureModal(false);
+        setShowAreaContext(false);
     };
 
     const update = (type, items) => {
@@ -75,6 +94,7 @@ function Area({ idx, areaData, itemData, areaObj, itemObj, areaGrabbedObj, isAre
     };
 
     const handleAreaDown = () => {
+        setShowAreaContext(false);
         const isFill = table.isFillArea(areaData, idx);
         dispatch(setIsAreaClickDown(true)); //클릭 상태
         dispatch(setIsAreaAppend(isFill)); //대상이 빈칸인지
@@ -126,7 +146,7 @@ function Area({ idx, areaData, itemData, areaObj, itemObj, areaGrabbedObj, isAre
         dispatch(setIsAreaClickDown(false));
         if (areaGrabbedObj.length > 0) {
             setModalPosition({ x: e.clientX, y: e.clientY });
-            setLectureModal(true);
+            setShowLectureModal(true);
         }
     };
     const handleItemDrop = e => {
@@ -164,7 +184,11 @@ function Area({ idx, areaData, itemData, areaObj, itemObj, areaGrabbedObj, isAre
     const handleAreaLeave = e => {
         offHover(e);
     };
-
+    const handleAreaClick = e => {
+        e.preventDefault();
+        setShowAreaContext(true);
+        setAreaContextPosition({ x: e.clientX, y: e.clientY });
+    };
     return (
         <React.Fragment>
             <div
@@ -175,20 +199,23 @@ function Area({ idx, areaData, itemData, areaObj, itemObj, areaGrabbedObj, isAre
                 onDragOver={handleItemDragOver}
                 onDragEnter={handleAreaEnter}
                 onDragLeave={handleAreaLeave}
+                onContextMenu={handleAreaClick}
                 className={`item 
-            ${areaData.some(item => item.block_group_No === idx) ? 'active' : ''}
-            ${areaGrabbedObj.some(item => item.block_group_No === idx) ? 'dragging' : ''}
-            `}
+                    ${areaData.some(item => item.block_group_No === idx) ? 'active' : ''}
+                    ${areaGrabbedObj.some(item => item.block_group_No === idx) ? 'dragging' : ''}
+                `}
             >
                 {_.find(areaData, { block_group_No: idx })?.areaActiveType?.map((e, i) => {
                     return (
-                        <span key={i} className={`lecture_${e}`}>
+                        <span key={i} className={`lecture_${e} ignoreEnter`}>
                             {e === 'all' ? '상관없음' : lecture.getLectureName(e).slice(0, 1)}
                         </span>
                     );
                 })}
+                {children}
             </div>
-            {lectureModal && <SelectLecture position={modalPosition} handleConfirm={update} handleRemove={remove} handleCancel={cancel} />}
+            {showLectureModal && <SelectLecture position={modalPosition} handleConfirm={update} handleRemove={remove} handleCancel={cancel} />}
+            {showAreaContext && areaObj.idx == idx && <AreaMenu position={areaContextPosition} close={() => setShowAreaContext(false)} />}
         </React.Fragment>
     );
 }

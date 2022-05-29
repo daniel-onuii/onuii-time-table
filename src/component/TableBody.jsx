@@ -40,6 +40,10 @@ const Layout = styled.div`
     }
     .item {
         height: 100%;
+        width: 100%;
+        position: absolute;
+        top: 0px;
+        z-index: 1;
         color: #b3b3b3;
     }
     .active {
@@ -94,13 +98,16 @@ const Layout = styled.div`
     .lecture_9171 {
         background: plum;
     }
+    .ignoreEnter {
+        pointer-events: none;
+    }
 `;
 
 function TableBody() {
     const tableRef = useRef();
     const dispatch = useDispatch();
     const { areaData, itemData, itemGroupData, timeListData } = useSelector(state => state.schedule);
-    const { areaGrabbedObj, itemObj, areaObj, isAreaClickDown, isAreaAppend, areaActiveType } = useSelector(state => state.trigger);
+    const { areaGrabbedObj, itemObj, areaObj, isAreaClickDown } = useSelector(state => state.trigger);
 
     useEffect(() => {
         dispatch(setTimeListData(schedule.getTimeList()));
@@ -136,11 +143,10 @@ function TableBody() {
                                                         itemObj={itemObj}
                                                         areaGrabbedObj={areaGrabbedObj}
                                                         isAreaClickDown={isAreaClickDown}
-                                                        isAreaAppend={isAreaAppend}
-                                                        areaActiveType={areaActiveType}
-                                                    />
+                                                    >
+                                                        {level && <Distribution level={level} />}
+                                                    </Area>
                                                     {itemGroupData.some(y => y.startIdx === idx) && <FixedItem idx={idx} />}
-                                                    {level && <Distribution level={level} />}
                                                 </td>
                                             );
                                         })}
