@@ -38,11 +38,17 @@ const App = () => {
         { block_group_No: 163, lecture_subject_Id: 8906 },
     ];
 
+    const matchingItemData = [
+        { block_group_No: 236, lecture_subject_Id: 9171 },
+        { block_group_No: 237, lecture_subject_Id: 9171 },
+        { block_group_No: 238, lecture_subject_Id: 9171 },
+        { block_group_No: 239, lecture_subject_Id: 9171 },
+    ];
     return (
         <>
             <h1 style={{ marginLeft: '20px' }}>타임테이블</h1>
             <div style={{ height: '20px' }}></div>
-            <OnuiiTimeTable areaData={areaData} itemData={itemData} />
+            <OnuiiTimeTable areaData={areaData} itemData={itemData} matchingItemData={matchingItemData} />
         </>
     );
 };

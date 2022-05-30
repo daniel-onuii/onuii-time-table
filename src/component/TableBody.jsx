@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setItemGroupData, setTimeListData } from '../store/reducer/schedule.reducer';
+import { setItemGroupData, setMatchingItemGroupData, setTimeListData } from '../store/reducer/schedule.reducer';
 import { lecture } from '../util/lecture';
 import { schedule } from '../util/schedule';
 import { table } from '../util/table';
@@ -10,6 +10,7 @@ import styled from 'styled-components';
 import Distribution from './Distribution';
 import { distData } from '../mock/distData';
 import _ from 'lodash';
+import MatchingItem from './MatchingItem';
 const Layout = styled.div`
     .contents {
         height: 504px;
@@ -43,7 +44,7 @@ const Layout = styled.div`
         width: 100%;
         position: absolute;
         top: 0px;
-        z-index: 1;
+        z-index: 0;
         color: #b3b3b3;
     }
     .active {
@@ -52,19 +53,21 @@ const Layout = styled.div`
         height: 100%;
         background: #d0ece7;
         color: white;
-        z-index: 0;
+        z-index: 1;
     }
     .weekend {
         background: #fef0f7;
-    }
-    .active.over {
-        background: none;
     }
     .over {
         background: #fa8072 !important;
         position: absolute;
         width: 100%;
         top: 0;
+        z-index: 0;
+        // border: 2px solid blue;
+        // border-radius: 3px;
+        // box-shadow: 0 0 0 3px #000 inset;
+        // background-color: transparent;
     }
     .time4 {
         height: 84px;
@@ -106,13 +109,16 @@ const Layout = styled.div`
 function TableBody() {
     const tableRef = useRef();
     const dispatch = useDispatch();
-    const { areaData, itemData, itemGroupData, timeListData } = useSelector(state => state.schedule);
+
+    const { areaData, itemData, itemGroupData, timeListData, matchingItemData, matchingItemGroupData } = useSelector(state => state.schedule);
     const { areaGrabbedObj, itemObj, areaObj, isAreaClickDown } = useSelector(state => state.trigger);
 
     useEffect(() => {
         dispatch(setTimeListData(schedule.getTimeList()));
         dispatch(setItemGroupData(lecture.getGroupByLectureTime(itemData)));
-    }, [itemData]);
+        dispatch(setMatchingItemGroupData(lecture.getGroupByLectureTime(matchingItemData)));
+    }, [itemData, matchingItemData]);
+
     // useEffect(() => {
     //     setTimeout(() => {
     //         tableRef.current.scrollTo(0, 681);
@@ -139,6 +145,7 @@ function TableBody() {
                                                         idx={idx}
                                                         areaData={areaData}
                                                         itemData={itemData}
+                                                        matchingItemData={matchingItemData}
                                                         areaObj={areaObj}
                                                         itemObj={itemObj}
                                                         areaGrabbedObj={areaGrabbedObj}
@@ -147,6 +154,7 @@ function TableBody() {
                                                         {level && <Distribution level={level} />}
                                                     </Area>
                                                     {itemGroupData.some(y => y.startIdx === idx) && <FixedItem idx={idx} />}
+                                                    {matchingItemGroupData.some(y => y.startIdx === idx) && <MatchingItem idx={idx} />}
                                                 </td>
                                             );
                                         })}

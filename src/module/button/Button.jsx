@@ -26,12 +26,26 @@ const Layout = styled.div`
     min-width: 64px;
     padding: 6px 16px;
     border-radius: 4px;
-    border: 1px solid #3f51b5;
-    background: #3f51b5;
     color: white;
+    &.blue {
+        border: 1px solid #3f51b5;
+        background: #3f51b5;
+    }
+    &.red {
+        border: 1px solid #ec7063;
+        background: #ec7063;
+    }
+    &.grey {
+        border: 1px solid #aeb6bf;
+        background: #aeb6bf;
+    }
 `;
-function Button({ text, handleClick }) {
-    return <Layout onClick={handleClick}>{text}</Layout>;
+function Button({ color, text, handleClick }) {
+    return (
+        <Layout className={color} onClick={handleClick}>
+            {text}
+        </Layout>
+    );
 }
 
 export default Button;

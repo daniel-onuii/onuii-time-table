@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { setAreaGrabbedObj, setAreaObj, setIsAreaAppend, setIsAreaClickDown, setItemObj } from '../store/reducer/trigger.reducer';
-import { setAreaData, setItemData } from '../store/reducer/schedule.reducer';
+import { setAreaData, setItemData, setMatchingItemData } from '../store/reducer/schedule.reducer';
 import { schedule } from '../util/schedule';
 import { table } from '../util/table';
 import _ from 'lodash';
@@ -9,7 +9,7 @@ import SelectLecture from './modal/SelectLecture';
 import { lecture } from '../util/lecture';
 import AreaMenu from './contextMenu/AreaMenu';
 
-function Area({ children, idx, areaData, itemData, areaObj, itemObj, areaGrabbedObj, isAreaClickDown }) {
+function Area({ children, idx, areaData, itemData, matchingItemData, areaObj, itemObj, areaGrabbedObj, isAreaClickDown }) {
     const dispatch = useDispatch();
     const [showLectureModal, setShowLectureModal] = useState(false); //과목정보 모달
     const [modalPosition, setModalPosition] = useState(null);
@@ -18,26 +18,13 @@ function Area({ children, idx, areaData, itemData, areaObj, itemObj, areaGrabbed
 
     const onHover = e => {
         const $this = e.currentTarget;
-        console.log($this);
-        // if (e.target === e.currentTarget) {
         $this.classList.add(`over`);
         $this.classList.add(`time${itemObj.time}`);
-        // } else {
-        // console.log(e.target.parentNode.parentNode);
-        // e.target.parentNode.parentNode.classList.add(`over`);
-        // e.target.parentNode.parentNode.classList.add(`time${itemObj.time}`);
-        // }
     };
     const offHover = e => {
         const $this = e.currentTarget;
-        // console.log($this, itemObj);
-        // if (e.target !== e.currentTarget) {
-        //     e.target.parentNode.classList.remove(`over`);
-        //     e.target.parentNode.classList.remove(`time${itemObj.time}`);
-        // } else {
         $this.classList.remove(`over`);
         $this.classList.remove(`time${itemObj.time}`);
-        // }
     };
 
     const init = () => {
@@ -149,19 +136,17 @@ function Area({ children, idx, areaData, itemData, areaObj, itemObj, areaGrabbed
             setShowLectureModal(true);
         }
     };
-    const handleItemDrop = e => {
-        e.preventDefault();
-        offHover(e);
-        dispatch(setItemObj({}));
+
+    const dropEvent = (data, setData) => {
         const itemIdx = itemObj.idx;
         const itemLectureId = itemObj.lectureId;
         const time = itemObj.time;
         const endTime = idx + time - 1;
-        if (!schedule.checkValidSchedule(endTime, idx, itemData, itemLectureId)) {
+        if (!schedule.checkValidSchedule(endTime, idx, data, itemLectureId)) {
             return false;
         }
         if (idx != 0) {
-            const removedLecture = _.reject([...itemData], function (o) {
+            const removedLecture = _.reject([...data], function (o) {
                 //이전 과목 시간은 삭제
                 return (
                     (o.block_group_No >= itemIdx && o.block_group_No < itemIdx + time) || (o.block_group_No >= idx && o.block_group_No < idx + time)
@@ -172,7 +157,19 @@ function Area({ children, idx, areaData, itemData, areaObj, itemObj, areaGrabbed
                 result.push({ block_group_No: e, lecture_subject_Id: itemLectureId });
                 return result;
             }, []);
-            dispatch(setItemData([...removedLecture, ...addLecture]));
+            dispatch(setData([...removedLecture, ...addLecture]));
+        }
+    };
+
+    const handleItemDrop = e => {
+        e.preventDefault();
+        offHover(e);
+        dispatch(setItemObj({}));
+        if (itemObj.type === 'item') {
+            dropEvent(itemData, setItemData);
+        }
+        if (itemObj.type === 'matching') {
+            dropEvent(matchingItemData, setMatchingItemData);
         }
     };
     const handleItemDragOver = e => {
@@ -215,7 +212,7 @@ function Area({ children, idx, areaData, itemData, areaObj, itemObj, areaGrabbed
                 {children}
             </div>
             {showLectureModal && <SelectLecture position={modalPosition} handleConfirm={update} handleRemove={remove} handleCancel={cancel} />}
-            {showAreaContext && areaObj.idx == idx && <AreaMenu position={areaContextPosition} close={() => setShowAreaContext(false)} />}
+            {showAreaContext && areaObj.idx == idx && <AreaMenu idx={idx} position={areaContextPosition} close={() => setShowAreaContext(false)} />}
         </React.Fragment>
     );
 }

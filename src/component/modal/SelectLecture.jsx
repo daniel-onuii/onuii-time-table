@@ -119,12 +119,12 @@ function SelectLecture({ position, handleConfirm, handleRemove, handleCancel }) 
                 <br />
                 <div className={'message'}>{message}</div>
                 <div className={'buttons'}>
-                    <Button text={'덮어쓰기 enter'} handleClick={() => handleConfirmExtend('overlap')} />
-                    <Button text={'삭제하기 del backspace'} handleClick={handleRemove} />
+                    <Button color={'blue'} text={'덮어쓰기 enter'} handleClick={() => handleConfirmExtend('overlap')} />
+                    <Button color={'red'} text={'삭제하기 del backspace'} handleClick={handleRemove} />
                     <br />
-                    <Button text={'선택 추가 a'} handleClick={() => handleConfirmExtend('add')} />
-                    <Button text={'선택 삭제 d'} handleClick={() => handleConfirmExtend('pop')} />
-                    <Button text={'취소 esc'} handleClick={handleCancel} />
+                    <Button color={'blue'} text={'선택 추가 a'} handleClick={() => handleConfirmExtend('add')} />
+                    <Button color={'red'} text={'선택 삭제 d'} handleClick={() => handleConfirmExtend('pop')} />
+                    <Button color={'grey'} text={'취소 esc'} handleClick={handleCancel} />
                 </div>
             </div>
         </Layout>

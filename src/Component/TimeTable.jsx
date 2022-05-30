@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import _ from 'lodash';
 import TableHead from './TableHead';
 import TableBody from './TableBody';
-import imgTest from '../asset/icon/ic-card.png';
+// import imgTest from '../asset/icon/ic-card.png';
 const Layout = styled.div`
     width: 800px;
     margin: auto;
@@ -45,8 +45,8 @@ function TimeTable() {
     return (
         <React.Fragment>
             <Layout>
-                <img src={imgTest} />
-                <img src="../../asset/icon/ic-card.png" />
+                {/* <img src={imgTest} />
+                <img src="../../asset/icon/ic-card.png" /> */}
                 {/* <FollowCursor /> */}
                 <TableHead />
                 <TableBody />

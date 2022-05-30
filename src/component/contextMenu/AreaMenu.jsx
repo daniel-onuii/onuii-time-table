@@ -1,5 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
+import { setMatchingItemData } from '../../store/reducer/schedule.reducer';
+import _ from 'lodash';
 const Layout = styled.div`
     position: fixed;
     background: white;
@@ -26,7 +29,9 @@ const Layout = styled.div`
         background: #efefef;
     }
 `;
-function AreaMenu({ position, close }) {
+function AreaMenu({ idx, position, close }) {
+    const dispatch = useDispatch();
+    const { matchingItemData, matchingItemGroupData } = useSelector(state => state.schedule);
     const boxRef = useRef();
     const newPositionX =
         position.x + boxRef?.current?.clientWidth >= document.body.clientWidth
@@ -47,12 +52,31 @@ function AreaMenu({ position, close }) {
             document.removeEventListener('keydown', inputKey);
         };
     }, []);
+    const handleClick = e => {
+        const lecture = Number(e.target.getAttribute('lecture'));
+        const time = Number(e.target.getAttribute('time'));
+        const weekCount = Number(e.target.getAttribute('weekCount'));
+        const lessonCount = _.filter(matchingItemGroupData, { lecture_subject_Id: lecture }).length;
+        close();
+        if (lessonCount >= weekCount) {
+            alert('횟수가 초과됨.');
+            return false;
+        } else {
+            const data = _.range(idx, idx + time).map((e, i) => {
+                return { block_group_No: e, lecture_subject_Id: lecture };
+            });
+            dispatch(setMatchingItemData([...matchingItemData, ...data]));
+        }
+    };
     return (
         <Layout left={newPositionX} top={position.y + 3} ref={boxRef}>
             <ul>
-                <li>매칭 추가</li>
-                <li>매칭 추가</li>
-                <li>매칭 추가</li>
+                <li lecture={'9171'} time={4} weekCount={2} onClick={handleClick}>
+                    매칭 추가(과학60분 주2회)
+                </li>
+                <li lecture={'8906'} time={6} weekCount={1} onClick={handleClick}>
+                    매칭 추가(수학90분 주1회)
+                </li>
             </ul>
         </Layout>
     );
