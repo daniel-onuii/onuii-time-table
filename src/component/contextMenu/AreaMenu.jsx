@@ -56,7 +56,7 @@ function AreaMenu({ idx, position, close }) {
     const handleClick = e => {
         const lecture = Number(e.target.getAttribute('lecture'));
         const time = Number(e.target.getAttribute('time'));
-        const weekCount = Number(e.target.getAttribute('weekCount'));
+        const weekCount = Number(e.target.getAttribute('weekcount'));
         const lessonCount = _.filter(matchingItemGroupData, { lecture_subject_Id: lecture }).length;
         close();
         if (lessonCount >= weekCount) {
@@ -72,10 +72,10 @@ function AreaMenu({ idx, position, close }) {
     return (
         <Layout left={newPositionX} top={position.y + 3} ref={boxRef}>
             <ul>
-                <li lecture={'9171'} time={4} weekCount={2} onClick={handleClick}>
+                <li lecture={'9171'} time={4} weekcount={2} onClick={handleClick}>
                     매칭 추가(과학60분 주2회)
                 </li>
-                <li lecture={'8906'} time={6} weekCount={1} onClick={handleClick}>
+                <li lecture={'8906'} time={6} weekcount={1} onClick={handleClick}>
                     매칭 추가(수학90분 주1회)
                 </li>
             </ul>

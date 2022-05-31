@@ -6,7 +6,6 @@ import { schedule } from '../../util/schedule';
 import { table } from '../../util/table';
 import _ from 'lodash';
 import SelectLecture from '../modal/SelectLecture';
-import { lecture } from '../../util/lecture';
 import AreaMenu from '../contextMenu/AreaMenu';
 
 function Area({ children, idx, areaData, fixedItemData, matchingItemData, areaObj, itemObj, areaGrabbedObj, isAreaClickDown }) {
@@ -138,42 +137,36 @@ function Area({ children, idx, areaData, fixedItemData, matchingItemData, areaOb
     };
 
     const dropEvent = (data, setData) => {
-        const itemIdx = itemObj.idx;
-        const itemLectureId = itemObj.lectureId;
-        const time = itemObj.time;
-        const endTime = idx + time - 1;
-        if (!schedule.checkValidSchedule(endTime, idx, data, itemLectureId, dispatch)) {
+        const endTime = idx + itemObj.time - 1;
+        if (!schedule.checkValidSchedule(endTime, idx, data, itemObj.lectureId, dispatch)) {
             return false;
         }
         if (idx != 0) {
-            const removedLecture = _.reject([...data], function (o) {
-                //이전 과목 시간은 삭제
-                return (
-                    (o.block_group_No >= itemIdx && o.block_group_No < itemIdx + time) || (o.block_group_No >= idx && o.block_group_No < idx + time)
-                );
-            });
-            const addLecture = _.range(idx, idx + time).reduce((result, e) => {
-                //드롭된 위치에 새롭게 생성
-                result.push({ block_group_No: e, lecture_subject_Id: itemLectureId });
+            const removedLecture = _.reject(
+                [...data],
+                o =>
+                    (o.block_group_No >= itemObj.idx && o.block_group_No < itemObj.idx + itemObj.time) ||
+                    (o.block_group_No >= idx && o.block_group_No < idx + itemObj.time),
+            );
+            const addLecture = _.range(idx, idx + itemObj.time).reduce((result, e) => {
+                result.push({ block_group_No: e, lecture_subject_Id: itemObj.lectureId });
                 return result;
             }, []);
             dispatch(setData([...removedLecture, ...addLecture]));
         }
     };
-
     const handleItemDrop = e => {
         e.preventDefault();
         offHover(e);
+        switch (itemObj.type) {
+            case 'item':
+                dropEvent(fixedItemData, setFixedItemData);
+                break;
+            case 'matching':
+                dropEvent(matchingItemData, setMatchingItemData);
+                break;
+        }
         dispatch(setItemObj({}));
-        if (itemObj.type === 'item') {
-            dropEvent(fixedItemData, setFixedItemData);
-        }
-        if (itemObj.type === 'matching') {
-            dropEvent(matchingItemData, setMatchingItemData);
-        }
-    };
-    const handleItemDragOver = e => {
-        e.preventDefault();
     };
     const handleAreaEnter = e => {
         onHover(e);
@@ -193,7 +186,7 @@ function Area({ children, idx, areaData, fixedItemData, matchingItemData, areaOb
                 onMouseOver={handleAreaOver}
                 onMouseUp={handleAreaUp}
                 onDrop={handleItemDrop}
-                onDragOver={handleItemDragOver}
+                onDragOver={e => e.preventDefault()}
                 onDragEnter={handleAreaEnter}
                 onDragLeave={handleAreaLeave}
                 onContextMenu={handleAreaClick}
