@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { lecture } from '../util/lecture';
-import { schedule } from '../util/schedule';
+import { lecture } from '../../util/lecture';
+import { schedule } from '../../util/schedule';
 
 import styled from 'styled-components';
 const Layout = styled.div`

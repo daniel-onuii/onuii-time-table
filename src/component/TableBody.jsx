@@ -5,12 +5,12 @@ import { lecture } from '../util/lecture';
 import { schedule } from '../util/schedule';
 import { table } from '../util/table';
 import Area from './area/Area';
-import FixedItem from './FixedItem';
+import FixedItem from './item/FixedItem';
 import styled from 'styled-components';
 import Distribution from './area/Distribution';
 import { distData } from '../mock/distData';
 import _ from 'lodash';
-import MatchingItem from './MatchingItem';
+import MatchingItem from './item/MatchingItem';
 import LectureItem from './area/LectureItem';
 const Layout = styled.div`
     .contents {
