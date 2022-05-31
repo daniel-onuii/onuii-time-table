@@ -1,7 +1,5 @@
 import moment from 'moment';
-
-import { toast } from 'react-toastify';
-import { ToastOption } from '../component/ToastOption';
+import { setMessage } from '../store/reducer/trigger.reducer';
 
 export const schedule = {
     getWeekIdx: function (idx) {
@@ -28,7 +26,7 @@ export const schedule = {
         return idx - (this.getWeekIdx(idx) * 96 + 36);
     },
 
-    checkValidSchedule: function (endTime, startTime, itemRowData, itemLectureId) {
+    checkValidSchedule: function (endTime, startTime, itemRowData, itemLectureId, dispatch) {
         if (
             (endTime > 101 && endTime < 132) ||
             (endTime > 197 && endTime < 228) ||
@@ -38,7 +36,9 @@ export const schedule = {
             (endTime > 581 && endTime < 612) ||
             endTime > 677
         ) {
-            toast.error('유효하지않은 범위입니다.', ToastOption);
+            // toast.error('유효하지않은 범위입니다.', ToastOption);
+            dispatch(setMessage('유효하지않은 범위입니다.'));
+
             return false;
         } else {
             const isInvalidEndtime = itemRowData.some(
@@ -46,7 +46,8 @@ export const schedule = {
             );
             const isInvalidStart = itemRowData.some(item => item.lecture_subject_Id !== itemLectureId && item.block_group_No === startTime - 2);
             if (isInvalidEndtime || isInvalidStart) {
-                toast.error('강의 사이에 최소 30분의 시간이 필요합니다.', ToastOption);
+                // toast.error('강의 사이에 최소 30분의 시간이 필요합니다.', ToastOption);
+                dispatch(setMessage('강의 사이에 최소 30분의 시간이 필요합니다.'));
                 return false;
             } else {
                 return true;

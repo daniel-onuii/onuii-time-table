@@ -1,4 +1,5 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 const Layout = styled.div`
     th,
@@ -23,8 +24,11 @@ const Layout = styled.div`
     }
 `;
 function TableHead() {
+    const { message } = useSelector(state => state.trigger);
+
     return (
         <Layout>
+            <div style={{ height: '20px', color: 'red' }}>{message}</div>
             <div className="head">
                 <table>
                     <thead>

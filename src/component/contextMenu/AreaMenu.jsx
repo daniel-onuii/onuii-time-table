@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { setMatchingItemData } from '../../store/reducer/schedule.reducer';
 import _ from 'lodash';
+import { setMessage } from '../../store/reducer/trigger.reducer';
 const Layout = styled.div`
     position: fixed;
     background: white;
@@ -59,7 +60,7 @@ function AreaMenu({ idx, position, close }) {
         const lessonCount = _.filter(matchingItemGroupData, { lecture_subject_Id: lecture }).length;
         close();
         if (lessonCount >= weekCount) {
-            alert('횟수가 초과됨.');
+            dispatch(setMessage('횟수가 초과됨.'));
             return false;
         } else {
             const data = _.range(idx, idx + time).map((e, i) => {

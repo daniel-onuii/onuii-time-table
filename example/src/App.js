@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { OnuiiTimeTable } from 'onuii-time-table';
-import 'onuii-time-table/dist/index.css';
+// import 'onuii-time-table/dist/index.css';
 
 const App = () => {
     const areaData = [

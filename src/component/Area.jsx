@@ -142,7 +142,7 @@ function Area({ children, idx, areaData, itemData, matchingItemData, areaObj, it
         const itemLectureId = itemObj.lectureId;
         const time = itemObj.time;
         const endTime = idx + time - 1;
-        if (!schedule.checkValidSchedule(endTime, idx, data, itemLectureId)) {
+        if (!schedule.checkValidSchedule(endTime, idx, data, itemLectureId, dispatch)) {
             return false;
         }
         if (idx != 0) {
