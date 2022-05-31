@@ -17,7 +17,7 @@ const App = () => {
         { block_group_No: 142, areaActiveType: ['8906'] },
         { block_group_No: 143, areaActiveType: ['8906'] },
     ];
-    const itemData = [
+    const fixedItemData = [
         { block_group_No: 36, lecture_subject_Id: 9171 },
         { block_group_No: 37, lecture_subject_Id: 9171 },
         { block_group_No: 38, lecture_subject_Id: 9171 },
@@ -48,7 +48,7 @@ const App = () => {
         <>
             <h1 style={{ marginLeft: '20px' }}>타임테이블</h1>
             <div style={{ height: '20px' }}></div>
-            <OnuiiTimeTable areaData={areaData} itemData={itemData} matchingItemData={matchingItemData} />
+            <OnuiiTimeTable areaData={areaData} fixedItemData={fixedItemData} matchingItemData={matchingItemData} />
         </>
     );
 };

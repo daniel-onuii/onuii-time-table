@@ -26,7 +26,7 @@ export const schedule = {
         return idx - (this.getWeekIdx(idx) * 96 + 36);
     },
 
-    checkValidSchedule: function (endTime, startTime, itemRowData, itemLectureId, dispatch) {
+    checkValidSchedule: function (endTime, startTime, fixedItemRowData, itemLectureId, dispatch) {
         if (
             (endTime > 101 && endTime < 132) ||
             (endTime > 197 && endTime < 228) ||
@@ -41,10 +41,10 @@ export const schedule = {
 
             return false;
         } else {
-            const isInvalidEndtime = itemRowData.some(
+            const isInvalidEndtime = fixedItemRowData.some(
                 item => item.lecture_subject_Id !== itemLectureId && (item.block_group_No === endTime || item.block_group_No === endTime + 2),
             );
-            const isInvalidStart = itemRowData.some(item => item.lecture_subject_Id !== itemLectureId && item.block_group_No === startTime - 2);
+            const isInvalidStart = fixedItemRowData.some(item => item.lecture_subject_Id !== itemLectureId && item.block_group_No === startTime - 2);
             if (isInvalidEndtime || isInvalidStart) {
                 // toast.error('강의 사이에 최소 30분의 시간이 필요합니다.', ToastOption);
                 dispatch(setMessage('강의 사이에 최소 30분의 시간이 필요합니다.'));

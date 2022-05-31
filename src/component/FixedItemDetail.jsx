@@ -20,8 +20,8 @@ const Layout = styled.div`
     }
 `;
 function FixedItemDetail({ idx }) {
-    const { itemData, itemGroupData } = useSelector(state => state.schedule);
-    const itemLectureName = lecture.getLectureNameByIdx(itemData, idx);
+    const { fixedItemData, itemGroupData } = useSelector(state => state.schedule);
+    const itemLectureName = lecture.getLectureNameByIdx(fixedItemData, idx);
     return (
         <Layout>
             <div className={'detailItem'}>

@@ -95,14 +95,14 @@ function TableBody() {
     const tableRef = useRef();
     const dispatch = useDispatch();
 
-    const { areaData, itemData, itemGroupData, timeListData, matchingItemData, matchingItemGroupData } = useSelector(state => state.schedule);
+    const { areaData, fixedItemData, itemGroupData, timeListData, matchingItemData, matchingItemGroupData } = useSelector(state => state.schedule);
     const { areaGrabbedObj, itemObj, areaObj, isAreaClickDown } = useSelector(state => state.trigger);
 
     useEffect(() => {
         dispatch(setTimeListData(schedule.getTimeList()));
-        dispatch(setItemGroupData(lecture.getGroupByLectureTime(itemData)));
+        dispatch(setItemGroupData(lecture.getGroupByLectureTime(fixedItemData)));
         dispatch(setMatchingItemGroupData(lecture.getGroupByLectureTime(matchingItemData)));
-    }, [itemData, matchingItemData]);
+    }, [fixedItemData, matchingItemData]);
 
     // useEffect(() => {
     //     setTimeout(() => {
@@ -129,7 +129,7 @@ function TableBody() {
                                                     <Area
                                                         idx={idx}
                                                         areaData={areaData}
-                                                        itemData={itemData}
+                                                        fixedItemData={fixedItemData}
                                                         matchingItemData={matchingItemData}
                                                         areaObj={areaObj}
                                                         itemObj={itemObj}
@@ -137,6 +137,14 @@ function TableBody() {
                                                         isAreaClickDown={isAreaClickDown}
                                                     >
                                                         {level && <Distribution level={level} />}
+
+                                                        {_.find(areaData, { block_group_No: idx })?.areaActiveType?.map((e, i) => {
+                                                            return (
+                                                                <span key={i} className={`lecture_${e} ignoreEnter`}>
+                                                                    {e === 'all' ? '상관없음' : lecture.getLectureName(e).slice(0, 1)}
+                                                                </span>
+                                                            );
+                                                        })}
                                                     </Area>
                                                     {itemGroupData.some(y => y.startIdx === idx) && <FixedItem idx={idx} />}
                                                     {matchingItemGroupData.some(y => y.startIdx === idx) && <MatchingItem idx={idx} />}

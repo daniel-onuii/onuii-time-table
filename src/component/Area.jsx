@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { setAreaGrabbedObj, setAreaObj, setIsAreaAppend, setIsAreaClickDown, setItemObj } from '../store/reducer/trigger.reducer';
-import { setAreaData, setItemData, setMatchingItemData } from '../store/reducer/schedule.reducer';
+import { setAreaData, setFixedItemData, setMatchingItemData } from '../store/reducer/schedule.reducer';
 import { schedule } from '../util/schedule';
 import { table } from '../util/table';
 import _ from 'lodash';
@@ -9,7 +9,7 @@ import SelectLecture from './modal/SelectLecture';
 import { lecture } from '../util/lecture';
 import AreaMenu from './contextMenu/AreaMenu';
 
-function Area({ children, idx, areaData, itemData, matchingItemData, areaObj, itemObj, areaGrabbedObj, isAreaClickDown }) {
+function Area({ children, idx, areaData, fixedItemData, matchingItemData, areaObj, itemObj, areaGrabbedObj, isAreaClickDown }) {
     const dispatch = useDispatch();
     const [showLectureModal, setShowLectureModal] = useState(false); //과목정보 모달
     const [modalPosition, setModalPosition] = useState(null);
@@ -166,7 +166,7 @@ function Area({ children, idx, areaData, itemData, matchingItemData, areaObj, it
         offHover(e);
         dispatch(setItemObj({}));
         if (itemObj.type === 'item') {
-            dropEvent(itemData, setItemData);
+            dropEvent(fixedItemData, setFixedItemData);
         }
         if (itemObj.type === 'matching') {
             dropEvent(matchingItemData, setMatchingItemData);
@@ -202,13 +202,6 @@ function Area({ children, idx, areaData, itemData, matchingItemData, areaObj, it
                     ${areaGrabbedObj.some(item => item.block_group_No === idx) ? 'dragging' : ''}
                 `}
             >
-                {_.find(areaData, { block_group_No: idx })?.areaActiveType?.map((e, i) => {
-                    return (
-                        <span key={i} className={`lecture_${e} ignoreEnter`}>
-                            {e === 'all' ? '상관없음' : lecture.getLectureName(e).slice(0, 1)}
-                        </span>
-                    );
-                })}
                 {children}
             </div>
             {showLectureModal && <SelectLecture position={modalPosition} handleConfirm={update} handleRemove={remove} handleCancel={cancel} />}

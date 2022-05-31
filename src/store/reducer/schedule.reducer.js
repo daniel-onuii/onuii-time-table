@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
     areaData: null,
-    itemData: null,
+    fixedItemData: null,
     itemGroupData: [],
     matchingItemData: null,
     matchingItemGroupData: [],
@@ -13,14 +13,14 @@ const slice = createSlice({
     reducers: {
         initData(state, action) {
             state.areaData = action.payload.areaData;
-            state.itemData = action.payload.itemData;
+            state.fixedItemData = action.payload.fixedItemData;
             state.matchingItemData = action.payload.matchingItemData;
         },
         setAreaData(state, action) {
             state.areaData = action.payload;
         },
-        setItemData(state, action) {
-            state.itemData = action.payload;
+        setFixedItemData(state, action) {
+            state.fixedItemData = action.payload;
         },
         setItemGroupData(state, action) {
             state.itemGroupData = action.payload;
@@ -38,5 +38,5 @@ const slice = createSlice({
 });
 
 const { actions, reducer } = slice;
-export const { initData, setAreaData, setItemData, setItemGroupData, setTimeListData, setMatchingItemData, setMatchingItemGroupData } = actions;
+export const { initData, setAreaData, setFixedItemData, setItemGroupData, setTimeListData, setMatchingItemData, setMatchingItemGroupData } = actions;
 export default reducer;

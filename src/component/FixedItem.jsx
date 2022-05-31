@@ -21,15 +21,15 @@ const Layout = styled.div`
 `;
 function FixedItem({ idx }) {
     const dispatch = useDispatch();
-    const { itemData, itemGroupData } = useSelector(state => state.schedule);
+    const { fixedItemData, itemGroupData } = useSelector(state => state.schedule);
     const { itemObj } = useSelector(state => state.trigger);
-    const itemLectureName = lecture.getLectureNameByIdx(itemData, idx);
+    const itemLectureName = lecture.getLectureNameByIdx(fixedItemData, idx);
     const handleClick = () => {
         dispatch(
             setItemObj({
                 idx: idx,
                 type: 'item',
-                lectureId: lecture.getLectureId(itemData, idx),
+                lectureId: lecture.getLectureId(fixedItemData, idx),
                 time: lecture.getLectureRunningTime(itemGroupData, idx),
                 isShow: itemObj.isShow ? false : true,
             }),
@@ -41,7 +41,7 @@ function FixedItem({ idx }) {
             setItemObj({
                 idx: idx,
                 type: 'item',
-                lectureId: lecture.getLectureId(itemData, idx),
+                lectureId: lecture.getLectureId(fixedItemData, idx),
                 time: lecture.getLectureRunningTime(itemGroupData, idx),
             }),
         );
