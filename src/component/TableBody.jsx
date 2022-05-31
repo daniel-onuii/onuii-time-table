@@ -4,13 +4,14 @@ import { setItemGroupData, setMatchingItemGroupData, setTimeListData } from '../
 import { lecture } from '../util/lecture';
 import { schedule } from '../util/schedule';
 import { table } from '../util/table';
-import Area from './Area';
+import Area from './area/Area';
 import FixedItem from './FixedItem';
 import styled from 'styled-components';
-import Distribution from './Distribution';
+import Distribution from './area/Distribution';
 import { distData } from '../mock/distData';
 import _ from 'lodash';
 import MatchingItem from './MatchingItem';
+import LectureItem from './area/LectureItem';
 const Layout = styled.div`
     .contents {
         height: 504px;
@@ -109,7 +110,6 @@ function TableBody() {
     //         tableRef.current.scrollTo(0, 681);
     //     }, 0);
     // }, []);
-
     return (
         <Layout>
             <div className="contents" ref={tableRef}>
@@ -124,6 +124,7 @@ function TableBody() {
                                         {_.range(0, 7).map((e, ii) => {
                                             const idx = table.getBlockId(e, i);
                                             const level = _.find(distData, { block_group_No: idx })?.level;
+                                            const lectureDatas = _.find(areaData, { block_group_No: idx })?.areaActiveType;
                                             return (
                                                 <td key={ii} className={`${e >= 6 ? 'weekend' : ''}`}>
                                                     <Area
@@ -137,14 +138,9 @@ function TableBody() {
                                                         isAreaClickDown={isAreaClickDown}
                                                     >
                                                         {level && <Distribution level={level} />}
-
-                                                        {_.find(areaData, { block_group_No: idx })?.areaActiveType?.map((e, i) => {
-                                                            return (
-                                                                <span key={i} className={`lecture_${e} ignoreEnter`}>
-                                                                    {e === 'all' ? '상관없음' : lecture.getLectureName(e).slice(0, 1)}
-                                                                </span>
-                                                            );
-                                                        })}
+                                                        {lectureDatas?.map((e, i) => (
+                                                            <LectureItem key={i} id={e} />
+                                                        ))}
                                                     </Area>
                                                     {itemGroupData.some(y => y.startIdx === idx) && <FixedItem idx={idx} />}
                                                     {matchingItemGroupData.some(y => y.startIdx === idx) && <MatchingItem idx={idx} />}

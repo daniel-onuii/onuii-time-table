@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { setAreaGrabbedObj, setAreaObj, setIsAreaAppend, setIsAreaClickDown, setItemObj } from '../store/reducer/trigger.reducer';
-import { setAreaData, setFixedItemData, setMatchingItemData } from '../store/reducer/schedule.reducer';
-import { schedule } from '../util/schedule';
-import { table } from '../util/table';
+import { setAreaGrabbedObj, setAreaObj, setIsAreaAppend, setIsAreaClickDown, setItemObj } from '../../store/reducer/trigger.reducer';
+import { setAreaData, setFixedItemData, setMatchingItemData } from '../../store/reducer/schedule.reducer';
+import { schedule } from '../../util/schedule';
+import { table } from '../../util/table';
 import _ from 'lodash';
-import SelectLecture from './modal/SelectLecture';
-import { lecture } from '../util/lecture';
-import AreaMenu from './contextMenu/AreaMenu';
+import SelectLecture from '../modal/SelectLecture';
+import { lecture } from '../../util/lecture';
+import AreaMenu from '../contextMenu/AreaMenu';
 
 function Area({ children, idx, areaData, fixedItemData, matchingItemData, areaObj, itemObj, areaGrabbedObj, isAreaClickDown }) {
     const dispatch = useDispatch();
