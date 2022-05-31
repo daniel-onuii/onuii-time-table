@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
-import FixedItemDetail from './FixedItemDetail';
+// import FixedItemDetail from './FixedItemDetail';
 import { setItemObj, setIsAreaClickDown } from '../store/reducer/trigger.reducer';
 import { lecture } from '../util/lecture';
 import { schedule } from '../util/schedule';
@@ -70,7 +70,7 @@ function FixedItem({ idx }) {
                     })}
                 </div>
             </div>
-            {itemObj.isShow && itemObj.idx === idx && <FixedItemDetail idx={idx} />}
+            {/* {itemObj.isShow && itemObj.idx === idx && <FixedItemDetail idx={idx} />} */}
         </Layout>
     );
 }

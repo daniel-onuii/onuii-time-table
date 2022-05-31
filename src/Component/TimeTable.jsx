@@ -46,7 +46,6 @@ function TimeTable() {
         <React.Fragment>
             <Layout>
                 {/* <img src={imgTest} /> */}
-                {/* <img src="../../asset/icon/ic-card.png" /> */}
                 {/* <FollowCursor /> */}
                 <TableHead />
                 <TableBody />

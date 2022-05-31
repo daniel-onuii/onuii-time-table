@@ -86,21 +86,6 @@ const Layout = styled.div`
         background: #01a8fe !important;
         color: white;
     }
-    .lecture_all {
-        background: #d0ece7;
-    }
-    .lecture_8906 {
-        background: coral;
-    }
-    .lecture_9168 {
-        background: cornflowerblue;
-    }
-    .lecture_9169 {
-        background: yellowgreen;
-    }
-    .lecture_9171 {
-        background: plum;
-    }
     .ignoreEnter {
         pointer-events: none;
     }
