@@ -124,6 +124,7 @@ function SelectLecture({ position, handleConfirm, handleRemove, handleCancel }) 
                     <br />
                     <Button color={'blue'} text={'선택 추가 a'} handleClick={() => handleConfirmExtend('add')} />
                     <Button color={'red'} text={'선택 삭제 d'} handleClick={() => handleConfirmExtend('pop')} />
+                    {/* <Button color={'yellow'} text={'가매칭 m'} handleClick={handleCancel} /> */}
                     <Button color={'grey'} text={'취소 esc'} handleClick={handleCancel} />
                 </div>
             </div>

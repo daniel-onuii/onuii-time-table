@@ -12,6 +12,9 @@ import { distData } from '../mock/distData';
 import _ from 'lodash';
 import MatchingItem from './item/MatchingItem';
 import LectureItem from './area/LectureItem';
+import { setSelectMode } from '../store/reducer/user.reducer';
+import { setAreaMatchingObj } from '../store/reducer/trigger.reducer';
+import { post } from '../util/interface';
 const Layout = styled.div`
     .contents {
         height: 504px;
@@ -87,6 +90,11 @@ const Layout = styled.div`
         background: #01a8fe !important;
         color: white;
     }
+    .matching {
+        // box-shadow: 100vw 0px 0px 0px blue inset;
+        background: yellow;
+        color: white;
+    }
     .ignoreEnter {
         pointer-events: none;
     }
@@ -97,7 +105,8 @@ function TableBody() {
     const dispatch = useDispatch();
 
     const { areaData, fixedItemData, itemGroupData, timeListData, matchingItemData, matchingItemGroupData } = useSelector(state => state.schedule);
-    const { areaGrabbedObj, itemObj, areaObj, isAreaClickDown } = useSelector(state => state.trigger);
+    const { areaGrabbedObj, areaMatchingObj, itemObj, areaObj, isAreaClickDown, isAreaAppend } = useSelector(state => state.trigger);
+    const { selectMode } = useSelector(state => state.user);
 
     useEffect(() => {
         dispatch(setTimeListData(schedule.getTimeList()));
@@ -105,11 +114,18 @@ function TableBody() {
         dispatch(setMatchingItemGroupData(lecture.getGroupByLectureTime(matchingItemData)));
     }, [fixedItemData, matchingItemData]);
 
-    // useEffect(() => {
-    //     setTimeout(() => {
-    //         tableRef.current.scrollTo(0, 681);
-    //     }, 0);
-    // }, []);
+    useEffect(() => {
+        //가매칭 영역 선택 후 parent에 영역값 전달
+        post.sendMessage({ name: 'matchingObj', data: { blocks: areaMatchingObj, lecture_id: selectMode.lecture_subject_Id } });
+    }, [areaMatchingObj]);
+
+    useEffect(() => {
+        //     setTimeout(() => {
+        //         tableRef.current.scrollTo(0, 681);
+        //     }, 0);
+        post.readyToListen(dispatch);
+    }, []);
+
     return (
         <Layout>
             <div className="contents" ref={tableRef}>
@@ -124,7 +140,7 @@ function TableBody() {
                                         {_.range(0, 7).map((e, ii) => {
                                             const idx = table.getBlockId(e, i);
                                             const level = _.find(distData, { block_group_No: idx })?.level;
-                                            const lectureDatas = _.find(areaData, { block_group_No: idx })?.areaActiveType;
+                                            const lectureData = _.find(areaData, { block_group_No: idx })?.areaActiveType;
                                             return (
                                                 <td key={ii} className={`${e >= 6 ? 'weekend' : ''}`}>
                                                     <Area
@@ -135,10 +151,12 @@ function TableBody() {
                                                         areaObj={areaObj}
                                                         itemObj={itemObj}
                                                         areaGrabbedObj={areaGrabbedObj}
+                                                        areaMatchingObj={areaMatchingObj}
                                                         isAreaClickDown={isAreaClickDown}
+                                                        isAreaAppend={isAreaAppend}
                                                     >
                                                         {level && <Distribution level={level} />}
-                                                        {lectureDatas?.map((e, i) => (
+                                                        {lectureData?.map((e, i) => (
                                                             <LectureItem key={i} id={e} />
                                                         ))}
                                                     </Area>

@@ -1,6 +1,13 @@
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { setAreaGrabbedObj, setAreaObj, setIsAreaAppend, setIsAreaClickDown, setItemObj } from '../../store/reducer/trigger.reducer';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+    setAreaGrabbedObj,
+    setAreaMatchingObj,
+    setAreaObj,
+    setIsAreaAppend,
+    setIsAreaClickDown,
+    setItemObj,
+} from '../../store/reducer/trigger.reducer';
 import { setAreaData, setFixedItemData, setMatchingItemData } from '../../store/reducer/schedule.reducer';
 import { schedule } from '../../util/schedule';
 import { table } from '../../util/table';
@@ -8,8 +15,22 @@ import _ from 'lodash';
 import SelectLecture from '../modal/SelectLecture';
 import AreaMenu from '../contextMenu/AreaMenu';
 
-function Area({ children, idx, areaData, fixedItemData, matchingItemData, areaObj, itemObj, areaGrabbedObj, isAreaClickDown }) {
+function Area({
+    children,
+    idx,
+    areaData,
+    fixedItemData,
+    matchingItemData,
+    areaObj,
+    itemObj,
+    areaGrabbedObj,
+    areaMatchingObj,
+    isAreaClickDown,
+    isAreaAppend,
+}) {
     const dispatch = useDispatch();
+
+    const { selectMode } = useSelector(state => state.user);
     const [showLectureModal, setShowLectureModal] = useState(false); //과목정보 모달
     const [modalPosition, setModalPosition] = useState(null);
     const [areaContextPosition, setAreaContextPosition] = useState(null);
@@ -81,7 +102,7 @@ function Area({ children, idx, areaData, fixedItemData, matchingItemData, areaOb
 
     const handleAreaDown = () => {
         setShowAreaContext(false);
-        const isFill = table.isFillArea(areaData, idx);
+        const isFill = table.isFillArea(areaMatchingObj, idx);
         dispatch(setIsAreaClickDown(true)); //클릭 상태
         dispatch(setIsAreaAppend(isFill)); //대상이 빈칸인지
         dispatch(
@@ -129,10 +150,23 @@ function Area({ children, idx, areaData, fixedItemData, matchingItemData, areaOb
         }
     };
     const handleAreaUp = e => {
-        dispatch(setIsAreaClickDown(false));
-        if (areaGrabbedObj.length > 0) {
-            setModalPosition({ x: e.clientX, y: e.clientY });
-            setShowLectureModal(true);
+        if (_.isEmpty(selectMode)) {
+            dispatch(setIsAreaClickDown(false));
+            if (areaGrabbedObj.length > 0) {
+                setModalPosition({ x: e.clientX, y: e.clientY });
+                setShowLectureModal(true);
+            }
+        } else {
+            dispatch(setIsAreaClickDown(false));
+            dispatch(setAreaGrabbedObj([]));
+            if (!isAreaAppend) {
+                dispatch(setAreaMatchingObj([...areaMatchingObj, ...areaGrabbedObj]));
+            } else {
+                const removeResult = _.reject(areaMatchingObj, o => {
+                    return areaGrabbedObj.some(item => item.block_group_No === o.block_group_No);
+                });
+                dispatch(setAreaMatchingObj(removeResult));
+            }
         }
     };
 
@@ -193,6 +227,7 @@ function Area({ children, idx, areaData, fixedItemData, matchingItemData, areaOb
                 className={`item 
                     ${areaData.some(item => item.block_group_No === idx) ? 'active' : ''}
                     ${areaGrabbedObj.some(item => item.block_group_No === idx) ? 'dragging' : ''}
+                    ${areaMatchingObj.some(item => item.block_group_No === idx) ? 'matching' : ''}
                 `}
             >
                 {children}

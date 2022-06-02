@@ -39,6 +39,10 @@ const Layout = styled.div`
         border: 1px solid #aeb6bf;
         background: #aeb6bf;
     }
+    &.yellow {
+        border: 1px solid #ffc300;
+        background: #ffc300;
+    }
 `;
 function Button({ color, text, handleClick }) {
     return (

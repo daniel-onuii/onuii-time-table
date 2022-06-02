@@ -2,8 +2,9 @@ import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { initData } from './store/reducer/schedule.reducer';
 import MainContainer from './container/MainContainer';
+import { setInitAuth } from './store/reducer/user.reducer';
 
-const App = ({ areaData, fixedItemData, matchingItemData }) => {
+const App = ({ auth, selectMode, areaData, fixedItemData, matchingItemData }) => {
     const dispatch = useDispatch();
     useEffect(() => {
         const areaRowData = areaData ? areaData : [];
@@ -17,11 +18,15 @@ const App = ({ areaData, fixedItemData, matchingItemData }) => {
             }),
         );
     }, []);
-    return (
-        <div>
-            <MainContainer />
-        </div>
-    );
+    useEffect(() => {
+        dispatch(
+            setInitAuth({
+                auth: auth,
+                selectMode: selectMode,
+            }),
+        );
+    }, [auth, selectMode]);
+    return <MainContainer />;
 };
 
 export default App;

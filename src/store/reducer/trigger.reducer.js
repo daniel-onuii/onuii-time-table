@@ -3,6 +3,7 @@ const initialState = {
     areaObj: {},
     itemObj: {},
     areaGrabbedObj: [],
+    areaMatchingObj: [],
     isAreaAppend: false,
     isAreaClickDown: false,
     areaActiveType: null,
@@ -21,6 +22,9 @@ const slice = createSlice({
         },
         setAreaGrabbedObj(state, action) {
             state.areaGrabbedObj = action.payload;
+        },
+        setAreaMatchingObj(state, action) {
+            state.areaMatchingObj = action.payload;
         },
         setIsAreaAppend(state, action) {
             state.isAreaAppend = action.payload;
@@ -41,6 +45,15 @@ const slice = createSlice({
 });
 
 const { actions, reducer } = slice;
-export const { setAreaObj, setItemObj, setAreaGrabbedObj, setIsAreaAppend, setIsAreaClickDown, setAreaActiveType, setStartGrabIdx, setMessage } =
-    actions;
+export const {
+    setAreaObj,
+    setItemObj,
+    setAreaGrabbedObj,
+    setAreaMatchingObj,
+    setIsAreaAppend,
+    setIsAreaClickDown,
+    setAreaActiveType,
+    setStartGrabIdx,
+    setMessage,
+} = actions;
 export default reducer;

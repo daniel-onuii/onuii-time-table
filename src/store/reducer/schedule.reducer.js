@@ -1,11 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
+    timeListData: [],
     areaData: null,
     fixedItemData: null,
     itemGroupData: [],
     matchingItemData: null,
     matchingItemGroupData: [],
-    timeListData: [],
 };
 const slice = createSlice({
     name: 'schedule',
