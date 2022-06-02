@@ -27,6 +27,7 @@ function Area({
     areaMatchingObj,
     isAreaClickDown,
     isAreaAppend,
+    compareAreaData,
 }) {
     const dispatch = useDispatch();
 
@@ -228,6 +229,7 @@ function Area({
                     ${areaData.some(item => item.block_group_No === idx) ? 'active' : ''}
                     ${areaGrabbedObj.some(item => item.block_group_No === idx) ? 'dragging' : ''}
                     ${areaMatchingObj.some(item => item.block_group_No === idx) ? 'matching' : ''}
+                    ${_.find(compareAreaData, { block_group_No: idx }) ? 'equal' : ''}
                 `}
             >
                 {children}

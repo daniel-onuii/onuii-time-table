@@ -2,9 +2,10 @@ import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { initData } from './store/reducer/schedule.reducer';
 import MainContainer from './container/MainContainer';
-import { setInitAuth } from './store/reducer/user.reducer';
+import { setAuth, setInitAuth } from './store/reducer/user.reducer';
+import { post } from './util/interface';
 
-const App = ({ auth, selectMode, areaData, fixedItemData, matchingItemData }) => {
+const App = ({ auth, areaData, fixedItemData, matchingItemData }) => {
     const dispatch = useDispatch();
     useEffect(() => {
         const areaRowData = areaData ? areaData : [];
@@ -17,15 +18,11 @@ const App = ({ auth, selectMode, areaData, fixedItemData, matchingItemData }) =>
                 matchingItemData: matchingItemRowData,
             }),
         );
+        post.readyToListen(dispatch);
     }, []);
     useEffect(() => {
-        dispatch(
-            setInitAuth({
-                auth: auth,
-                selectMode: selectMode,
-            }),
-        );
-    }, [auth, selectMode]);
+        dispatch(setAuth(auth));
+    }, [auth]);
     return <MainContainer />;
 };
 

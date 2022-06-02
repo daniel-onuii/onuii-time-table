@@ -98,6 +98,9 @@ const Layout = styled.div`
     .ignoreEnter {
         pointer-events: none;
     }
+    .equal {
+        background: pink;
+    }
 `;
 
 function TableBody() {
@@ -106,7 +109,8 @@ function TableBody() {
 
     const { areaData, fixedItemData, itemGroupData, timeListData, matchingItemData, matchingItemGroupData } = useSelector(state => state.schedule);
     const { areaGrabbedObj, areaMatchingObj, itemObj, areaObj, isAreaClickDown, isAreaAppend } = useSelector(state => state.trigger);
-    const { selectMode } = useSelector(state => state.user);
+    const compareAreaData = useSelector(state => state.compare.areaData);
+    const { auth, selectMode } = useSelector(state => state.user);
 
     useEffect(() => {
         dispatch(setTimeListData(schedule.getTimeList()));
@@ -119,12 +123,15 @@ function TableBody() {
         post.sendMessage({ name: 'matchingObj', data: { blocks: areaMatchingObj, lecture_id: selectMode.lecture_subject_Id } });
     }, [areaMatchingObj]);
 
-    useEffect(() => {
-        //     setTimeout(() => {
-        //         tableRef.current.scrollTo(0, 681);
-        //     }, 0);
-        post.readyToListen(dispatch);
-    }, []);
+    // useEffect(() => {
+    //     console.log('!!', compareAreaData, areaMatchingObj);
+    //     console.log('??', _.intersectionBy(compareAreaData, areaMatchingObj, 'block_group_No'));
+    // }, [compareAreaData]);
+    // useEffect(() => {
+    //     //     setTimeout(() => {
+    //     //         tableRef.current.scrollTo(0, 681);
+    //     //     }, 0);
+    // }, []);
 
     return (
         <Layout>
@@ -154,6 +161,7 @@ function TableBody() {
                                                         areaMatchingObj={areaMatchingObj}
                                                         isAreaClickDown={isAreaClickDown}
                                                         isAreaAppend={isAreaAppend}
+                                                        compareAreaData={_.intersectionBy(compareAreaData, areaMatchingObj, 'block_group_No')}
                                                     >
                                                         {level && <Distribution level={level} />}
                                                         {lectureData?.map((e, i) => (
@@ -161,7 +169,9 @@ function TableBody() {
                                                         ))}
                                                     </Area>
                                                     {itemGroupData.some(y => y.startIdx === idx) && <FixedItem idx={idx} />}
-                                                    {matchingItemGroupData.some(y => y.startIdx === idx) && <MatchingItem idx={idx} />}
+                                                    {auth === 'admin' && matchingItemGroupData.some(y => y.startIdx === idx) && (
+                                                        <MatchingItem idx={idx} />
+                                                    )}
                                                 </td>
                                             );
                                         })}

@@ -45,20 +45,50 @@ const App = () => {
         { block_group_No: 239, lecture_subject_Id: 9171 },
     ];
 
-    const [auth, setAuth] = useState('student');
-    const [selectMode, setSelectMode] = useState({});
+    const teacherData = [
+        { block_group_No: 36 },
+        { block_group_No: 37 },
+        { block_group_No: 56 },
+        { block_group_No: 57 },
+        { block_group_No: 58 },
+        { block_group_No: 59 },
+        { block_group_No: 60 },
+        { block_group_No: 140 },
+        { block_group_No: 141 },
+        { block_group_No: 142 },
+        { block_group_No: 143 },
+        { block_group_No: 232 },
+        { block_group_No: 233 },
+        { block_group_No: 234 },
+        { block_group_No: 235 },
+        { block_group_No: 236 },
+        { block_group_No: 237 },
+        { block_group_No: 238 },
+    ];
+
+    const [auth, setAuth] = useState('student'); //권한
+    const [isSelect, setIsSelect] = useState(false); //선택모드
 
     const handleMode = mode => {
         if (mode == 1) {
-            window.postMessage({ id: 'onuii-time-table', name: 'init', target: 'matching' }, '*');
+            //초기화
+            window.postMessage({ id: 'onuii-time-table', name: 'setSelectMode', data: {} }, '*');
         } else {
-            setSelectMode({ type: 'matching', lecture_subject_Id: 8906 });
+            //가매칭 - 수학
+            window.postMessage({ id: 'onuii-time-table', name: 'setSelectMode', data: { type: 'matching', lecture_subject_Id: 8906 } }, '*');
         }
+    };
+    const handleChoose = () => {
+        window.postMessage({ id: 'onuii-time-table', name: 'setTeacher', data: teacherData }, '*');
     };
     useEffect(() => {
         window.addEventListener('message', function (e) {
             if (e.data.id === 'onuii-time-table') {
-                console.log(e.data);
+                switch (e.data.name) {
+                    case 'matchingObj':
+                        e.data.data.blocks.length > 0 ? setIsSelect(true) : setIsSelect(false);
+                        break;
+                }
             }
         });
     }, []);
@@ -76,16 +106,11 @@ const App = () => {
             {auth == 'admin' && (
                 <>
                     <button onClick={() => handleMode(1)}>가매칭 초기화</button>
-                    <button onClick={() => handleMode(2)}>가매칭 - 예)수학</button>
+                    <button onClick={() => handleMode(2)}>가매칭 - 수학</button>
                 </>
             )}
-            <OnuiiTimeTable
-                auth={auth}
-                selectMode={selectMode}
-                areaData={areaData}
-                fixedItemData={fixedItemData}
-                matchingItemData={matchingItemData}
-            />
+            {isSelect && <button onClick={handleChoose}>후보 선생님 A</button>}
+            <OnuiiTimeTable auth={auth} areaData={areaData} fixedItemData={fixedItemData} matchingItemData={matchingItemData} />
         </>
     );
 };
