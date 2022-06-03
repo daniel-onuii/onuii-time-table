@@ -119,7 +119,7 @@ function TableBody() {
     }, [fixedItemData, matchingItemData]);
 
     useEffect(() => {
-        //가매칭 영역 선택 후 parent에 영역값 전달
+        //가매칭 영역 선택 후 parent에 영역값 전달하여 선생님 후보 get
         post.sendMessage({ name: 'matchingObj', data: { blocks: areaMatchingObj, lecture_id: selectMode.lecture_subject_Id } });
     }, [areaMatchingObj]);
 
