@@ -101,11 +101,8 @@ function Area({
         init();
     };
 
-    const handleAreaDown = () => {
+    const handleAreaDown = e => {
         setShowAreaContext(false);
-        const isFill = table.isFillArea(areaMatchingObj, idx);
-        dispatch(setIsAreaClickDown(true)); //클릭 상태
-        dispatch(setIsAreaAppend(isFill)); //대상이 빈칸인지
         dispatch(
             setAreaObj({
                 idx: idx,
@@ -115,6 +112,10 @@ function Area({
                 endOverDayIdx: schedule.getWeekIdx(idx),
             }),
         );
+        if (e.buttons !== 1) return false; //좌클릭 이외는 전부 false
+        dispatch(setIsAreaClickDown(true)); //클릭 상태
+        const isFill = table.isFillArea(areaMatchingObj, idx); //가매칭모드때 사용
+        dispatch(setIsAreaAppend(isFill)); //대상이 빈칸인지
     };
 
     const handleAreaOver = () => {
@@ -151,11 +152,35 @@ function Area({
         }
     };
     const handleAreaUp = e => {
+        //드래그 영역만큼 셋팅
         if (_.isEmpty(selectMode)) {
-            dispatch(setIsAreaClickDown(false));
-            if (areaGrabbedObj.length > 0) {
+            if (_.isEmpty(areaGrabbedObj)) {
+                //드래그를 하지않았다면 기본적으로 1시간값 셋팅,, 1:30분 넘어서 처리 해야함. ㅅ
+                dispatch(setIsAreaClickDown(false));
                 setModalPosition({ x: e.clientX, y: e.clientY });
+                dispatch(
+                    setAreaObj({
+                        idx: idx,
+                        startOverIdx: schedule.getTimeIdx(idx),
+                        endOverIdx: schedule.getTimeIdx(idx + 4),
+                        startOverDayIdx: schedule.getWeekIdx(idx),
+                        endOverDayIdx: schedule.getWeekIdx(idx),
+                    }),
+                );
+                dispatch(
+                    setAreaGrabbedObj(
+                        _.range(idx, idx + 4).map(e => {
+                            return { block_group_No: e };
+                        }),
+                    ),
+                );
                 setShowLectureModal(true);
+            } else {
+                dispatch(setIsAreaClickDown(false));
+                if (areaGrabbedObj.length > 0) {
+                    setModalPosition({ x: e.clientX, y: e.clientY });
+                    setShowLectureModal(true);
+                }
             }
         } else {
             dispatch(setIsAreaClickDown(false));

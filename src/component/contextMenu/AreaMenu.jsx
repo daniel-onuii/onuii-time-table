@@ -71,7 +71,7 @@ function AreaMenu({ idx, position, close }) {
     };
     return (
         <Layout left={newPositionX} top={position.y + 3} ref={boxRef}>
-            <ul>
+            <ul onContextMenu={e => e.preventDefault()}>
                 <li lecture={'9171'} time={4} weekcount={2} onClick={handleClick}>
                     매칭 추가(과학60분 주2회)
                 </li>

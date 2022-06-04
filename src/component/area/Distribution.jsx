@@ -21,7 +21,7 @@ function Distribution({ level }) {
     return (
         <Layout>
             <Circle level={level} />
-            <Text level={level}>{level == 1 ? '원활' : level == 2 ? '보통' : '혼잡'}</Text>
+            {/* <Text level={level}>{level == 1 ? '원활' : level == 2 ? '보통' : '혼잡'}</Text> */}
         </Layout>
     );
 }

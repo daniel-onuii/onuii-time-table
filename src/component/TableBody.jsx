@@ -12,8 +12,6 @@ import { distData } from '../mock/distData';
 import _ from 'lodash';
 import MatchingItem from './item/MatchingItem';
 import LectureItem from './area/LectureItem';
-import { setSelectMode } from '../store/reducer/user.reducer';
-import { setAreaMatchingObj } from '../store/reducer/trigger.reducer';
 import { post } from '../util/interface';
 const Layout = styled.div`
     .contents {
@@ -119,7 +117,6 @@ function TableBody() {
     }, [fixedItemData, matchingItemData]);
 
     useEffect(() => {
-        //가매칭 영역 선택 후 parent에 영역값 전달하여 선생님 후보 get
         post.sendMessage({ name: 'matchingObj', data: { blocks: areaMatchingObj, lecture_id: selectMode.lecture_subject_Id } });
     }, [areaMatchingObj]);
 

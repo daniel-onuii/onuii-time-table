@@ -44,7 +44,7 @@ const Layout = styled.div`
         background: #ffc300;
     }
 `;
-function Button({ color, text, handleClick }) {
+function Button({ color, alt, text, handleClick }) {
     return (
         <Layout className={color} onClick={handleClick}>
             {text}

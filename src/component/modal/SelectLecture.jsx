@@ -3,6 +3,8 @@ import styled from 'styled-components';
 import _ from 'lodash';
 import Button from '../../module/button/Button';
 import Input from '../../module/input/Input';
+import { useSelector } from 'react-redux';
+import { schedule } from '../../util/schedule';
 const Layout = styled.div`
     position: fixed;
     width: 100vw;
@@ -11,6 +13,11 @@ const Layout = styled.div`
     left: 0;
     z-index: 3;
     background: rgb(0, 0, 0, 0.2);
+    .timeInfo {
+        text-align: left;
+        font-size: 18px;
+        padding-bottom: 15px;
+    }
     .modalLectureBox {
         position: absolute;
         padding: 15px;
@@ -42,7 +49,12 @@ const Layout = styled.div`
     }
 `;
 function SelectLecture({ position, handleConfirm, handleRemove, handleCancel }) {
+    const { areaObj, areaGrabbedObj } = useSelector(state => state.trigger);
     const boxRef = useRef();
+    useEffect(() => {
+        console.log(areaGrabbedObj);
+        console.log(areaObj, '얘 없앨수있는지');
+    }, []);
     const [dynamicX, setDynamicX] = useState();
     const [lecture, setLecture] = useState([]);
     const [message, setMessage] = useState('');
@@ -105,6 +117,11 @@ function SelectLecture({ position, handleConfirm, handleRemove, handleCancel }) 
     return (
         <Layout>
             <div ref={boxRef} className={'modalLectureBox'} style={{ left: dynamicX, top: position.y }}>
+                <div className={'timeInfo'}>
+                    <span>{`${schedule.getWeekText(areaObj.startOverDayIdx)} ${schedule.getTime(areaObj.startOverIdx)}`}</span> {` ~ `}
+                    <span>{`${schedule.getWeekText(areaObj.endOverDayIdx)} ${schedule.getTime(areaObj.endOverIdx)}`}</span>
+                    <span>({(areaObj.endOverIdx - areaObj.startOverIdx) * 15}분)</span>
+                </div>
                 <div style={{ display: 'flex' }}>
                     {lectureList.map((e, i) => {
                         return (
@@ -119,13 +136,11 @@ function SelectLecture({ position, handleConfirm, handleRemove, handleCancel }) 
                 <br />
                 <div className={'message'}>{message}</div>
                 <div className={'buttons'}>
-                    <Button color={'blue'} text={'덮어쓰기 enter'} handleClick={() => handleConfirmExtend('overlap')} />
-                    <Button color={'red'} text={'삭제하기 del backspace'} handleClick={handleRemove} />
-                    <br />
-                    <Button color={'blue'} text={'선택 추가 a'} handleClick={() => handleConfirmExtend('add')} />
-                    <Button color={'red'} text={'선택 삭제 d'} handleClick={() => handleConfirmExtend('pop')} />
-                    {/* <Button color={'yellow'} text={'가매칭 m'} handleClick={handleCancel} /> */}
-                    <Button color={'grey'} text={'취소 esc'} handleClick={handleCancel} />
+                    <Button color={'blue'} text={'덮어쓰기'} alt={'enter'} handleClick={() => handleConfirmExtend('overlap')} />
+                    <Button color={'red'} text={'초기화'} handleClick={handleRemove} />
+                    <Button color={'blue'} text={'추가'} handleClick={() => handleConfirmExtend('add')} />
+                    <Button color={'red'} text={'삭제'} handleClick={() => handleConfirmExtend('pop')} />
+                    <Button color={'grey'} text={'취소'} handleClick={handleCancel} />
                 </div>
             </div>
         </Layout>
