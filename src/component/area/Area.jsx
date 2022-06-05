@@ -152,6 +152,10 @@ function Area({
         }
     };
     const handleAreaUp = e => {
+        if (e.button !== 0) {
+            //좌클릭일때만
+            return false;
+        }
         //드래그 영역만큼 셋팅
         if (_.isEmpty(selectMode)) {
             if (_.isEmpty(areaGrabbedObj)) {
