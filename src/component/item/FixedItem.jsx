@@ -19,6 +19,9 @@ const Layout = styled.div`
         border-radius: 5px;
         padding-top: 4px;
     }
+    .lectureItem:hover {
+        -webkit-filter: brightness(110%);
+    }
 `;
 function FixedItem({ idx }) {
     const dispatch = useDispatch();

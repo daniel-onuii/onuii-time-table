@@ -37,10 +37,6 @@ const Layout = styled.div`
         border-spacing: 0;
         font-size: 12px;
     }
-    td:hover {
-        background: #cfcfcf;
-        cursor: cell;
-    }
     .item {
         height: 100%;
         width: 100%;
@@ -48,6 +44,9 @@ const Layout = styled.div`
         top: 0px;
         z-index: 0;
         color: #b3b3b3;
+    }
+    .item:hover {
+        background: #cfcfcf;
     }
     .active {
         cursor: cell;
@@ -66,13 +65,6 @@ const Layout = styled.div`
         width: 100%;
         top: 0;
         z-index: 0;
-    }
-    input {
-        width: 64px !important;
-        margin: 0px !important;
-        height: 16px !important;
-        padding: 5px !important;
-        font-size: 12px !important;
     }
     .dragging {
         background: #01a8fe !important;

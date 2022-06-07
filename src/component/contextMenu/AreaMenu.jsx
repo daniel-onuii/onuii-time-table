@@ -54,11 +54,11 @@ function AreaMenu({ idx, position, close }) {
         };
     }, []);
     const handleClick = e => {
+        close();
         const lecture = Number(e.target.getAttribute('lecture'));
         const time = Number(e.target.getAttribute('time'));
         const weekCount = Number(e.target.getAttribute('weekcount'));
         const lessonCount = _.filter(matchingItemGroupData, { lecture_subject_Id: lecture }).length;
-        close();
         if (lessonCount >= weekCount) {
             dispatch(setMessage('횟수가 초과됨.'));
             return false;

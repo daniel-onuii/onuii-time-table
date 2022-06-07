@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import _ from 'lodash';
 import { OnuiiTimeTable } from 'onuii-time-table';
 // import 'onuii-time-table/dist/index.css';
 
 const App = () => {
     const areaData = [
         { block_group_No: 36, areaActiveType: ['8906', '9168'] },
-        { block_group_No: 37 },
+        { block_group_No: 37, areaActiveType: ['8906', '9168'] },
+        { block_group_No: 38, areaActiveType: ['8906', '9168'] },
+        { block_group_No: 39, areaActiveType: ['8906', '9168'] },
+        { block_group_No: 40, areaActiveType: ['8906', '9168'] },
         { block_group_No: 135, areaActiveType: ['8906'] },
         { block_group_No: 136, areaActiveType: ['8906'] },
         { block_group_No: 137, areaActiveType: ['8906'] },
@@ -16,6 +18,15 @@ const App = () => {
         { block_group_No: 141, areaActiveType: ['8906'] },
         { block_group_No: 142, areaActiveType: ['8906'] },
         { block_group_No: 143, areaActiveType: ['8906'] },
+        { block_group_No: 232, areaActiveType: ['8906'] },
+        { block_group_No: 233, areaActiveType: ['8906'] },
+        { block_group_No: 234, areaActiveType: ['8906'] },
+        { block_group_No: 235, areaActiveType: ['8906'] },
+        { block_group_No: 236, areaActiveType: ['8906'] },
+        { block_group_No: 237, areaActiveType: ['9171'] },
+        { block_group_No: 238, areaActiveType: ['9171'] },
+        { block_group_No: 239, areaActiveType: ['9171'] },
+        { block_group_No: 240, areaActiveType: ['9171'] },
     ];
     const fixedItemData = [
         { block_group_No: 36, lecture_subject_Id: 9171 },
@@ -39,12 +50,8 @@ const App = () => {
     ];
 
     const matchingItemData = [
-        { block_group_No: 236, lecture_subject_Id: 9171 },
-        { block_group_No: 237, lecture_subject_Id: 9171 },
-        { block_group_No: 238, lecture_subject_Id: 9171 },
-        { block_group_No: 239, lecture_subject_Id: 9171 },
+        // { block_group_No: 236, lecture_subject_Id: 9171 }
     ];
-
     const teacherData = [
         [
             { block_group_No: 36 },
@@ -114,7 +121,7 @@ const App = () => {
     const [isMatching, setIsMatching] = useState(false); //
 
     const handleMode = mode => {
-        if (mode == 1) {
+        if (mode === 1) {
             //초기화
             setIsMatching(false);
             window.postMessage({ id: 'onuii-time-table', name: 'setSelectMode', data: {} }, '*');
@@ -155,7 +162,7 @@ const App = () => {
             <input id="radio_3" type="radio" name="auth" value="admin" onChange={e => setAuth(e.target.value)} />
             <label htmlFor="radio_3">관리자</label>
 
-            {auth == 'admin' && (
+            {auth === 'admin' && (
                 <>
                     {isMatching && <button onClick={() => handleMode(1)}>가매칭모드 초기화</button>}
                     {!isMatching && <button onClick={() => handleMode(2)}>가매칭모드 - 수학</button>}

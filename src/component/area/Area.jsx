@@ -30,7 +30,7 @@ function Area({
     compareAreaData,
 }) {
     const dispatch = useDispatch();
-    const { selectMode } = useSelector(state => state.user);
+    const { selectMode, auth } = useSelector(state => state.user);
     const [showLectureModal, setShowLectureModal] = useState(false); //과목정보 모달
     const [modalPosition, setModalPosition] = useState(null);
     const [areaContextPosition, setAreaContextPosition] = useState(null);
@@ -220,7 +220,7 @@ function Area({
         }
         dispatch(setItemObj({}));
     };
-    const handleAreaEnter = e => {
+    const handleDragEnter = e => {
         table.removeOver();
         const $this = e.currentTarget;
         const weekIdx = schedule.getWeekIdx(idx);
@@ -247,7 +247,7 @@ function Area({
                 onMouseUp={handleAreaUp}
                 onDrop={handleItemDrop}
                 onDragOver={e => e.preventDefault()}
-                onDragEnter={handleAreaEnter}
+                onDragEnter={handleDragEnter}
                 onContextMenu={handleAreaClick}
                 className={`item 
                     ${areaData.some(item => item.block_group_No === idx) ? 'active' : ''}
@@ -259,7 +259,9 @@ function Area({
                 {children}
             </div>
             {showLectureModal && <SelectLecture position={modalPosition} handleConfirm={update} handleRemove={remove} handleCancel={cancel} />}
-            {showAreaContext && areaObj.idx == idx && <AreaMenu idx={idx} position={areaContextPosition} close={() => setShowAreaContext(false)} />}
+            {auth === 'admin' && showAreaContext && areaObj.idx == idx && (
+                <AreaMenu idx={idx} position={areaContextPosition} close={() => setShowAreaContext(false)} />
+            )}
         </React.Fragment>
     );
 }

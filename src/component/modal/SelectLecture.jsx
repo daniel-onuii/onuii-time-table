@@ -47,6 +47,13 @@ const Layout = styled.div`
         text-align: left;
         color: red;
     }
+    input {
+        width: 64px !important;
+        margin: 0px !important;
+        height: 16px !important;
+        padding: 5px !important;
+        font-size: 12px !important;
+    }
 `;
 function SelectLecture({ position, handleConfirm, handleRemove, handleCancel }) {
     const { areaObj, areaGrabbedObj } = useSelector(state => state.trigger);
@@ -126,8 +133,6 @@ function SelectLecture({ position, handleConfirm, handleRemove, handleCancel }) 
                     {lectureList.map((e, i) => {
                         return (
                             <React.Fragment key={i}>
-                                {/* <input type="checkbox" id={e.key} value={e.key} onChange={handleLecture} checked={lecture.includes(e.key)} />
-                                    <label htmlFor={e.key}>{e.value}</label> */}
                                 <Input text={e.value} id={e.key} value={e.key} checked={lecture.includes(e.key)} handleChange={handleLecture} />
                             </React.Fragment>
                         );
