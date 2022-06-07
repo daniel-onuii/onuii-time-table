@@ -36,7 +36,6 @@ export const schedule = {
             (endTime > 581 && endTime < 612) ||
             endTime > 677
         ) {
-            // toast.error('유효하지않은 범위입니다.', ToastOption);
             dispatch(setMessage('유효하지않은 범위입니다.'));
 
             return false;
@@ -46,7 +45,6 @@ export const schedule = {
             );
             const isInvalidStart = fixedItemRowData.some(item => item.lecture_subject_Id !== itemLectureId && item.block_group_No === startTime - 2);
             if (isInvalidEndtime || isInvalidStart) {
-                // toast.error('강의 사이에 최소 30분의 시간이 필요합니다.', ToastOption);
                 dispatch(setMessage('강의 사이에 최소 30분의 시간이 필요합니다.'));
                 return false;
             } else {

@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { setItemObj, setIsAreaClickDown } from '../../store/reducer/trigger.reducer';
 import { lecture } from '../../util/lecture';
 import { schedule } from '../../util/schedule';
+import { table } from '../../util/table';
 import _ from 'lodash';
 const Layout = styled.div`
     .lectureItem {
@@ -52,6 +53,7 @@ function MatchingItem({ idx }) {
                 className={`lectureItem`}
                 draggable={true}
                 onDragStart={handleDragStart}
+                onDragOver={table.removeOver}
                 onClick={handleClick}
                 style={{
                     zIndex: 2,

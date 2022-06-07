@@ -7,7 +7,9 @@ const Layout = styled.div`
 function LectureItem({ id }) {
     return (
         // <Layout>
-        <span className={`lecture_${id} ignoreEnter`}>{id === 'all' ? '상관없음' : lecture.getLectureName(id).slice(0, 1)}</span>
+        <React.Fragment>
+            <span className={`lecture_${id} ignoreEnter`}>{id === 'all' ? '상관없음' : lecture.getLectureName(id).slice(0, 1)}</span>
+        </React.Fragment>
         // </Layout>
     );
 }

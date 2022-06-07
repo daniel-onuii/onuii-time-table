@@ -66,16 +66,6 @@ const Layout = styled.div`
         width: 100%;
         top: 0;
         z-index: 0;
-        // border: 2px solid blue;
-        // border-radius: 3px;
-        // box-shadow: 0 0 0 3px #000 inset;
-        // background-color: transparent;
-    }
-    .time4 {
-        height: 84px;
-    }
-    .time6 {
-        height: 127px;
     }
     input {
         width: 64px !important;
@@ -89,7 +79,6 @@ const Layout = styled.div`
         color: white;
     }
     .matching {
-        // box-shadow: 100vw 0px 0px 0px blue inset;
         background: yellow;
         color: white;
     }
@@ -119,6 +108,11 @@ function TableBody() {
     useEffect(() => {
         post.sendMessage({ name: 'matchingObj', data: { blocks: areaMatchingObj, lecture_id: selectMode.lecture_subject_Id } });
     }, [areaMatchingObj]);
+
+    // useEffect(() => {
+    //     console.log(areaData);
+    //     console.log(itemGroupData);
+    // }, [areaData]);
 
     // useEffect(() => {
     //     console.log('!!', compareAreaData, areaMatchingObj);

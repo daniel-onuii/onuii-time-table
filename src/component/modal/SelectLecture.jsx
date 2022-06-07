@@ -51,10 +51,10 @@ const Layout = styled.div`
 function SelectLecture({ position, handleConfirm, handleRemove, handleCancel }) {
     const { areaObj, areaGrabbedObj } = useSelector(state => state.trigger);
     const boxRef = useRef();
-    useEffect(() => {
-        console.log(areaGrabbedObj);
-        console.log(areaObj, '얘 없앨수있는지');
-    }, []);
+    // useEffect(() => {
+    //     console.log(areaGrabbedObj);
+    //     console.log(areaObj, '얘 없앨수있는지');
+    // }, []);
     const [dynamicX, setDynamicX] = useState();
     const [lecture, setLecture] = useState([]);
     const [message, setMessage] = useState('');

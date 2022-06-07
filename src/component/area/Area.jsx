@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import _ from 'lodash';
 import {
     setAreaGrabbedObj,
     setAreaMatchingObj,
@@ -11,7 +12,6 @@ import {
 import { setAreaData, setFixedItemData, setMatchingItemData } from '../../store/reducer/schedule.reducer';
 import { schedule } from '../../util/schedule';
 import { table } from '../../util/table';
-import _ from 'lodash';
 import SelectLecture from '../modal/SelectLecture';
 import AreaMenu from '../contextMenu/AreaMenu';
 
@@ -30,23 +30,11 @@ function Area({
     compareAreaData,
 }) {
     const dispatch = useDispatch();
-
     const { selectMode } = useSelector(state => state.user);
     const [showLectureModal, setShowLectureModal] = useState(false); //과목정보 모달
     const [modalPosition, setModalPosition] = useState(null);
     const [areaContextPosition, setAreaContextPosition] = useState(null);
     const [showAreaContext, setShowAreaContext] = useState(false);
-
-    const onHover = e => {
-        const $this = e.currentTarget;
-        $this.classList.add(`over`);
-        $this.classList.add(`time${itemObj.time}`);
-    };
-    const offHover = e => {
-        const $this = e.currentTarget;
-        $this.classList.remove(`over`);
-        $this.classList.remove(`time${itemObj.time}`);
-    };
 
     const init = () => {
         dispatch(setAreaGrabbedObj([]));
@@ -221,7 +209,7 @@ function Area({
     };
     const handleItemDrop = e => {
         e.preventDefault();
-        offHover(e);
+        table.removeOver();
         switch (itemObj.type) {
             case 'item':
                 dropEvent(fixedItemData, setFixedItemData);
@@ -233,10 +221,18 @@ function Area({
         dispatch(setItemObj({}));
     };
     const handleAreaEnter = e => {
-        onHover(e);
-    };
-    const handleAreaLeave = e => {
-        offHover(e);
+        table.removeOver();
+        const $this = e.currentTarget;
+        const weekIdx = schedule.getWeekIdx(idx);
+        const $tr = e.currentTarget.parentNode.parentNode;
+        $this.classList.add(`over`);
+        const arrTr = [];
+        for (var i = 0; i < itemObj.time - 1; i++) {
+            _.isEmpty(arrTr) ? arrTr.push($tr.nextSibling) : arrTr.push(arrTr[i - 1]?.nextSibling);
+        }
+        arrTr.map(ee => {
+            ee && ee.childNodes[ee.childNodes.length === 8 ? weekIdx + 1 : weekIdx].childNodes[0].classList.add(`over`);
+        });
     };
     const handleAreaClick = e => {
         e.preventDefault();
@@ -252,7 +248,6 @@ function Area({
                 onDrop={handleItemDrop}
                 onDragOver={e => e.preventDefault()}
                 onDragEnter={handleAreaEnter}
-                onDragLeave={handleAreaLeave}
                 onContextMenu={handleAreaClick}
                 className={`item 
                     ${areaData.some(item => item.block_group_No === idx) ? 'active' : ''}
