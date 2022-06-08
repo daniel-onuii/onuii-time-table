@@ -29,8 +29,19 @@ const Layout = styled.div`
     li:hover {
         background: #efefef;
     }
+    .disabled {
+        // pointer-events: none;
+        opacity: 0.4;
+    }
 `;
 function AreaMenu({ idx, position, close }) {
+    const userLectureInfo = [
+        //유저의 가매칭 대기중인 mock data
+        { lecture_subject_Id: 9168, count: 1, time: 6, title: '국어' },
+        { lecture_subject_Id: 8906, count: 3, time: 4, title: '수학' },
+        { lecture_subject_Id: 9171, count: 2, time: 6, title: '과학' },
+    ];
+
     const dispatch = useDispatch();
     const { matchingItemData, matchingItemGroupData } = useSelector(state => state.schedule);
     const boxRef = useRef();
@@ -63,6 +74,15 @@ function AreaMenu({ idx, position, close }) {
             dispatch(setMessage('횟수가 초과됨.'));
             return false;
         } else {
+            console.log(idx, idx + time);
+            matchingItemGroupData.map(e => {
+                console.log(idx, e.startIdx, e.endIdx);
+                if ((idx >= e.startIdx && idx <= e.endIdx) || (idx + time >= e.startIdx && idx + time <= e.endIdx)) {
+                    console.log('stuck');
+                    return false;
+                }
+            });
+
             const data = _.range(idx, idx + time).map((e, i) => {
                 return { block_group_No: e, lecture_subject_Id: lecture };
             });
@@ -72,12 +92,16 @@ function AreaMenu({ idx, position, close }) {
     return (
         <Layout left={newPositionX} top={position.y + 3} ref={boxRef}>
             <ul onContextMenu={e => e.preventDefault()}>
-                <li lecture={'9171'} time={4} weekcount={2} onClick={handleClick}>
-                    매칭 추가(과학60분 주2회)
-                </li>
-                <li lecture={'8906'} time={6} weekcount={1} onClick={handleClick}>
-                    매칭 추가(수학90분 주1회)
-                </li>
+                {userLectureInfo &&
+                    userLectureInfo.map((e, i) => {
+                        const isDisabled =
+                            _.filter(matchingItemGroupData, { lecture_subject_Id: e.lecture_subject_Id }).length >= e.count ? 'disabled' : '';
+                        return (
+                            <li key={i} lecture={e.lecture_subject_Id} time={e.time} weekcount={e.count} onClick={handleClick} className={isDisabled}>
+                                {`${e.title} ${e.time * 15}분 주${e.count}회`}
+                            </li>
+                        );
+                    })}
             </ul>
         </Layout>
     );
