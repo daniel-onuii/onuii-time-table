@@ -61,13 +61,8 @@ function Item({ idx, type, itemData, itemGroupData }) {
     };
     const handleRightClick = e => {
         e.preventDefault();
-        // const isEmpty = _.isEmpty(_.find(itemData, { block_group_No: idx }));
-        // if (isEmpty) {
         setShowMenu(true);
         setMenuPosition({ x: e.clientX, y: e.clientY });
-        // } else {
-        //     dispatch(setMessage('해당 범위에 가매칭 과목이있음'));
-        // }
     };
     return (
         <Layout>
@@ -94,7 +89,7 @@ function Item({ idx, type, itemData, itemGroupData }) {
                     })}
                 </div>
             </div>
-            {auth === 'admin' && showMenu && <ItemMenu idx={idx} position={menuPosition} close={() => setShowMenu(false)} />}
+            {auth === 'admin' && showMenu && <ItemMenu idx={idx} type={type} position={menuPosition} close={() => setShowMenu(false)} />}
         </Layout>
     );
 }

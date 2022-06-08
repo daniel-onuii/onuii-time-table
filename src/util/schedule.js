@@ -1,6 +1,6 @@
 import moment from 'moment';
 import { setMessage } from '../store/reducer/trigger.reducer';
-
+import _ from 'lodash';
 export const schedule = {
     getWeekIdx: function (idx) {
         return Math.floor((idx - 36) / 96);
@@ -49,6 +49,36 @@ export const schedule = {
                 return false;
             } else {
                 return true;
+            }
+        }
+    },
+
+    checkCrashItemTime: (targetGroupData, startTime, endTime, id) => {
+        // 과목 이동과 따로 써야할듯
+        //충돌시간 체크, id체크 없이도 가매칭 추가는
+        if (
+            (endTime > 101 && endTime < 132) ||
+            (endTime > 197 && endTime < 228) ||
+            (endTime > 293 && endTime < 324) ||
+            (endTime > 389 && endTime < 420) ||
+            (endTime > 485 && endTime < 516) ||
+            (endTime > 581 && endTime < 612) ||
+            endTime > 677
+        ) {
+            return '유효하지 않은 범위입니다.';
+        } else {
+            console.log(targetGroupData, id);
+            //과외 시작시간 앞으로 30분 비워둠
+            if (targetGroupData.some(e => _.inRange(endTime, e.startIdx - 2, e.endIdx + 1))) {
+                return '강의 사이 최소 30분은 비워둬야합니다.';
+            }
+            //과외 종료시간 뒤로 30분 비워둠
+            else if (targetGroupData.some(e => _.inRange(startTime, e.startIdx, e.endIdx + 1 + 2))) {
+                return '강의 사이 최소 30분은 비워둬야합니다.';
+            }
+            //과외 시간 충돌 체크
+            else if (targetGroupData.some(e => _.inRange(e.startIdx, startTime, endTime) || _.inRange(e.endIdx, startTime, endTime))) {
+                return '해당 범위에 다른 강의가 존재합니다.';
             }
         }
     },

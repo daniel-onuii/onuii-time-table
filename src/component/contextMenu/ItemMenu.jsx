@@ -34,7 +34,7 @@ const Layout = styled.div`
         opacity: 0.4;
     }
 `;
-function ItemMenu({ idx, position, close }) {
+function ItemMenu({ idx, type, position, close }) {
     const dispatch = useDispatch();
     const { matchingItemData, matchingItemGroupData } = useSelector(state => state.schedule);
     const boxRef = useRef();
@@ -59,7 +59,9 @@ function ItemMenu({ idx, position, close }) {
     }, []);
     const handleClick = e => {
         close();
-        alert(idx);
+        const target = _.find(matchingItemGroupData, { startIdx: idx });
+        const result = _.reject(matchingItemData, o => _.inRange(o.block_group_No, target.startIdx, target.endIdx + 1));
+        dispatch(setMatchingItemData(result));
     };
     return (
         <Layout left={newPositionX} top={position.y + 3} ref={boxRef}>

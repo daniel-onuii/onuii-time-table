@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { setMatchingItemData } from '../../store/reducer/schedule.reducer';
 import _ from 'lodash';
 import { setMessage } from '../../store/reducer/trigger.reducer';
+import { schedule } from '../../util/schedule';
 const Layout = styled.div`
     position: fixed;
     background: white;
@@ -74,13 +75,12 @@ function AreaMenu({ idx, position, close }) {
             dispatch(setMessage('횟수가 초과됨.'));
             return false;
         } else {
-            // console.log(idx, idx + time);
             const endTime = idx - 1 + time;
-            matchingItemGroupData.map(e => {
-                console.log(_.inRange(endTime, e.startIdx, e.endIdx + 1));
-                console.log(_.inRange(e.startIdx, idx, endTime) && _.inRange(e.endIdx, idx, endTime));
-            });
-
+            const checkCrash = schedule.checkCrashItemTime(matchingItemGroupData, idx, endTime, lecture);
+            if (!_.isEmpty(checkCrash)) {
+                dispatch(setMessage(checkCrash));
+                return false;
+            }
             const data = _.range(idx, idx + time).map((e, i) => {
                 return { block_group_No: e, lecture_subject_Id: lecture };
             });
