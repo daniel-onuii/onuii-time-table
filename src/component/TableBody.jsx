@@ -43,6 +43,7 @@ const Layout = styled.div`
         top: 0px;
         z-index: 0;
         color: #b3b3b3;
+        display: flex;
     }
     .item:hover {
         background: #cfcfcf;
@@ -149,7 +150,7 @@ function TableBody() {
                                                     >
                                                         {level && <Distribution level={level} />}
                                                         {lectureData?.map((e, i) => (
-                                                            <LectureItem key={i} id={e} />
+                                                            <LectureItem key={i} id={e} idx={idx} />
                                                         ))}
                                                     </Area>
                                                     {fixedItemGroupData.some(y => y.startIdx === idx) && (

@@ -27,6 +27,12 @@ const App = () => {
         { block_group_No: 238, areaActiveType: ['9171'] },
         { block_group_No: 239, areaActiveType: ['9171'] },
         { block_group_No: 240, areaActiveType: ['9171'] },
+        { block_group_No: 241, areaActiveType: ['9171', '9168'] },
+        { block_group_No: 242, areaActiveType: ['9171', '9168'] },
+        { block_group_No: 243, areaActiveType: ['9171', '9168'] },
+        { block_group_No: 244, areaActiveType: ['8906', '9168'] },
+        { block_group_No: 245, areaActiveType: ['8906', '9168'] },
+        { block_group_No: 246, areaActiveType: ['8906', '9168'] },
     ];
     const fixedItemData = [
         { block_group_No: 36, lecture_subject_Id: 9171 },

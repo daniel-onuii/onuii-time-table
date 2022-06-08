@@ -6,6 +6,7 @@ const Layout = styled.div.attrs({
     display: flex;
     position: absolute;
     top: 0px;
+    right: 0px;
 `;
 const Circle = styled.div`
     width: 10px;
