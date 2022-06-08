@@ -5,12 +5,11 @@ import { lecture } from '../util/lecture';
 import { schedule } from '../util/schedule';
 import { table } from '../util/table';
 import Area from './area/Area';
-import FixedItem from './item/FixedItem';
+import Item from './item/Item';
 import styled from 'styled-components';
 import Distribution from './area/Distribution';
 import { distData } from '../mock/distData';
 import _ from 'lodash';
-import MatchingItem from './item/MatchingItem';
 import LectureItem from './area/LectureItem';
 import { post } from '../util/interface';
 const Layout = styled.div`
@@ -86,7 +85,9 @@ function TableBody() {
     const tableRef = useRef();
     const dispatch = useDispatch();
 
-    const { areaData, fixedItemData, itemGroupData, timeListData, matchingItemData, matchingItemGroupData } = useSelector(state => state.schedule);
+    const { areaData, fixedItemData, fixedItemGroupData, timeListData, matchingItemData, matchingItemGroupData } = useSelector(
+        state => state.schedule,
+    );
     const { areaGrabbedObj, areaMatchingObj, itemObj, areaObj, isAreaClickDown, isAreaAppend } = useSelector(state => state.trigger);
     const compareAreaData = useSelector(state => state.compare.areaData);
     const { auth, selectMode } = useSelector(state => state.user);
@@ -103,7 +104,7 @@ function TableBody() {
 
     // useEffect(() => {
     //     console.log(areaData);
-    //     console.log(itemGroupData);
+    //     console.log(fixedItemGroupData);
     // }, [areaData]);
 
     // useEffect(() => {
@@ -151,9 +152,16 @@ function TableBody() {
                                                             <LectureItem key={i} id={e} />
                                                         ))}
                                                     </Area>
-                                                    {itemGroupData.some(y => y.startIdx === idx) && <FixedItem idx={idx} />}
+                                                    {fixedItemGroupData.some(y => y.startIdx === idx) && (
+                                                        <Item type={'fixed'} idx={idx} itemData={fixedItemData} itemGroupData={fixedItemGroupData} />
+                                                    )}
                                                     {auth === 'admin' && matchingItemGroupData.some(y => y.startIdx === idx) && (
-                                                        <MatchingItem idx={idx} />
+                                                        <Item
+                                                            type={'matching'}
+                                                            idx={idx}
+                                                            itemData={matchingItemData}
+                                                            itemGroupData={matchingItemGroupData}
+                                                        />
                                                     )}
                                                 </td>
                                             );

@@ -8,6 +8,7 @@ import {
     setIsAreaAppend,
     setIsAreaClickDown,
     setItemObj,
+    setMessage,
 } from '../../store/reducer/trigger.reducer';
 import { setAreaData, setFixedItemData, setMatchingItemData } from '../../store/reducer/schedule.reducer';
 import { schedule } from '../../util/schedule';
@@ -33,13 +34,13 @@ function Area({
     const { selectMode, auth } = useSelector(state => state.user);
     const [showLectureModal, setShowLectureModal] = useState(false); //과목정보 모달
     const [modalPosition, setModalPosition] = useState(null);
-    const [areaContextPosition, setAreaContextPosition] = useState(null);
-    const [showAreaContext, setShowAreaContext] = useState(false);
+    const [menuPosition, setMenuPosition] = useState(null);
+    const [showMenu, setShowMenu] = useState(false);
 
     const init = () => {
         dispatch(setAreaGrabbedObj([]));
         setShowLectureModal(false);
-        setShowAreaContext(false);
+        setShowMenu(false);
     };
 
     const update = (type, items) => {
@@ -90,7 +91,7 @@ function Area({
     };
 
     const handleAreaDown = e => {
-        setShowAreaContext(false);
+        setShowMenu(false);
         dispatch(
             setAreaObj({
                 idx: idx,
@@ -211,7 +212,7 @@ function Area({
         e.preventDefault();
         table.removeOver();
         switch (itemObj.type) {
-            case 'item':
+            case 'fixed':
                 dropEvent(fixedItemData, setFixedItemData);
                 break;
             case 'matching':
@@ -234,10 +235,15 @@ function Area({
             ee && ee.childNodes[ee.childNodes.length === 8 ? weekIdx + 1 : weekIdx].childNodes[0].classList.add(`over`);
         });
     };
-    const handleAreaClick = e => {
+    const handleAreaRightClick = e => {
         e.preventDefault();
-        setShowAreaContext(true);
-        setAreaContextPosition({ x: e.clientX, y: e.clientY });
+        const isEmpty = _.isEmpty(_.find(matchingItemData, { block_group_No: idx }));
+        if (isEmpty) {
+            setShowMenu(true);
+            setMenuPosition({ x: e.clientX, y: e.clientY });
+        } else {
+            dispatch(setMessage('해당 범위에 가매칭 과목이있음'));
+        }
     };
     return (
         <React.Fragment>
@@ -248,7 +254,7 @@ function Area({
                 onDrop={handleItemDrop}
                 onDragOver={e => e.preventDefault()}
                 onDragEnter={handleDragEnter}
-                onContextMenu={handleAreaClick}
+                onContextMenu={handleAreaRightClick}
                 className={`item 
                     ${areaData.some(item => item.block_group_No === idx) ? 'active' : ''}
                     ${areaGrabbedObj.some(item => item.block_group_No === idx) ? 'dragging' : ''}
@@ -259,9 +265,7 @@ function Area({
                 {children}
             </div>
             {showLectureModal && <SelectLecture position={modalPosition} handleConfirm={update} handleRemove={remove} handleCancel={cancel} />}
-            {auth === 'admin' && showAreaContext && areaObj.idx == idx && (
-                <AreaMenu idx={idx} position={areaContextPosition} close={() => setShowAreaContext(false)} />
-            )}
+            {auth === 'admin' && showMenu && areaObj.idx == idx && <AreaMenu idx={idx} position={menuPosition} close={() => setShowMenu(false)} />}
         </React.Fragment>
     );
 }

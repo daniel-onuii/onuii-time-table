@@ -74,13 +74,11 @@ function AreaMenu({ idx, position, close }) {
             dispatch(setMessage('횟수가 초과됨.'));
             return false;
         } else {
-            console.log(idx, idx + time);
+            // console.log(idx, idx + time);
+            const endTime = idx - 1 + time;
             matchingItemGroupData.map(e => {
-                console.log(idx, e.startIdx, e.endIdx);
-                if ((idx >= e.startIdx && idx <= e.endIdx) || (idx + time >= e.startIdx && idx + time <= e.endIdx)) {
-                    console.log('stuck');
-                    return false;
-                }
+                console.log(_.inRange(endTime, e.startIdx, e.endIdx + 1));
+                console.log(_.inRange(e.startIdx, idx, endTime) && _.inRange(e.endIdx, idx, endTime));
             });
 
             const data = _.range(idx, idx + time).map((e, i) => {

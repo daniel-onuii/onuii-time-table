@@ -20,7 +20,7 @@ const Layout = styled.div`
     }
 `;
 function FixedItemDetail({ idx }) {
-    const { fixedItemData, itemGroupData } = useSelector(state => state.schedule);
+    const { fixedItemData, fixedItemGroupData } = useSelector(state => state.schedule);
     const itemLectureName = lecture.getLectureNameByIdx(fixedItemData, idx);
     return (
         <Layout>
@@ -29,7 +29,7 @@ function FixedItemDetail({ idx }) {
                     <option>{itemLectureName}</option>
                 </select>
 
-                {itemGroupData.map((y, k) => {
+                {fixedItemGroupData.map((y, k) => {
                     return (
                         idx == y.startIdx && (
                             <React.Fragment key={k}>

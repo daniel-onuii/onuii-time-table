@@ -3,7 +3,7 @@ const initialState = {
     timeListData: [],
     areaData: null,
     fixedItemData: null,
-    itemGroupData: [],
+    fixedItemGroupData: [],
     matchingItemData: null,
     matchingItemGroupData: [],
 };
@@ -23,7 +23,7 @@ const slice = createSlice({
             state.fixedItemData = action.payload;
         },
         setItemGroupData(state, action) {
-            state.itemGroupData = action.payload;
+            state.fixedItemGroupData = action.payload;
         },
         setMatchingItemData(state, action) {
             state.matchingItemData = action.payload;
