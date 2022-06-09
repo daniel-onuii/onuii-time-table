@@ -78,8 +78,10 @@ function SelectLecture({ position, handleConfirm, handleRemove, handleCancel }) 
     const handleLecture = e => {
         const value = e.target.value;
         if (value === 'all') {
+            // lecture.includes(value) ? setLecture(_.sortBy(_.without(lecture, value))) : setLecture(['all']);
             lecture.includes(value) ? setLecture(_.without(lecture, value)) : setLecture(['all']);
         } else {
+            // lecture.includes(value) ? setLecture(_.sortBy(_.without(lecture, value))) : setLecture(_.sortBy(_.without([...lecture, value], 'all')));
             lecture.includes(value) ? setLecture(_.without(lecture, value)) : setLecture(_.without([...lecture, value], 'all'));
         }
     };

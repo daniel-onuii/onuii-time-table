@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import _ from 'lodash';
 import TableHead from './TableHead';
 import TableBody from './TableBody';
+// import FollowCursor from './FollowCursor';
 // import imgTest from '../asset/icon/ic-card.png';
 const Layout = styled.div`
     width: 800px;
@@ -38,6 +39,30 @@ const Layout = styled.div`
     }
     .lecture_9171 {
         background: plum;
+    }
+    .lecture_all {
+        background: navy;
+    }
+
+    .item > div.lecture_8906 {
+        position: absolute;
+        left: 0px;
+    }
+    .item > div.lecture_9168 {
+        position: absolute;
+        left: 15px;
+    }
+    .item > div.lecture_9169 {
+        position: absolute;
+        left: 30px;
+    }
+    .item > div.lecture_9171 {
+        position: absolute;
+        left: 45px;
+    }
+    .item > div.lecture_all {
+        position: absolute;
+        left: 60px;
     }
 `;
 

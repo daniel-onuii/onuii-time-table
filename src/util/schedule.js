@@ -67,7 +67,6 @@ export const schedule = {
         ) {
             return '유효하지 않은 범위입니다.';
         } else {
-            console.log(targetGroupData, id);
             //과외 시작시간 앞으로 30분 비워둠
             if (targetGroupData.some(e => _.inRange(endTime, e.startIdx - 2, e.endIdx + 1))) {
                 return '강의 사이 최소 30분은 비워둬야합니다.';

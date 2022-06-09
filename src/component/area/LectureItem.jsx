@@ -8,11 +8,13 @@ const Layout = styled.div.attrs(props => ({
 }))`
     display: inline-block;
     height: 100%;
-    width: 20px; ///
+    width: 15px;
     opacity: 0.7;
     &.head {
         opacity: 1;
         border-radius: 50% !important;
+        height: 18px;
+        font-size: 11px;
         // -webkit-filter: brightness(100%);
     }
     &.last {
@@ -32,21 +34,21 @@ const Layout = styled.div.attrs(props => ({
 `;
 function LectureItem({ id, idx }) {
     const { areaData } = useSelector(state => state.schedule);
+    const $before = _.find(areaData, { block_group_No: idx - 1 });
     const $this = _.find(areaData, { block_group_No: idx });
-    const isFirst = _.find(areaData, { block_group_No: idx - 1 }); //과목값의 첫번째인지
-    const isEqual = _.isEqual($this?.areaActiveType, isFirst?.areaActiveType); //과목 배열값이 동일한지
-    const isRealFirst = isFirst == null || !isEqual;
-    const isLast = _.find(areaData, { block_group_No: idx + 1 }); //과목 다음값이 없거나 다르면 백그라운드 지우기
-    const isNextEqual = _.isEqual($this?.areaActiveType, isLast?.areaActiveType); //다음값과 비교
-    //isFirst가 null이거나 areaActiveType이 다른값 체크
-
-    // -webkit-filter: brightness(110%);
+    const $next = _.find(areaData, { block_group_No: idx + 1 });
+    const isEmptyBefore = _.isEmpty($before);
+    const isEmptyNext = _.isEmpty($next);
+    // const isEqualBefore = _.indexOf($this?.areaActiveType, id) === _.indexOf($before?.areaActiveType, id);
+    const isEqualBefore = _.indexOf($before?.areaActiveType, id) > -1;
+    // const isEqualNext = _.indexOf($this?.areaActiveType, id) === _.indexOf($next?.areaActiveType, id);
+    const isEqualNext = _.indexOf($next?.areaActiveType, id) > -1;
+    const isFirst = isEmptyBefore || !isEqualBefore;
+    const isLast = isEmptyNext || !isEqualNext;
     return (
-        <Layout lecture_id={id} className={`${isRealFirst ? 'head' : ''} ${!isLast && 'last'} ${isLast && !isNextEqual && 'last'}`}>
-            <span className={`lecture_${id} ignoreEnter`}>
-                {id === 'all' ? '상관없음' : isRealFirst ? lecture.getLectureName(id).slice(0, 1) : ''}
-            </span>
-            {isRealFirst && isNextEqual && <div className={`corner lecture_${id}`}></div>}
+        <Layout lecture_id={id} className={`${isFirst && 'head'} ${isLast && 'last'} `}>
+            <span className={`lecture_${id} ignoreEnter`}>{isFirst ? lecture.getLectureName(id).slice(0, 1) : ''}</span>
+            {isFirst && !isLast && <div className={`corner lecture_${id}`}></div>}
         </Layout>
     );
 }

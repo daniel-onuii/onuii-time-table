@@ -9,23 +9,45 @@ import _ from 'lodash';
 import ItemMenu from '../contextMenu/ItemMenu';
 const Layout = styled.div`
     .lectureItem {
+        display: flex;
         cursor: pointer;
         width: 85%;
-        height: 100%;
         position: absolute;
         top: 0px;
-        color: white;
         border-radius: 5px;
-        padding-top: 4px;
+        color: black;
     }
     .lectureItem:hover {
         -webkit-filter: brightness(110%);
     }
     .lectureItem.fixed {
-        background: #6495ed;
+        border: 1px solid #6495ed;
     }
     .lectureItem.matching {
+        border: 1px solid #ec7063;
+    }
+    .lectureBar {
+        height: 100%;
+        width: 7px;
+    }
+    .fixed .lectureBar {
+        background: #6495ed;
+    }
+    .matching .lectureBar {
         background: #ec7063;
+    }
+    .lectureContents {
+        width: 100%;
+        border-radius: 0 5px 5px 0;
+        padding: 8px 0 8px 0px;
+    }
+    .fixed .lectureContents {
+        background: #6495ed;
+        -webkit-filter: brightness(215%);
+    }
+    .matching .lectureContents {
+        background: #ec7063;
+        -webkit-filter: brightness(215%);
     }
 `;
 function Item({ idx, type, itemData, itemGroupData }) {
@@ -76,17 +98,22 @@ function Item({ idx, type, itemData, itemGroupData }) {
                 style={{
                     zIndex: 2,
                     height: `${itemGroupData.reduce((result, y) => {
-                        idx == y.startIdx && result.push((y.endTimeIdx + 1 - y.startTimeIdx) * 20 + 'px');
+                        idx == y.startIdx && result.push((y.endTimeIdx + 1 - y.startTimeIdx) * 21 + 'px');
                         return result;
                     }, [])}`,
                 }}
             >
-                <div style={{ padding: '5px' }}>
-                    {itemLectureName}
+                <div className={`lectureBar`}></div>
+                <div className={`lectureContents`}>
+                    <span>{type === 'fixed' ? '정규수업' : '가매칭수업'}</span>
                     <br />
-                    {itemGroupData.map(y => {
-                        return idx == y.startIdx && `${schedule.getTime(y.startTimeIdx)}~${schedule.getTime(y.endTimeIdx + 1)} `;
-                    })}
+                    <span>{itemLectureName}</span>
+                    <br />
+                    <span>
+                        {itemGroupData.map(y => {
+                            return idx == y.startIdx && `${schedule.getTime(y.startTimeIdx)}~${schedule.getTime(y.endTimeIdx + 1)} `;
+                        })}
+                    </span>
                 </div>
             </div>
             {auth === 'admin' && showMenu && <ItemMenu idx={idx} type={type} position={menuPosition} close={() => setShowMenu(false)} />}

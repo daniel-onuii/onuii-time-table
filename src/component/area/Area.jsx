@@ -89,7 +89,6 @@ function Area({
     const cancel = () => {
         init();
     };
-
     const handleAreaDown = e => {
         setShowMenu(false);
         dispatch(
@@ -191,6 +190,7 @@ function Area({
 
     const dropEvent = (data, setData) => {
         const endTime = idx + itemObj.time - 1;
+        console.log('drop', data);
         if (!schedule.checkValidSchedule(endTime, idx, data, itemObj.lectureId, dispatch)) {
             return false;
         }

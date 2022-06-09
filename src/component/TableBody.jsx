@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setItemGroupData, setMatchingItemGroupData, setTimeListData } from '../store/reducer/schedule.reducer';
+import { setFixedItemGroupData, setMatchingItemGroupData, setTimeListData } from '../store/reducer/schedule.reducer';
 import { lecture } from '../util/lecture';
 import { schedule } from '../util/schedule';
 import { table } from '../util/table';
@@ -68,17 +68,23 @@ const Layout = styled.div`
     }
     .dragging {
         background: #01a8fe !important;
+        // box-shadow: 10px 5px 5px red inset;
         color: white;
     }
-    .matching {
+    .item.matching {
         background: yellow;
         color: white;
     }
     .ignoreEnter {
         pointer-events: none;
     }
-    .equal {
+    .item.equal {
         background: pink;
+    }
+    .timeText {
+        position: absolute;
+        right: 5px;
+        z-index: 3;
     }
 `;
 
@@ -95,7 +101,7 @@ function TableBody() {
 
     useEffect(() => {
         dispatch(setTimeListData(schedule.getTimeList()));
-        dispatch(setItemGroupData(lecture.getGroupByLectureTime(fixedItemData)));
+        dispatch(setFixedItemGroupData(lecture.getGroupByLectureTime(fixedItemData)));
         dispatch(setMatchingItemGroupData(lecture.getGroupByLectureTime(matchingItemData)));
     }, [fixedItemData, matchingItemData]);
 
@@ -133,6 +139,7 @@ function TableBody() {
                                             const idx = table.getBlockId(e, i);
                                             const level = _.find(distData, { block_group_No: idx })?.level;
                                             const lectureData = _.find(areaData, { block_group_No: idx })?.areaActiveType;
+                                            const maxBlock = _.maxBy(areaGrabbedObj, 'block_group_No');
                                             return (
                                                 <td key={ii} className={`${e >= 6 ? 'weekend' : ''}`}>
                                                     <Area
@@ -152,6 +159,14 @@ function TableBody() {
                                                         {lectureData?.map((e, i) => (
                                                             <LectureItem key={i} id={e} idx={idx} />
                                                         ))}
+                                                        {maxBlock?.block_group_No === idx ? (
+                                                            <div className={'timeText'}>
+                                                                <span>{`${schedule.getTime(areaObj.startOverIdx)}`}</span> {` - `}
+                                                                <span>{`${schedule.getTime(areaObj.endOverIdx)}`}</span>
+                                                            </div>
+                                                        ) : (
+                                                            ''
+                                                        )}
                                                     </Area>
                                                     {fixedItemGroupData.some(y => y.startIdx === idx) && (
                                                         <Item type={'fixed'} idx={idx} itemData={fixedItemData} itemGroupData={fixedItemGroupData} />

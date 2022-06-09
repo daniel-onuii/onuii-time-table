@@ -22,7 +22,7 @@ const slice = createSlice({
         setFixedItemData(state, action) {
             state.fixedItemData = action.payload;
         },
-        setItemGroupData(state, action) {
+        setFixedItemGroupData(state, action) {
             state.fixedItemGroupData = action.payload;
         },
         setMatchingItemData(state, action) {
@@ -38,5 +38,6 @@ const slice = createSlice({
 });
 
 const { actions, reducer } = slice;
-export const { initData, setAreaData, setFixedItemData, setItemGroupData, setTimeListData, setMatchingItemData, setMatchingItemGroupData } = actions;
+export const { initData, setAreaData, setFixedItemData, setFixedItemGroupData, setTimeListData, setMatchingItemData, setMatchingItemGroupData } =
+    actions;
 export default reducer;
