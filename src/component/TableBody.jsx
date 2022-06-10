@@ -16,6 +16,13 @@ const Layout = styled.div`
     .contents {
         height: 504px;
         overflow-y: scroll;
+        &::-webkit-scrollbar {
+            width: 4px;
+        }
+        &::-webkit-scrollbar-thumb {
+            border-radius: 2px;
+            background: #ccc;
+        }
     }
     .onTime {
         border-top: 1px solid #cdcdcd;
@@ -46,10 +53,16 @@ const Layout = styled.div`
         display: flex;
     }
     .item:hover {
-        background: #cfcfcf;
+        cursor: cell;
+        background: #efefef;
+        :not(.dragging)::after {
+            content: '📌';
+            color: #fff;
+            font-size: 20px;
+            z-index: 4;
+        }
     }
     .active {
-        cursor: cell;
         width: 100%;
         height: 100%;
         background: #d0ece7;
@@ -95,7 +108,7 @@ function TableBody() {
     const { areaData, fixedItemData, fixedItemGroupData, timeListData, matchingItemData, matchingItemGroupData } = useSelector(
         state => state.schedule,
     );
-    const { areaGrabbedObj, areaMatchingObj, itemObj, areaObj, isAreaClickDown, isAreaAppend } = useSelector(state => state.trigger);
+    const { areaGrabbedObj, areaMatchingObj, areaObj } = useSelector(state => state.trigger);
     const compareAreaData = useSelector(state => state.compare.areaData);
     const { auth, selectMode } = useSelector(state => state.user);
 
@@ -110,18 +123,9 @@ function TableBody() {
     }, [areaMatchingObj]);
 
     // useEffect(() => {
-    //     console.log(areaData);
-    //     console.log(fixedItemGroupData);
-    // }, [areaData]);
-
-    // useEffect(() => {
-    //     console.log('!!', compareAreaData, areaMatchingObj);
-    //     console.log('??', _.intersectionBy(compareAreaData, areaMatchingObj, 'block_group_No'));
-    // }, [compareAreaData]);
-    // useEffect(() => {
-    //     //     setTimeout(() => {
-    //     //         tableRef.current.scrollTo(0, 681);
-    //     //     }, 0);
+    //     setTimeout(() => {
+    //         tableRef.current.scrollTo(0, 681);
+    //     }, 0);
     // }, []);
 
     return (
@@ -135,6 +139,21 @@ function TableBody() {
                                 <React.Fragment key={i}>
                                     <tr className={isOntime ? 'onTime' : ''}>
                                         {isOntime ? <th rowSpan="4">{e}</th> : null}
+
+                                        {/* <th rowSpan="4">
+                                                <td>{e}</td>
+                                                <td>
+                                                    <tr>
+                                                        <td>15</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>30</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>45</td>
+                                                    </tr>
+                                                </td>
+                                            </th> */}
                                         {_.range(0, 7).map((e, ii) => {
                                             const idx = table.getBlockId(e, i);
                                             const level = _.find(distData, { block_group_No: idx })?.level;
@@ -144,15 +163,6 @@ function TableBody() {
                                                 <td key={ii} className={`${e >= 6 ? 'weekend' : ''}`}>
                                                     <Area
                                                         idx={idx}
-                                                        areaData={areaData}
-                                                        fixedItemData={fixedItemData}
-                                                        matchingItemData={matchingItemData}
-                                                        areaObj={areaObj}
-                                                        itemObj={itemObj}
-                                                        areaGrabbedObj={areaGrabbedObj}
-                                                        areaMatchingObj={areaMatchingObj}
-                                                        isAreaClickDown={isAreaClickDown}
-                                                        isAreaAppend={isAreaAppend}
                                                         compareAreaData={_.intersectionBy(compareAreaData, areaMatchingObj, 'block_group_No')}
                                                     >
                                                         {level && <Distribution level={level} />}

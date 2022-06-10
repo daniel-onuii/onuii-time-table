@@ -16,6 +16,13 @@ const Layout = styled.div`
     }
     .head {
         overflow-y: scroll;
+        &::-webkit-scrollbar {
+            width: 4px;
+        }
+        &::-webkit-scrollbar-thumb {
+            border-radius: 2px;
+            background: #ccc;
+        }
     }
     .head th {
         height: 30px;

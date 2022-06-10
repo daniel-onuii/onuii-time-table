@@ -16,6 +16,7 @@ const Layout = styled.div`
         top: 0px;
         border-radius: 5px;
         color: black;
+        box-shadow: 2px 2px 3px grey;
     }
     .lectureItem:hover {
         -webkit-filter: brightness(110%);
@@ -107,7 +108,9 @@ function Item({ idx, type, itemData, itemGroupData }) {
                 <div className={`lectureContents`}>
                     <span>{type === 'fixed' ? '정규수업' : '가매칭수업'}</span>
                     <br />
-                    <span>{itemLectureName}</span>
+                    <span>
+                        <b>{itemLectureName}</b>
+                    </span>
                     <br />
                     <span>
                         {itemGroupData.map(y => {

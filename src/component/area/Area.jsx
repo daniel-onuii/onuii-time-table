@@ -16,21 +16,10 @@ import { table } from '../../util/table';
 import SelectLecture from '../modal/SelectLecture';
 import AreaMenu from '../contextMenu/AreaMenu';
 
-function Area({
-    children,
-    idx,
-    areaData,
-    fixedItemData,
-    matchingItemData,
-    areaObj,
-    itemObj,
-    areaGrabbedObj,
-    areaMatchingObj,
-    isAreaClickDown,
-    isAreaAppend,
-    compareAreaData,
-}) {
+function Area({ children, idx, compareAreaData }) {
     const dispatch = useDispatch();
+    const { areaData, fixedItemData, matchingItemData } = useSelector(state => state.schedule);
+    const { areaGrabbedObj, areaMatchingObj, itemObj, areaObj, isAreaClickDown, isAreaAppend } = useSelector(state => state.trigger);
     const { selectMode, auth } = useSelector(state => state.user);
     const [showLectureModal, setShowLectureModal] = useState(false); //과목정보 모달
     const [modalPosition, setModalPosition] = useState(null);
@@ -186,11 +175,11 @@ function Area({
                 dispatch(setAreaMatchingObj(removeResult));
             }
         }
+        console.log('s', areaGrabbedObj);
     };
 
     const dropEvent = (data, setData) => {
         const endTime = idx + itemObj.time - 1;
-        console.log('drop', data);
         if (!schedule.checkValidSchedule(endTime, idx, data, itemObj.lectureId, dispatch)) {
             return false;
         }

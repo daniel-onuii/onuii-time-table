@@ -23,7 +23,7 @@ const Layout = styled.div`
         user-select: none;
     }
     th:first-child {
-        width: 12%;
+        width: 7%;
     }
     .lecture_all {
         background: #d0ece7;
