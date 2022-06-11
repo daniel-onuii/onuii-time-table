@@ -167,7 +167,7 @@ function TableBody() {
                                                     >
                                                         {level && <Distribution level={level} />}
                                                         {lectureData?.map((e, i) => (
-                                                            <LectureItem key={i} id={e} idx={idx} />
+                                                            <LectureItem key={i} id={e} idx={idx} length={lectureData.length} seq={i} />
                                                         ))}
                                                         {maxBlock?.block_group_No === idx ? (
                                                             <div className={'timeText'}>

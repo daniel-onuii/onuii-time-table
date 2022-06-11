@@ -133,11 +133,11 @@ function Area({ children, idx, compareAreaData }) {
             //좌클릭일때만
             return false;
         }
-        //드래그 영역만큼 셋팅
+        dispatch(setIsAreaClickDown(false)); //클릭 상태
         if (_.isEmpty(selectMode)) {
+            //일반 과목 선택 모드
             if (_.isEmpty(areaGrabbedObj)) {
-                //드래그를 하지않았다면 기본적으로 1시간값 셋팅,, 1:30분 넘어서 처리 해야함. ㅅ
-                dispatch(setIsAreaClickDown(false));
+                //셀 클릭시
                 setModalPosition({ x: e.clientX, y: e.clientY });
                 dispatch(
                     setAreaObj({
@@ -157,25 +157,35 @@ function Area({ children, idx, compareAreaData }) {
                 );
                 setShowLectureModal(true);
             } else {
-                dispatch(setIsAreaClickDown(false));
+                //셀 드래그 앤 드롭
                 if (areaGrabbedObj.length > 0) {
                     setModalPosition({ x: e.clientX, y: e.clientY });
                     setShowLectureModal(true);
                 }
             }
         } else {
-            dispatch(setIsAreaClickDown(false));
-            dispatch(setAreaGrabbedObj([]));
-            if (!isAreaAppend) {
-                dispatch(setAreaMatchingObj([...areaMatchingObj, ...areaGrabbedObj]));
-            } else {
-                const removeResult = _.reject(areaMatchingObj, o => {
-                    return areaGrabbedObj.some(item => item.block_group_No === o.block_group_No);
+            //가매칭 모드
+            if (_.isEmpty(areaGrabbedObj)) {
+                //셀 클릭시
+                // 가매칭 범위를 위한 상태값이 필요함.
+                // console.log(selectMode);
+                const tempMatching = _.range(idx, idx + 6).map(e => {
+                    return { block_group_No: e };
                 });
-                dispatch(setAreaMatchingObj(removeResult));
+                // dispatch(setAreaGrabbedObj(tempMatching));
+            } else {
+                //셀 드래그 앤 드롭
+                dispatch(setAreaGrabbedObj([]));
+                if (!isAreaAppend) {
+                    dispatch(setAreaMatchingObj([...areaMatchingObj, ...areaGrabbedObj]));
+                } else {
+                    const removeResult = _.reject(areaMatchingObj, o => {
+                        return areaGrabbedObj.some(item => item.block_group_No === o.block_group_No);
+                    });
+                    dispatch(setAreaMatchingObj(removeResult));
+                }
             }
         }
-        console.log('s', areaGrabbedObj);
     };
 
     const dropEvent = (data, setData) => {

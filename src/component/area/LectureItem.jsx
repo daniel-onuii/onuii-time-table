@@ -12,7 +12,7 @@ const Layout = styled.div.attrs(props => ({
     opacity: 0.7;
     &.head {
         opacity: 1;
-        border-radius: 50% !important;
+        // border-radius: 50% !important;
         height: 18px;
         font-size: 11px;
         // -webkit-filter: brightness(100%);
@@ -32,8 +32,9 @@ const Layout = styled.div.attrs(props => ({
         top: -5px;
     }
 `;
-function LectureItem({ id, idx }) {
+function LectureItem({ id, idx, length, seq }) {
     const { areaData } = useSelector(state => state.schedule);
+    console.log(idx, length, seq);
     const $before = _.find(areaData, { block_group_No: idx - 1 });
     const $this = _.find(areaData, { block_group_No: idx });
     const $next = _.find(areaData, { block_group_No: idx + 1 });
@@ -46,7 +47,7 @@ function LectureItem({ id, idx }) {
     const isFirst = isEmptyBefore || !isEqualBefore;
     const isLast = isEmptyNext || !isEqualNext;
     return (
-        <Layout lecture_id={id} className={`${isFirst && 'head'} ${isLast && 'last'} `}>
+        <Layout lecture_id={id} className={`${isFirst && 'head'} ${isLast && 'last'} `} length={length} seq={seq}>
             <span className={`lecture_${id} ignoreEnter`}>{isFirst ? lecture.getLectureName(id).slice(0, 1) : ''}</span>
             {isFirst && !isLast && <div className={`corner lecture_${id}`}></div>}
         </Layout>

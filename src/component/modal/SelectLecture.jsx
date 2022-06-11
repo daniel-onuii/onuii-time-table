@@ -57,16 +57,17 @@ const Layout = styled.div`
 `;
 function SelectLecture({ position, handleConfirm, handleRemove, handleCancel }) {
     const { areaObj, areaGrabbedObj } = useSelector(state => state.trigger);
+    const { areaData } = useSelector(state => state.schedule);
     const boxRef = useRef();
-    // useEffect(() => {
-    //     console.log(areaGrabbedObj);
-    //     console.log(areaObj, '얘 없앨수있는지');
-    // }, []);
+    useEffect(() => {
+        // const intersection = _.intersectionBy(areaData, areaGrabbedObj, 'block_group_No').map(e => e.areaActiveType);
+        // setLecture([..._.union(_.flatMap(intersection))]);
+    }, []);
     const [dynamicX, setDynamicX] = useState();
     const [lecture, setLecture] = useState([]);
     const [message, setMessage] = useState('');
     const lectureList = [
-        { key: 'all', value: '상관없음' },
+        // { key: 'all', value: '상관없음' },
         { key: '9168', value: '국어' },
         { key: '9169', value: '영어' },
         { key: '8906', value: '수학' },
@@ -143,10 +144,11 @@ function SelectLecture({ position, handleConfirm, handleRemove, handleCancel }) 
                 <br />
                 <div className={'message'}>{message}</div>
                 <div className={'buttons'}>
-                    <Button color={'blue'} text={'덮어쓰기'} alt={'enter'} handleClick={() => handleConfirmExtend('overlap')} />
-                    <Button color={'red'} text={'초기화'} handleClick={handleRemove} />
+                    {/* <Button color={'blue'} text={'덮어쓰기'} alt={'enter'} handleClick={() => handleConfirmExtend('overlap')} /> */}
                     <Button color={'blue'} text={'추가'} handleClick={() => handleConfirmExtend('add')} />
                     <Button color={'red'} text={'삭제'} handleClick={() => handleConfirmExtend('pop')} />
+                    {/* <Button color={'red'} text={'초기화'} handleClick={handleRemove} /> */}
+                    {/* <Button color={'blue'} text={'설정'} handleClick={() => handleConfirmExtend('set')} /> */}
                     <Button color={'grey'} text={'취소'} handleClick={handleCancel} />
                 </div>
             </div>

@@ -135,6 +135,7 @@ const App = () => {
         } else {
             //가매칭 - 수학
             setIsMatching(true);
+            //가매칭 모드, LVT
             window.postMessage({ id: 'onuii-time-table', name: 'setSelectMode', data: { type: 'matching', lecture_subject_Id: 8906 } }, '*');
         }
     };
