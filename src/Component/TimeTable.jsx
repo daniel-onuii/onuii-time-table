@@ -26,7 +26,7 @@ const Layout = styled.div`
         width: 7%;
     }
     .lecture_all {
-        background: #d0ece7;
+        // background: #d0ece7;
     }
     .lecture_8906 {
         background: coral;
@@ -44,26 +44,26 @@ const Layout = styled.div`
         background: navy;
     }
 
-    .item > div.lecture_8906 {
-        position: absolute;
-        left: 0px;
-    }
-    .item > div.lecture_9168 {
-        position: absolute;
-        left: 15px;
-    }
-    .item > div.lecture_9169 {
-        position: absolute;
-        left: 30px;
-    }
-    .item > div.lecture_9171 {
-        position: absolute;
-        left: 45px;
-    }
-    .item > div.lecture_all {
-        position: absolute;
-        left: 60px;
-    }
+    // .item > div.lecture_8906 {
+    //     position: absolute;
+    //     left: 0px;
+    // }
+    // .item > div.lecture_9168 {
+    //     position: absolute;
+    //     left: 15px;
+    // }
+    // .item > div.lecture_9169 {
+    //     position: absolute;
+    //     left: 30px;
+    // }
+    // .item > div.lecture_9171 {
+    //     position: absolute;
+    //     left: 45px;
+    // }
+    // .item > div.lecture_all {
+    //     position: absolute;
+    //     left: 60px;
+    // }
 `;
 
 function TimeTable() {

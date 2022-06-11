@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { lecture } from '../../util/lecture';
 import styled from 'styled-components';
 import _ from 'lodash';
@@ -8,17 +8,18 @@ const Layout = styled.div.attrs(props => ({
 }))`
     display: inline-block;
     height: 100%;
-    width: 15px;
+    width: ${props => 100 / props.length}%;
     opacity: 0.7;
+    position: absolute;
+    left: ${props => props.seq * (100 / props.length)}%;
     &.head {
         opacity: 1;
         // border-radius: 50% !important;
-        height: 18px;
+        // height: 18px;
         font-size: 11px;
-        // -webkit-filter: brightness(100%);
     }
     &.last {
-        border-radius: 0 0 50% 50%;
+        // border-radius: 0 0 50% 50%;
     }
     span {
         position: relative;
@@ -32,9 +33,18 @@ const Layout = styled.div.attrs(props => ({
         top: -5px;
     }
 `;
-function LectureItem({ id, idx, length, seq }) {
-    const { areaData } = useSelector(state => state.schedule);
-    console.log(idx, length, seq);
+function LectureItem({ id, idx }) {
+    const { areaData, areaGroupData } = useSelector(state => state.schedule);
+    const [length, setLength] = useState(0);
+    const [seq, setSeq] = useState(0);
+    useEffect(() => {
+        const getGroupIdx = _.find(areaGroupData, e => {
+            return _.inRange(idx, e.startIdx, e.endIdx + 1);
+        });
+        setLength(getGroupIdx?.areaActiveType?.length);
+        setSeq(_.indexOf(getGroupIdx?.areaActiveType, id));
+    }, [areaGroupData]);
+
     const $before = _.find(areaData, { block_group_No: idx - 1 });
     const $this = _.find(areaData, { block_group_No: idx });
     const $next = _.find(areaData, { block_group_No: idx + 1 });
@@ -49,7 +59,7 @@ function LectureItem({ id, idx, length, seq }) {
     return (
         <Layout lecture_id={id} className={`${isFirst && 'head'} ${isLast && 'last'} `} length={length} seq={seq}>
             <span className={`lecture_${id} ignoreEnter`}>{isFirst ? lecture.getLectureName(id).slice(0, 1) : ''}</span>
-            {isFirst && !isLast && <div className={`corner lecture_${id}`}></div>}
+            {/* {isFirst && !isLast && <div className={`corner lecture_${id}`}></div>} */}
         </Layout>
     );
 }

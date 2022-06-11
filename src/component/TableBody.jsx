@@ -1,9 +1,10 @@
 import React, { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setFixedItemGroupData, setMatchingItemGroupData, setTimeListData } from '../store/reducer/schedule.reducer';
+import { setAreaGroupData, setFixedItemGroupData, setMatchingItemGroupData, setTimeListData } from '../store/reducer/schedule.reducer';
 import { lecture } from '../util/lecture';
 import { schedule } from '../util/schedule';
 import { table } from '../util/table';
+import { area } from '../util/area';
 import Area from './area/Area';
 import Item from './item/Item';
 import styled from 'styled-components';
@@ -65,7 +66,7 @@ const Layout = styled.div`
     .active {
         width: 100%;
         height: 100%;
-        background: #d0ece7;
+        // background: #d0ece7;
         color: white;
         z-index: 1;
     }
@@ -119,6 +120,10 @@ function TableBody() {
     }, [fixedItemData, matchingItemData]);
 
     useEffect(() => {
+        dispatch(setAreaGroupData(area.getAreaGroupData(areaData)));
+    }, [areaData]);
+
+    useEffect(() => {
         post.sendMessage({ name: 'matchingObj', data: { blocks: areaMatchingObj, lecture_id: selectMode.lecture_subject_Id } });
     }, [areaMatchingObj]);
 
@@ -139,21 +144,6 @@ function TableBody() {
                                 <React.Fragment key={i}>
                                     <tr className={isOntime ? 'onTime' : ''}>
                                         {isOntime ? <th rowSpan="4">{e}</th> : null}
-
-                                        {/* <th rowSpan="4">
-                                                <td>{e}</td>
-                                                <td>
-                                                    <tr>
-                                                        <td>15</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>30</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>45</td>
-                                                    </tr>
-                                                </td>
-                                            </th> */}
                                         {_.range(0, 7).map((e, ii) => {
                                             const idx = table.getBlockId(e, i);
                                             const level = _.find(distData, { block_group_No: idx })?.level;
@@ -167,7 +157,7 @@ function TableBody() {
                                                     >
                                                         {level && <Distribution level={level} />}
                                                         {lectureData?.map((e, i) => (
-                                                            <LectureItem key={i} id={e} idx={idx} length={lectureData.length} seq={i} />
+                                                            <LectureItem key={i} id={e} idx={idx} />
                                                         ))}
                                                         {maxBlock?.block_group_No === idx ? (
                                                             <div className={'timeText'}>

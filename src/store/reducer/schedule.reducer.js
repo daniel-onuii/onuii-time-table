@@ -2,6 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
     timeListData: [],
     areaData: null,
+    areaGroupData: null,
     fixedItemData: null,
     fixedItemGroupData: [],
     matchingItemData: null,
@@ -18,6 +19,9 @@ const slice = createSlice({
         },
         setAreaData(state, action) {
             state.areaData = action.payload;
+        },
+        setAreaGroupData(state, action) {
+            state.areaGroupData = action.payload;
         },
         setFixedItemData(state, action) {
             state.fixedItemData = action.payload;
@@ -38,6 +42,14 @@ const slice = createSlice({
 });
 
 const { actions, reducer } = slice;
-export const { initData, setAreaData, setFixedItemData, setFixedItemGroupData, setTimeListData, setMatchingItemData, setMatchingItemGroupData } =
-    actions;
+export const {
+    initData,
+    setAreaData,
+    setAreaGroupData,
+    setFixedItemData,
+    setFixedItemGroupData,
+    setTimeListData,
+    setMatchingItemData,
+    setMatchingItemGroupData,
+} = actions;
 export default reducer;

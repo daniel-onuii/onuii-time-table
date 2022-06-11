@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import _ from 'lodash';
+import _, { bind } from 'lodash';
 import {
     setAreaGrabbedObj,
     setAreaMatchingObj,
@@ -49,11 +49,10 @@ function Area({ children, idx, compareAreaData }) {
                 const target = _.find(bindLecture, { block_group_No: e.block_group_No });
                 const beforLecture = e.areaActiveType ? e.areaActiveType : [];
                 const addData = _.uniq([...beforLecture, ...items]);
-                // const addData = _.isEmpty(beforLecture) ? items : _.without(_.uniq([...beforLecture, ...items]), 'all');
                 target ? result.push({ ...target, areaActiveType: addData }) : result.push(e);
                 return result;
             }, []);
-            dispatch(setAreaData([...newAreaData, ...bindLecture]));
+            dispatch(setAreaData([...newAreaData, ..._.differenceBy(bindLecture, areaData, 'block_group_No')]));
         } else if (type === 'pop') {
             //빼기
             const newAreaData = areaData.reduce((result, e) => {
