@@ -8,18 +8,19 @@ const Layout = styled.div.attrs(props => ({
 }))`
     display: inline-block;
     height: 100%;
-    width: ${props => 100 / props.length}%;
+    width: ${props => 85 / props.length}%;
     opacity: 0.7;
     position: absolute;
-    left: ${props => props.seq * (100 / props.length)}%;
+    left: ${props => props.seq * ((100 - 15) / props.length)}%;
     &.head {
         opacity: 1;
         // border-radius: 50% !important;
+        border-radius: 5px 5px 0px 0px;
         // height: 18px;
         font-size: 11px;
     }
     &.last {
-        // border-radius: 0 0 50% 50%;
+        border-radius: 0 0 5px 5px;
     }
     span {
         position: relative;
