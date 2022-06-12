@@ -28,6 +28,12 @@ const Layout = styled.div`
     .lecture_all {
         // background: #d0ece7;
     }
+    .lecture_18492 {
+        background: red;
+    }
+    .lecture_9170 {
+        background: green;
+    }
     .lecture_8906 {
         background: coral;
     }

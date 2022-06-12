@@ -71,7 +71,9 @@ function SelectLecture({ position, handleConfirm, handleRemove, handleCancel }) 
         { key: '9168', value: '국어' },
         { key: '9169', value: '영어' },
         { key: '8906', value: '수학' },
+        { key: '9170', value: '사회' },
         { key: '9171', value: '과학' },
+        { key: '18492', value: '입시' },
     ];
     const handleConfirmExtend = type => {
         lecture.length === 0 ? setMessage(`${type}과목 선택 안함`) : handleConfirm(type, lecture);
