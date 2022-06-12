@@ -9,7 +9,7 @@ const Layout = styled.div.attrs(props => ({
     display: inline-block;
     height: 100%;
     width: ${props => 85 / props.length}%;
-    opacity: 0.7;
+    // opacity: 0.7;
     position: absolute;
     left: ${props => props.seq * ((100 - 15) / props.length)}%;
     &.head {
@@ -38,16 +38,19 @@ function LectureItem({ id, idx }) {
     const { areaData, areaGroupData } = useSelector(state => state.schedule);
     const [length, setLength] = useState(0);
     const [seq, setSeq] = useState(0);
+    // const [rowIdx, setRowIdx] = useState();
     useEffect(() => {
         const getGroupIdx = _.find(areaGroupData, e => {
             return _.inRange(idx, e.startIdx, e.endIdx + 1);
         });
+        // console.log(getGroupIdx);
+        // setRowIdx(idx - getGroupIdx?.startIdx);
         setLength(getGroupIdx?.areaActiveType?.length);
         setSeq(_.indexOf(getGroupIdx?.areaActiveType, id));
     }, [areaGroupData]);
 
     const $before = _.find(areaData, { block_group_No: idx - 1 });
-    const $this = _.find(areaData, { block_group_No: idx });
+    // const $this = _.find(areaData, { block_group_No: idx });
     const $next = _.find(areaData, { block_group_No: idx + 1 });
     const isEmptyBefore = _.isEmpty($before);
     const isEmptyNext = _.isEmpty($next);
@@ -59,7 +62,12 @@ function LectureItem({ id, idx }) {
     const isLast = isEmptyNext || !isEqualNext;
     return (
         <Layout lecture_id={id} className={`${isFirst && 'head'} ${isLast && 'last'} `} length={length} seq={seq}>
-            <span className={`lecture_${id} ignoreEnter`}>{isFirst ? lecture.getLectureName(id).slice(0, 1) : ''}</span>
+            <span className={`lecture_${id} ignoreEnter`}>
+                {/* {isFirst ? lecture.getLectureName(id).slice(0, 1) : ''} */}
+                {isFirst ? `${lecture.getLectureName(id)}` : ''}
+                {/* {rowIdx} */}
+                {/* {seq} */}
+            </span>
             {/* {isFirst && !isLast && <div className={`corner lecture_${id}`}></div>} */}
         </Layout>
     );

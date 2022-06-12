@@ -47,7 +47,7 @@ const Layout = styled.div`
     .item {
         height: 100%;
         width: 100%;
-        position: absolute;
+        // position: absolute;
         top: 0px;
         z-index: 0;
         color: #b3b3b3;
@@ -59,7 +59,7 @@ const Layout = styled.div`
         :not(.dragging)::after {
             content: '📌';
             color: #fff;
-            font-size: 20px;
+            font-size: 15px;
             z-index: 4;
         }
     }
