@@ -14,7 +14,10 @@ export const lecture = {
     getGroupByLectureTime: function (data) {
         let seq = 0;
         const rowData = _.sortBy(data, 'block_group_No').reduce((result, e) => {
-            const isCheckSeq = result.slice(-1)[0]?.block_group_No === e.block_group_No - 1;
+            const isCheckSeq =
+                _.isEqual(result.slice(-1)[0]?.block_group_No, e.block_group_No - 1) &&
+                _.isEqual(result.slice(-1)[0]?.lecture_subject_Id, e.lecture_subject_Id);
+
             result.push({
                 week: schedule.getWeekIdx(e.block_group_No),
                 block_group_No: e.block_group_No,
@@ -40,7 +43,7 @@ export const lecture = {
 
     getLectureName: function (id) {
         const subjectList = [
-            '상관없음',
+            // '상관없음',
             '수학',
             '국어',
             '영어',
@@ -80,7 +83,7 @@ export const lecture = {
             '입시상담',
         ];
         const subjectIdList = [
-            'all',
+            // 'all',
             '8906',
             '9168',
             '9169',

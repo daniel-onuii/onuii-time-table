@@ -37,7 +37,7 @@ const Layout = styled.div`
     .modalLectureBox label {
         cursor: pointer;
         padding-left: 10px;
-        padding-right: 10px;
+        padding-right: 15px;
     }
     .buttons div {
         margin-right: 5px;
@@ -58,6 +58,7 @@ const Layout = styled.div`
 function SelectLecture({ position, handleConfirm, handleRemove, handleCancel }) {
     const { areaObj, areaGrabbedObj } = useSelector(state => state.trigger);
     const { areaData } = useSelector(state => state.schedule);
+    const { lvt } = useSelector(state => state.user);
     const boxRef = useRef();
     useEffect(() => {
         // const intersection = _.intersectionBy(areaData, areaGrabbedObj, 'block_group_No').map(e => e.areaActiveType);
@@ -67,24 +68,27 @@ function SelectLecture({ position, handleConfirm, handleRemove, handleCancel }) 
     const [lecture, setLecture] = useState([]);
     const [message, setMessage] = useState('');
     const lectureList = [
-        // { key: 'all', value: '상관없음' },
         { key: '9168', value: '국어' },
         { key: '9169', value: '영어' },
         { key: '8906', value: '수학' },
         { key: '9170', value: '사회' },
         { key: '9171', value: '과학' },
         { key: '18492', value: '입시' },
-    ];
+        { key: '9813', value: '고1 통합과학' },
+    ]; //mock data
+    const [visibleList, setVisibleList] = useState(lectureList);
+    useEffect(() => {
+        !_.isNull(lvt) && setVisibleList([_.find(lectureList, { key: lvt.toString() })]);
+        !_.isNull(lvt) && setLecture([lvt.toString()]);
+    }, [lvt]);
     const handleConfirmExtend = type => {
         lecture.length === 0 ? setMessage(`${type}과목 선택 안함`) : handleConfirm(type, lecture);
     };
     const handleLecture = e => {
         const value = e.target.value;
         if (value === 'all') {
-            // lecture.includes(value) ? setLecture(_.sortBy(_.without(lecture, value))) : setLecture(['all']);
             lecture.includes(value) ? setLecture(_.without(lecture, value)) : setLecture(['all']);
         } else {
-            // lecture.includes(value) ? setLecture(_.sortBy(_.without(lecture, value))) : setLecture(_.sortBy(_.without([...lecture, value], 'all')));
             lecture.includes(value) ? setLecture(_.without(lecture, value)) : setLecture(_.without([...lecture, value], 'all'));
         }
     };
@@ -134,11 +138,14 @@ function SelectLecture({ position, handleConfirm, handleRemove, handleCancel }) 
                     <span>{`${schedule.getWeekText(areaObj.endOverDayIdx)} ${schedule.getTime(areaObj.endOverIdx)}`}</span>
                     <span>({(areaObj.endOverIdx - areaObj.startOverIdx) * 15}분)</span>
                 </div>
-                <div style={{ display: 'flex' }}>
-                    {lectureList.map((e, i) => {
+                <div style={{ display: 'inline-block' }}>
+                    {visibleList.map((e, i) => {
                         return (
                             <React.Fragment key={i}>
-                                <Input text={e.value} id={e.key} value={e.key} checked={lecture.includes(e.key)} handleChange={handleLecture} />
+                                {i == 4 && <br />}
+                                <div style={{ display: 'inline-block' }}>
+                                    <Input text={e.value} id={e.key} value={e.key} checked={lecture.includes(e.key)} handleChange={handleLecture} />
+                                </div>
                             </React.Fragment>
                         );
                     })}
@@ -149,7 +156,7 @@ function SelectLecture({ position, handleConfirm, handleRemove, handleCancel }) 
                     {/* <Button color={'blue'} text={'덮어쓰기'} alt={'enter'} handleClick={() => handleConfirmExtend('overlap')} /> */}
                     <Button color={'blue'} text={'추가'} handleClick={() => handleConfirmExtend('add')} />
                     <Button color={'red'} text={'삭제'} handleClick={() => handleConfirmExtend('pop')} />
-                    {/* <Button color={'red'} text={'초기화'} handleClick={handleRemove} /> */}
+                    <Button color={'red'} text={'초기화'} handleClick={handleRemove} />
                     {/* <Button color={'blue'} text={'설정'} handleClick={() => handleConfirmExtend('set')} /> */}
                     <Button color={'grey'} text={'취소'} handleClick={handleCancel} />
                 </div>

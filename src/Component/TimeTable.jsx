@@ -25,51 +25,30 @@ const Layout = styled.div`
     th:first-child {
         width: 7%;
     }
-    .lecture_all {
-        // background: #d0ece7;
-    }
-    .lecture_18492 {
+    .area._18492 {
         background: red;
     }
-    .lecture_9170 {
+    .area._9170 {
         background: green;
     }
-    .lecture_8906 {
+    .area._8906 {
         background: coral;
     }
-    .lecture_9168 {
+    .area._9168 {
         background: cornflowerblue;
     }
-    .lecture_9169 {
+    .area._9169 {
         background: yellowgreen;
     }
-    .lecture_9171 {
+    .area._9171 {
         background: plum;
     }
-    .lecture_all {
-        background: navy;
+    .area._9813 {
+        background: steelblue;
     }
-
-    // .item > div.lecture_8906 {
-    //     position: absolute;
-    //     left: 0px;
-    // }
-    // .item > div.lecture_9168 {
-    //     position: absolute;
-    //     left: 15px;
-    // }
-    // .item > div.lecture_9169 {
-    //     position: absolute;
-    //     left: 30px;
-    // }
-    // .item > div.lecture_9171 {
-    //     position: absolute;
-    //     left: 45px;
-    // }
-    // .item > div.lecture_all {
-    //     position: absolute;
-    //     left: 60px;
-    // }
+    .area.disabled {
+        opacity: 0.2;
+    }
 `;
 
 function TimeTable() {

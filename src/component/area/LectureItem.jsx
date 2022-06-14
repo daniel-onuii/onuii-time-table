@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import _ from 'lodash';
 import { useSelector } from 'react-redux';
 const Layout = styled.div.attrs(props => ({
-    className: `lecture_${props.lecture_id}`,
+    className: `area _${props.lecture_id} ${props.lvt && props.lvt != props.lecture_id && 'disabled'}`,
 }))`
     display: inline-block;
     height: 100%;
@@ -36,39 +36,27 @@ const Layout = styled.div.attrs(props => ({
 `;
 function LectureItem({ id, idx }) {
     const { areaData, areaGroupData } = useSelector(state => state.schedule);
+    const { lvt } = useSelector(state => state.user);
     const [length, setLength] = useState(0);
     const [seq, setSeq] = useState(0);
-    // const [rowIdx, setRowIdx] = useState();
     useEffect(() => {
         const getGroupIdx = _.find(areaGroupData, e => {
             return _.inRange(idx, e.startIdx, e.endIdx + 1);
         });
-        // console.log(getGroupIdx);
-        // setRowIdx(idx - getGroupIdx?.startIdx);
         setLength(getGroupIdx?.areaActiveType?.length);
         setSeq(_.indexOf(getGroupIdx?.areaActiveType, id));
     }, [areaGroupData]);
-
     const $before = _.find(areaData, { block_group_No: idx - 1 });
-    // const $this = _.find(areaData, { block_group_No: idx });
     const $next = _.find(areaData, { block_group_No: idx + 1 });
     const isEmptyBefore = _.isEmpty($before);
     const isEmptyNext = _.isEmpty($next);
-    // const isEqualBefore = _.indexOf($this?.areaActiveType, id) === _.indexOf($before?.areaActiveType, id);
     const isEqualBefore = _.indexOf($before?.areaActiveType, id) > -1;
-    // const isEqualNext = _.indexOf($this?.areaActiveType, id) === _.indexOf($next?.areaActiveType, id);
     const isEqualNext = _.indexOf($next?.areaActiveType, id) > -1;
     const isFirst = isEmptyBefore || !isEqualBefore;
     const isLast = isEmptyNext || !isEqualNext;
     return (
-        <Layout lecture_id={id} className={`${isFirst && 'head'} ${isLast && 'last'} `} length={length} seq={seq}>
-            <span className={`lecture_${id} ignoreEnter`}>
-                {/* {isFirst ? lecture.getLectureName(id).slice(0, 1) : ''} */}
-                {isFirst ? `${lecture.getLectureName(id)}` : ''}
-                {/* {rowIdx} */}
-                {/* {seq} */}
-            </span>
-            {/* {isFirst && !isLast && <div className={`corner lecture_${id}`}></div>} */}
+        <Layout lecture_id={id} className={`${isFirst && 'head'} ${isLast && 'last'} `} length={length} seq={seq} lvt={lvt}>
+            <span className={`ignoreEnter`}>{isFirst ? `${lecture.getLectureName(id)}` : ''}</span>
         </Layout>
     );
 }

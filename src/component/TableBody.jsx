@@ -59,7 +59,7 @@ const Layout = styled.div`
         :not(.dragging)::after {
             content: '📌';
             color: #fff;
-            font-size: 15px;
+            font-size: 13px;
             z-index: 4;
         }
     }
@@ -73,14 +73,14 @@ const Layout = styled.div`
     .weekend {
         background: #fef0f7;
     }
-    .over {
+    .item.over {
         background: #fa8072 !important;
         position: absolute;
         width: 100%;
         top: 0;
         z-index: 0;
     }
-    .dragging {
+    .item.dragging {
         background: #01a8fe !important;
         // box-shadow: 10px 5px 5px red inset;
         color: white;
@@ -88,6 +88,11 @@ const Layout = styled.div`
     .item.matching {
         background: yellow;
         color: white;
+    }
+    .item.matching .area,
+    .item.dragging .area,
+    .item.over .area {
+        opacity: 0.2;
     }
     .ignoreEnter {
         pointer-events: none;
@@ -98,7 +103,7 @@ const Layout = styled.div`
     .timeText {
         position: absolute;
         right: 5px;
-        z-index: 3;
+        z-index: 2;
     }
 `;
 
@@ -114,16 +119,19 @@ function TableBody() {
     const { auth, selectMode } = useSelector(state => state.user);
 
     useEffect(() => {
+        //과외 시간 그룹
         dispatch(setTimeListData(schedule.getTimeList()));
         dispatch(setFixedItemGroupData(lecture.getGroupByLectureTime(fixedItemData)));
         dispatch(setMatchingItemGroupData(lecture.getGroupByLectureTime(matchingItemData)));
     }, [fixedItemData, matchingItemData]);
 
     useEffect(() => {
+        //희망 시간 그룹
         dispatch(setAreaGroupData(area.getAreaGroupData(areaData)));
     }, [areaData]);
 
     useEffect(() => {
+        //가매칭 영역 선택시 postmessage
         post.sendMessage({ name: 'matchingObj', data: { blocks: areaMatchingObj, lecture_id: selectMode.lecture_subject_Id } });
     }, [areaMatchingObj]);
 

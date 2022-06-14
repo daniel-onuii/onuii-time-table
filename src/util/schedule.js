@@ -67,17 +67,22 @@ export const schedule = {
         ) {
             return '유효하지 않은 범위입니다.';
         } else {
-            //과외 시작시간 앞으로 30분 비워둠
-            if (targetGroupData.some(e => _.inRange(endTime, e.startIdx - 2, e.endIdx + 1))) {
-                return '강의 사이 최소 30분은 비워둬야합니다.';
-            }
-            //과외 종료시간 뒤로 30분 비워둠
-            else if (targetGroupData.some(e => _.inRange(startTime, e.startIdx, e.endIdx + 1 + 2))) {
-                return '강의 사이 최소 30분은 비워둬야합니다.';
-            }
-            //과외 시간 충돌 체크
-            else if (targetGroupData.some(e => _.inRange(e.startIdx, startTime, endTime) || _.inRange(e.endIdx, startTime, endTime))) {
+            // //과외 시작시간 앞으로 30분 비워둠
+            // if (targetGroupData.some(e => _.inRange(endTime, e.startIdx - 2, e.endIdx + 1))) {
+            //     return '강의 사이 최소 30분은 비워둬야합니다.';
+            // }
+            // //과외 종료시간 뒤로 30분 비워둠
+            // else if (targetGroupData.some(e => _.inRange(startTime, e.startIdx, e.endIdx + 1 + 2))) {
+            //     return '강의 사이 최소 30분은 비워둬야합니다.';
+            // }
+            // //과외 시간 충돌 체크
+            // else
+            if (targetGroupData.some(e => _.inRange(e.startIdx, startTime, endTime + 1) || _.inRange(e.endIdx, startTime, endTime + 1))) {
                 return '해당 범위에 다른 강의가 존재합니다.';
+            } else if (targetGroupData.some(e => e.startIdx - 1 == endTime && e.lecture_subject_Id == id)) {
+                return '같은 과목이 연속됨.';
+            } else if (targetGroupData.some(e => e.endIdx + 1 == startTime && e.lecture_subject_Id == id)) {
+                return '같은 과목이 연속됨.';
             }
         }
     },

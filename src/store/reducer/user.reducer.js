@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
     auth: '',
+    lvt: null,
     selectMode: {},
 };
 const slice = createSlice({
@@ -14,6 +15,9 @@ const slice = createSlice({
         setAuth(state, action) {
             state.auth = action.payload;
         },
+        setLVT(state, action) {
+            state.lvt = action.payload;
+        },
         setSelectMode(state, action) {
             state.selectMode = action.payload;
         },
@@ -21,5 +25,5 @@ const slice = createSlice({
 });
 
 const { actions, reducer } = slice;
-export const { setInitAuth, setAuth, setSelectMode } = actions;
+export const { setInitAuth, setAuth, setLVT, setSelectMode } = actions;
 export default reducer;
