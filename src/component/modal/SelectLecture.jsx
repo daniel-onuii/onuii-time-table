@@ -56,8 +56,7 @@ const Layout = styled.div`
     }
 `;
 function SelectLecture({ position, handleConfirm, handleRemove, handleCancel }) {
-    const { areaObj, areaGrabbedObj } = useSelector(state => state.trigger);
-    const { areaData } = useSelector(state => state.schedule);
+    const { areaObj } = useSelector(state => state.trigger);
     const { lvt } = useSelector(state => state.user);
     const boxRef = useRef();
     useEffect(() => {

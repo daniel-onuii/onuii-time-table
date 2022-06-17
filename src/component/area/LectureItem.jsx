@@ -8,7 +8,7 @@ const Layout = styled.div.attrs(props => ({
 }))`
     display: inline-block;
     height: 100%;
-    width: ${props => 85 / props.length}%;
+    width: ${props => (100 - 15) / props.length}%;
     // opacity: 0.7;
     position: absolute;
     left: ${props => props.seq * ((100 - 15) / props.length)}%;
@@ -55,7 +55,7 @@ function LectureItem({ id, idx }) {
     const isFirst = isEmptyBefore || !isEqualBefore;
     const isLast = isEmptyNext || !isEqualNext;
     return (
-        <Layout lecture_id={id} className={`${isFirst && 'head'} ${isLast && 'last'} `} length={length} seq={seq} lvt={lvt}>
+        <Layout lecture_id={id} className={`${isFirst ? 'head' : ''} ${isLast ? 'last' : ''} `} length={length} seq={seq} lvt={lvt}>
             <span className={`ignoreEnter`}>{isFirst ? `${lecture.getLectureName(id)}` : ''}</span>
         </Layout>
     );

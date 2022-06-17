@@ -2,6 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
     auth: '',
     lvt: null,
+    lessonOption: null,
     selectMode: {},
 };
 const slice = createSlice({
@@ -18,6 +19,9 @@ const slice = createSlice({
         setLVT(state, action) {
             state.lvt = action.payload;
         },
+        setLessonOption(state, action) {
+            state.lessonOption = action.payload;
+        },
         setSelectMode(state, action) {
             state.selectMode = action.payload;
         },
@@ -25,5 +29,5 @@ const slice = createSlice({
 });
 
 const { actions, reducer } = slice;
-export const { setInitAuth, setAuth, setLVT, setSelectMode } = actions;
+export const { setInitAuth, setAuth, setLVT, setLessonOption, setSelectMode } = actions;
 export default reducer;

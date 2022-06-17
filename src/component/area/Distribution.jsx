@@ -9,8 +9,8 @@ const Layout = styled.div.attrs({
     right: 0px;
 `;
 const Circle = styled.div`
-    width: 10px;
-    height: 10px;
+    width: 5px;
+    height: 5px;
     border-radius: 50%;
     background: ${props => (props.level == 1 ? '#2ecc71' : props.level == 2 ? 'gold' : 'red')};
     margin: 3px;

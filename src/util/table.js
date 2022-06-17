@@ -1,7 +1,7 @@
 import _ from 'lodash';
 export const table = {
     getBlockId: function (dayOfweekIdx, i) {
-        return dayOfweekIdx * 96 + 36 + i;
+        return dayOfweekIdx * 96 + 32 + i;
     },
     isFillArea: function (data, idx) {
         return data.some(item => item.block_group_No === idx);

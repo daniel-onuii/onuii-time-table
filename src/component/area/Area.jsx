@@ -8,6 +8,7 @@ import {
     setIsAreaAppend,
     setIsAreaClickDown,
     setItemObj,
+    setMatchingGrabbedObj,
     setMessage,
 } from '../../store/reducer/trigger.reducer';
 import { setAreaData, setFixedItemData, setMatchingItemData } from '../../store/reducer/schedule.reducer';
@@ -15,21 +16,27 @@ import { schedule } from '../../util/schedule';
 import { table } from '../../util/table';
 import SelectLecture from '../modal/SelectLecture';
 import AreaMenu from '../contextMenu/AreaMenu';
+import MatchingMenu from '../contextMenu/MatchingMenu';
 
 function Area({ children, idx, compareAreaData }) {
     const dispatch = useDispatch();
     const { areaData, fixedItemData, matchingItemData } = useSelector(state => state.schedule);
-    const { areaGrabbedObj, areaMatchingObj, itemObj, areaObj, isAreaClickDown, isAreaAppend } = useSelector(state => state.trigger);
+    const { areaGrabbedObj, areaMatchingObj, matchingGrabbedObj, itemObj, areaObj, isAreaClickDown, isAreaAppend } = useSelector(
+        state => state.trigger,
+    );
     const { selectMode, auth } = useSelector(state => state.user);
     const [showLectureModal, setShowLectureModal] = useState(false); //과목정보 모달
     const [modalPosition, setModalPosition] = useState(null);
     const [menuPosition, setMenuPosition] = useState(null);
     const [showMenu, setShowMenu] = useState(false);
+    const [showMatchingMenu, setShowMatchingMenu] = useState(false);
 
     const init = () => {
-        dispatch(setAreaGrabbedObj([]));
+        dispatch(setAreaGrabbedObj([])); //좌클릭 드래그 영역
+        dispatch(setMatchingGrabbedObj([])); //가매칭 영역
         setShowLectureModal(false);
         setShowMenu(false);
+        setShowMatchingMenu(false);
     };
 
     const update = (type, items) => {
@@ -60,7 +67,6 @@ function Area({ children, idx, compareAreaData }) {
                 const beforLecture = e.areaActiveType ? e.areaActiveType : [];
                 const popData = _.without(beforLecture, ...items);
                 target ? !_.isEmpty(popData) && result.push({ ...target, areaActiveType: popData }) : result.push(e);
-                // target ? result.push({ ...target, areaActiveType: _.isEmpty(popData) ? ['all'] : popData }) : result.push(e);
                 return result;
             }, []);
             dispatch(setAreaData(newAreaData));
@@ -79,6 +85,8 @@ function Area({ children, idx, compareAreaData }) {
     };
     const handleAreaDown = e => {
         setShowMenu(false);
+        setShowMatchingMenu(false);
+        dispatch(setMatchingGrabbedObj([])); //가매칭 영역
         dispatch(
             setAreaObj({
                 idx: idx,
@@ -108,8 +116,7 @@ function Area({ children, idx, compareAreaData }) {
             );
             const selectedInfo = intervalDay.reduce((result, e) => {
                 result.push(
-                    _.range(e * 96 + 36 + startRange, e * 96 + 36 + endRange + (startRange < endRange ? 1 : -1)).map(ee => {
-                        // return { block_group_No: ee, areaActiveType: areaActiveType };
+                    _.range(e * 96 + 32 + startRange, e * 96 + 32 + endRange + (startRange < endRange ? 1 : -1)).map(ee => {
                         return { block_group_No: ee };
                     }),
                 );
@@ -128,6 +135,7 @@ function Area({ children, idx, compareAreaData }) {
         }
     };
     const handleAreaUp = e => {
+        ////////////여기 리팩토링해주세요
         if (e.button !== 0) {
             //좌클릭일때만
             return false;
@@ -165,13 +173,13 @@ function Area({ children, idx, compareAreaData }) {
         } else {
             //가매칭 모드
             if (_.isEmpty(areaGrabbedObj)) {
-                //셀 클릭시
-                // 가매칭 범위를 위한 상태값이 필요함.
-                // console.log(selectMode);
                 const tempMatching = _.range(idx, idx + 6).map(e => {
                     return { block_group_No: e };
                 });
-                // dispatch(setAreaGrabbedObj(tempMatching));
+                dispatch(setMatchingGrabbedObj(tempMatching));
+                setShowMatchingMenu(true);
+                setMenuPosition({ x: e.clientX, y: e.clientY });
+                // 정규 , 다른가매칭 시간 예외처리 후 post message to admin.
             } else {
                 //셀 드래그 앤 드롭
                 dispatch(setAreaGrabbedObj([]));
@@ -235,13 +243,13 @@ function Area({ children, idx, compareAreaData }) {
     };
     const handleAreaRightClick = e => {
         e.preventDefault();
-        const isEmpty = _.isEmpty(_.find(matchingItemData, { block_group_No: idx }));
-        if (isEmpty) {
-            setShowMenu(true);
-            setMenuPosition({ x: e.clientX, y: e.clientY });
-        } else {
-            dispatch(setMessage('해당 범위에 가매칭 과목이있음'));
-        }
+        //     const isEmpty = _.isEmpty(_.find(matchingItemData, { block_group_No: idx }));
+        //     if (isEmpty) {
+        //         setShowMenu(true);
+        //         setMenuPosition({ x: e.clientX, y: e.clientY });
+        //     } else {
+        //         dispatch(setMessage('해당 범위에 가매칭 과목이있음'));
+        //     }
     };
     return (
         <React.Fragment>
@@ -257,13 +265,17 @@ function Area({ children, idx, compareAreaData }) {
                     ${areaData.some(item => item.block_group_No === idx) ? 'active' : ''}
                     ${areaGrabbedObj.some(item => item.block_group_No === idx) ? 'dragging' : ''}
                     ${areaMatchingObj.some(item => item.block_group_No === idx) ? 'matching' : ''}
-                    ${_.find(compareAreaData, { block_group_No: idx }) ? 'equal' : ''}
+                    ${matchingGrabbedObj.some(item => item.block_group_No === idx) ? 'tempMatching' : ''}
+                    ${compareAreaData.some(item => item.block_group_No === idx) ? 'equal' : ''}
                 `}
             >
                 {children}
             </div>
             {showLectureModal && <SelectLecture position={modalPosition} handleConfirm={update} handleRemove={remove} handleCancel={cancel} />}
-            {auth === 'admin' && showMenu && areaObj.idx == idx && <AreaMenu idx={idx} position={menuPosition} close={() => setShowMenu(false)} />}
+            {/* {auth === 'admin' && showMenu && areaObj.idx == idx && <AreaMenu idx={idx} position={menuPosition} close={() => setShowMenu(false)} />} */}
+            {auth === 'admin' && showMatchingMenu && areaObj.idx == idx && (
+                <MatchingMenu idx={idx} time={6} weekcount={4} position={menuPosition} close={init} />
+            )}
         </React.Fragment>
     );
 }

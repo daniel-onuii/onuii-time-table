@@ -29,6 +29,9 @@ const Layout = styled.div`
         font-size: 15px;
         color: #757575;
     }
+    table {
+        border: 1px solid #cdcdcd;
+    }
 `;
 function TableHead() {
     const { message } = useSelector(state => state.trigger);

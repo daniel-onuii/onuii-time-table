@@ -1,8 +1,9 @@
-import { setLVT, setSelectMode } from '../store/reducer/user.reducer';
+import { setLessonOption, setLVT, setSelectMode } from '../store/reducer/user.reducer';
 import { setAreaMatchingObj } from '../store/reducer/trigger.reducer';
 import _ from 'lodash';
 import { setAreaData as setCompareAreaData } from '../store/reducer/compare.reducer';
 const common = { id: 'onuii-time-table' };
+
 export const post = {
     readyToListen: function (dispatch) {
         window.addEventListener('message', function (e) {
@@ -11,12 +12,18 @@ export const post = {
                     case 'setLVT': // admin LVT
                         dispatch(setLVT(e.data.data));
                         break;
+                    case 'setLessonOption': // admin lesson option
+                        dispatch(setLessonOption(e.data.data));
+                        break;
                     case 'setSelectMode': //가매칭모드
                         dispatch(setSelectMode(e.data.data));
                         _.isEmpty(e.data.data) && dispatch(setAreaMatchingObj([]));
                         break;
-                    case 'setTeacher':
+                    case 'setTeacher': //후보선생 설정
                         dispatch(setCompareAreaData(e.data.data));
+                        break;
+                    case 'save': //테이블 저장
+                        alert('saved');
                         break;
                 }
             }
@@ -24,8 +31,6 @@ export const post = {
     },
 
     sendMessage: function (param) {
-        //send to parent
-        //이부분 요청이 복잡해지면 메서드별로 분기
         window.postMessage({ ...common, ...param }, '*');
     },
 };

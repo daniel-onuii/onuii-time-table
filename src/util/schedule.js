@@ -3,7 +3,7 @@ import { setMessage } from '../store/reducer/trigger.reducer';
 import _ from 'lodash';
 export const schedule = {
     getWeekIdx: function (idx) {
-        return Math.floor((idx - 36) / 96);
+        return Math.floor((idx - 32) / 96);
     },
     getWeekText: function (e) {
         const week = ['월', '화', '수', '목', '금', '토', '일'];
@@ -18,22 +18,22 @@ export const schedule = {
         return timeList;
     },
     getTime: function (idx) {
-        return moment('2022-01-01 09:00')
+        return moment('2022-01-01 08:00')
             .add(15 * idx, 'minutes')
             .format('HH:mm');
     },
     getTimeIdx: function (idx) {
-        return idx - (this.getWeekIdx(idx) * 96 + 36);
+        return idx - (this.getWeekIdx(idx) * 96 + 32);
     },
 
     checkValidSchedule: function (endTime, startTime, fixedItemRowData, itemLectureId, dispatch) {
         if (
-            (endTime > 101 && endTime < 132) ||
-            (endTime > 197 && endTime < 228) ||
-            (endTime > 293 && endTime < 324) ||
-            (endTime > 389 && endTime < 420) ||
-            (endTime > 485 && endTime < 516) ||
-            (endTime > 581 && endTime < 612) ||
+            (endTime > 101 && endTime < 128) ||
+            (endTime > 197 && endTime < 224) ||
+            (endTime > 293 && endTime < 320) ||
+            (endTime > 389 && endTime < 416) ||
+            (endTime > 485 && endTime < 512) ||
+            (endTime > 581 && endTime < 607) ||
             endTime > 677
         ) {
             dispatch(setMessage('유효하지않은 범위입니다.'));
@@ -57,12 +57,12 @@ export const schedule = {
         // 과목 이동과 따로 써야할듯
         //충돌시간 체크, id체크 없이도 가매칭 추가는
         if (
-            (endTime > 101 && endTime < 132) ||
-            (endTime > 197 && endTime < 228) ||
-            (endTime > 293 && endTime < 324) ||
-            (endTime > 389 && endTime < 420) ||
-            (endTime > 485 && endTime < 516) ||
-            (endTime > 581 && endTime < 612) ||
+            (endTime > 101 && endTime < 128) ||
+            (endTime > 197 && endTime < 224) ||
+            (endTime > 293 && endTime < 320) ||
+            (endTime > 389 && endTime < 416) ||
+            (endTime > 485 && endTime < 512) ||
+            (endTime > 581 && endTime < 607) ||
             endTime > 677
         ) {
             return '유효하지 않은 범위입니다.';

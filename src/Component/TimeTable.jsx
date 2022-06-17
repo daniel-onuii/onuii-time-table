@@ -6,7 +6,19 @@ import TableBody from './TableBody';
 // import FollowCursor from './FollowCursor';
 // import imgTest from '../asset/icon/ic-card.png';
 const Layout = styled.div`
-    width: 800px;
+    th:first-child {
+        width: 7%;
+    }
+    @media (min-width: 376px) {
+        width: 700px;
+    }
+    @media (max-width: 375px) {
+        width: 375px;
+        th:first-child {
+            font-size: 10px;
+            width: 9%;
+        }
+    }
     margin: auto;
     body::-webkit-scrollbar {
         display: none;
@@ -14,16 +26,12 @@ const Layout = styled.div`
     table {
         width: 100%;
         border-collapse: collapse;
-        border: 1px solid #cdcdcd;
         -webkit-touch-callout: none;
         -webkit-user-select: none;
         -khtml-user-select: none;
         -moz-user-select: none;
         -ms-user-select: none;
         user-select: none;
-    }
-    th:first-child {
-        width: 7%;
     }
     .area._18492 {
         background: red;

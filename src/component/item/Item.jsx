@@ -8,6 +8,13 @@ import { table } from '../../util/table';
 import _ from 'lodash';
 import ItemMenu from '../contextMenu/ItemMenu';
 const Layout = styled.div`
+    @media (min-width: 376px) {
+    }
+    @media (max-width: 375px) {
+        .lectureItem {
+            font-size: 10px;
+        }
+    }
     .lectureItem {
         display: flex;
         cursor: pointer;

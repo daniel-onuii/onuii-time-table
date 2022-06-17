@@ -14,6 +14,21 @@ import _ from 'lodash';
 import LectureItem from './area/LectureItem';
 import { post } from '../util/interface';
 const Layout = styled.div`
+    table {
+        // border: 1px solid #cdcdcd;
+        // border-top: none;
+        border-right: 1px solid #cdcdcd;
+    }
+    @media (min-width: 376px) {
+        td {
+            height: 21px;
+        }
+    }
+    @media (max-width: 375px) {
+        td {
+            height: 16px;
+        }
+    }
     .contents {
         height: 504px;
         overflow-y: scroll;
@@ -28,6 +43,11 @@ const Layout = styled.div`
     .onTime {
         border-top: 1px solid #cdcdcd;
     }
+    tr:first-child,
+    tr:last-child {
+        border-top: none;
+        border-bottom: none;
+    }
     .onTime th {
         font-size: 15px;
         color: #757575;
@@ -36,7 +56,6 @@ const Layout = styled.div`
     td {
         border-left: 1px solid #cdcdcd;
         text-align: center;
-        height: 21px;
         vertical-align: middle;
         width: 10%;
         position: relative;
@@ -82,18 +101,26 @@ const Layout = styled.div`
     }
     .item.dragging {
         background: #01a8fe !important;
-        // box-shadow: 10px 5px 5px red inset;
         color: white;
     }
     .item.matching {
-        background: yellow;
-        color: white;
+        // background-color: rgba(165, 210, 255, 0.4);
+        // background-image: linear-gradient(90deg, rgba(165, 210, 255, 0.3) 50%, transparent 50%),
+        //     linear-gradient(rgba(165, 210, 255, 0.3) 50%, transparent 50%);
+        // background-size: 20px 20px;
+        background: green;
     }
     .item.matching .area,
     .item.dragging .area,
-    .item.over .area {
+    .item.over .area,
+    .item.tempMatching .area {
         opacity: 0.2;
     }
+
+    .item.tempMatching {
+        box-shadow: 100vw 100vh 0px yellow inset;
+    }
+
     .ignoreEnter {
         pointer-events: none;
     }
@@ -110,7 +137,6 @@ const Layout = styled.div`
 function TableBody() {
     const tableRef = useRef();
     const dispatch = useDispatch();
-
     const { areaData, fixedItemData, fixedItemGroupData, timeListData, matchingItemData, matchingItemGroupData } = useSelector(
         state => state.schedule,
     );
@@ -132,8 +158,12 @@ function TableBody() {
 
     useEffect(() => {
         //가매칭 영역 선택시 postmessage
-        post.sendMessage({ name: 'matchingObj', data: { blocks: areaMatchingObj, lecture_id: selectMode.lecture_subject_Id } });
+        post.sendMessage({ name: 'selectMatchingArea', data: { blocks: areaMatchingObj, lecture_id: selectMode.lecture_subject_Id } });
     }, [areaMatchingObj]);
+
+    useEffect(() => {
+        post.sendMessage({ name: 'updateMatching', data: matchingItemGroupData });
+    }, [matchingItemGroupData]);
 
     // useEffect(() => {
     //     setTimeout(() => {

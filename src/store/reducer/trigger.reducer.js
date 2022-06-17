@@ -3,11 +3,12 @@ const initialState = {
     areaObj: {},
     itemObj: {},
     areaGrabbedObj: [],
-    areaMatchingObj: [],
+    areaMatchingObj: [], //후보선생님 필터링을 위한 범위
     isAreaAppend: false,
     isAreaClickDown: false,
     areaActiveType: null,
     message: '',
+    matchingGrabbedObj: [], //가매칭으로 추가 될 범위(60,90분)
 };
 const slice = createSlice({
     name: 'trigger',
@@ -37,10 +38,22 @@ const slice = createSlice({
         setMessage(state, action) {
             state.message = action.payload;
         },
+        setMatchingGrabbedObj(state, action) {
+            state.matchingGrabbedObj = action.payload;
+        },
     },
 });
 
 const { actions, reducer } = slice;
-export const { setAreaObj, setItemObj, setAreaGrabbedObj, setAreaMatchingObj, setIsAreaAppend, setIsAreaClickDown, setAreaActiveType, setMessage } =
-    actions;
+export const {
+    setAreaObj,
+    setItemObj,
+    setAreaGrabbedObj,
+    setAreaMatchingObj,
+    setIsAreaAppend,
+    setIsAreaClickDown,
+    setAreaActiveType,
+    setMessage,
+    setMatchingGrabbedObj,
+} = actions;
 export default reducer;
