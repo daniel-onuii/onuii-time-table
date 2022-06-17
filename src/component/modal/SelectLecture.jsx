@@ -55,8 +55,7 @@ const Layout = styled.div`
         font-size: 12px !important;
     }
 `;
-function SelectLecture({ position, handleConfirm, handleRemove, handleCancel }) {
-    const { areaObj } = useSelector(state => state.trigger);
+function SelectLecture({ position, handleConfirm, handleRemove, handleCancel, areaObj }) {
     const { lvt } = useSelector(state => state.user);
     const boxRef = useRef();
     useEffect(() => {

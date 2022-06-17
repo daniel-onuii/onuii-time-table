@@ -34,8 +34,7 @@ const Layout = styled.div.attrs(props => ({
         top: -5px;
     }
 `;
-function LectureItem({ id, idx }) {
-    const { areaData, areaGroupData } = useSelector(state => state.schedule);
+function LectureItem({ id, idx, areaData, areaGroupData }) {
     const { lvt } = useSelector(state => state.user);
     const [length, setLength] = useState(0);
     const [seq, setSeq] = useState(0);

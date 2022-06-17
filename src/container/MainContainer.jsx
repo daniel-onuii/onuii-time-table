@@ -1,11 +1,10 @@
-import React, { useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import React from 'react';
 import TimeTable from '../component/TimeTable';
 
-function MainContainer() {
+function MainContainer(props) {
     return (
         <React.Fragment>
-            <TimeTable />
+            <TimeTable auth={props.auth} areaData={props.areaData} fixedItemData={props.fixedItemData} matchingItemData={props.matchingItemData} />
         </React.Fragment>
     );
 }

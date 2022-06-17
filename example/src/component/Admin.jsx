@@ -12,16 +12,10 @@ function Admin({ auth }) {
     return (
         <React.Fragment>
             <Layout>
-                <OnuiiTimeTable
-                    auth={auth}
-                    areaData={mock.areaData}
-                    fixedItemData={mock.fixedItemData}
-                    matchingItemData={mock.matchingItemData}
-                    test={1}
-                />
+                <OnuiiTimeTable auth={auth} areaData={mock.areaData} fixedItemData={mock.fixedItemData} matchingItemData={mock.matchingItemData} />
             </Layout>
             <Layout>
-                <OnuiiTimeTable auth={auth} test={2} />
+                <OnuiiTimeTable auth={auth} />
             </Layout>
         </React.Fragment>
     );

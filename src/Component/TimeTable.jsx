@@ -3,8 +3,6 @@ import styled from 'styled-components';
 import _ from 'lodash';
 import TableHead from './TableHead';
 import TableBody from './TableBody';
-// import FollowCursor from './FollowCursor';
-// import imgTest from '../asset/icon/ic-card.png';
 const Layout = styled.div`
     th:first-child {
         width: 7%;
@@ -59,14 +57,17 @@ const Layout = styled.div`
     }
 `;
 
-function TimeTable() {
+function TimeTable(props) {
     return (
         <React.Fragment>
             <Layout>
-                {/* <img src={imgTest} /> */}
-                {/* <FollowCursor /> */}
                 <TableHead />
-                <TableBody />
+                <TableBody
+                    auth={props.auth}
+                    areaData={props.areaData}
+                    fixedItemData={props.fixedItemData}
+                    matchingItemData={props.matchingItemData}
+                />
             </Layout>
         </React.Fragment>
     );

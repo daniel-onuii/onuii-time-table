@@ -10,9 +10,9 @@ export const schedule = {
         return week[e];
     },
     getTimeList: function () {
-        const defaultTime = moment('2022-01-01 08:45');
+        const defaultTime = moment('2022-01-01 07:45');
         const timeList = [];
-        for (var i = 0; i < 66; i++) {
+        for (var i = 0; i < 70; i++) {
             timeList.push(defaultTime.add(15, 'minutes').format('HH:mm'));
         }
         return timeList;

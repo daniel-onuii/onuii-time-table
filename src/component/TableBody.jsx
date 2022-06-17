@@ -1,6 +1,6 @@
-import React, { useEffect, useRef } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { setAreaGroupData, setFixedItemGroupData, setMatchingItemGroupData, setTimeListData } from '../store/reducer/schedule.reducer';
+import React, { useEffect, useRef, useState } from 'react';
+import { useSelector } from 'react-redux';
+// import { setAreaGroupData, setFixedItemGroupData, setMatchingItemGroupData, setTimeListData } from '../store/reducer/schedule.reducer';
 import { lecture } from '../util/lecture';
 import { schedule } from '../util/schedule';
 import { table } from '../util/table';
@@ -134,30 +134,40 @@ const Layout = styled.div`
     }
 `;
 
-function TableBody() {
+function TableBody(props) {
     const tableRef = useRef();
-    const dispatch = useDispatch();
-    const { areaData, fixedItemData, fixedItemGroupData, timeListData, matchingItemData, matchingItemGroupData } = useSelector(
-        state => state.schedule,
-    );
-    const { areaGrabbedObj, areaMatchingObj, areaObj } = useSelector(state => state.trigger);
+    const { auth } = props;
+    const [timeListData, setTimeListData] = useState([]);
+    const [areaData, setAreaData] = useState(props.areaData || []);
+    const [fixedItemData, setFixedItemData] = useState(props.fixedItemData || []);
+    const [matchingItemData, setMatchingItemData] = useState(props.matchingItemData || []);
+    const [areaGroupData, setAreaGroupData] = useState([]);
+    const [fixedItemGroupData, setFixedItemGroupData] = useState([]);
+    const [matchingItemGroupData, setMatchingItemGroupData] = useState([]);
+    const [areaObj, setAreaObj] = useState({});
+    const [itemObj, setItemObj] = useState({});
+    const [areaGrabbedObj, setAreaGrabbedObj] = useState([]);
+    const [areaMatchingObj, setAreaMatchingObj] = useState([]);
+    const [matchingGrabbedObj, setMatchingGrabbedObj] = useState([]);
+    const [isAreaClickDown, setIsAreaClickDown] = useState(false);
+    const [isAreaAppend, setIsAreaAppend] = useState(false);
+    const { selectMode } = useSelector(state => state.user);
     const compareAreaData = useSelector(state => state.compare.areaData);
-    const { auth, selectMode } = useSelector(state => state.user);
 
     useEffect(() => {
-        //과외 시간 그룹
-        dispatch(setTimeListData(schedule.getTimeList()));
-        dispatch(setFixedItemGroupData(lecture.getGroupByLectureTime(fixedItemData)));
-        dispatch(setMatchingItemGroupData(lecture.getGroupByLectureTime(matchingItemData)));
+        setTimeListData(schedule.getTimeList());
+    }, []);
+
+    useEffect(() => {
+        setFixedItemGroupData(lecture.getGroupByLectureTime(fixedItemData));
+        setMatchingItemGroupData(lecture.getGroupByLectureTime(matchingItemData));
     }, [fixedItemData, matchingItemData]);
 
     useEffect(() => {
-        //희망 시간 그룹
-        dispatch(setAreaGroupData(area.getAreaGroupData(areaData)));
+        setAreaGroupData(area.getAreaGroupData(areaData));
     }, [areaData]);
 
     useEffect(() => {
-        //가매칭 영역 선택시 postmessage
         post.sendMessage({ name: 'selectMatchingArea', data: { blocks: areaMatchingObj, lecture_id: selectMode.lecture_subject_Id } });
     }, [areaMatchingObj]);
 
@@ -170,7 +180,6 @@ function TableBody() {
     //         tableRef.current.scrollTo(0, 681);
     //     }, 0);
     // }, []);
-
     return (
         <Layout>
             <div className="contents" ref={tableRef}>
@@ -191,11 +200,38 @@ function TableBody() {
                                                 <td key={ii} className={`${e >= 6 ? 'weekend' : ''}`}>
                                                     <Area
                                                         idx={idx}
+                                                        auth={auth}
+                                                        areaData={areaData}
+                                                        fixedItemData={fixedItemData}
+                                                        matchingItemData={matchingItemData}
+                                                        areaGroupData={areaGroupData}
+                                                        fixedItemGroupData={fixedItemGroupData}
+                                                        matchingItemGroupData={matchingItemGroupData}
+                                                        setAreaData={setAreaData}
+                                                        setFixedItemData={setFixedItemData}
+                                                        setMatchingItemData={setMatchingItemData}
+                                                        setAreaGroupData={setAreaGroupData}
+                                                        setFixedItemGroupData={setFixedItemGroupData}
+                                                        setMatchingItemGroupData={setMatchingItemGroupData}
+                                                        areaObj={areaObj}
+                                                        setAreaObj={setAreaObj}
+                                                        itemObj={itemObj}
+                                                        setItemObj={setItemObj}
+                                                        areaGrabbedObj={areaGrabbedObj}
+                                                        setAreaGrabbedObj={setAreaGrabbedObj}
+                                                        areaMatchingObj={areaMatchingObj}
+                                                        setAreaMatchingObj={setAreaMatchingObj}
+                                                        matchingGrabbedObj={matchingGrabbedObj}
+                                                        setMatchingGrabbedObj={setMatchingGrabbedObj}
+                                                        isAreaClickDown={isAreaClickDown}
+                                                        setIsAreaClickDown={setIsAreaClickDown}
+                                                        isAreaAppend={isAreaAppend}
+                                                        setIsAreaAppend={setIsAreaAppend}
                                                         compareAreaData={_.intersectionBy(compareAreaData, areaMatchingObj, 'block_group_No')}
                                                     >
                                                         {level && <Distribution level={level} />}
                                                         {lectureData?.map((e, i) => (
-                                                            <LectureItem key={i} id={e} idx={idx} />
+                                                            <LectureItem key={i} id={e} idx={idx} areaData={areaData} areaGroupData={areaGroupData} />
                                                         ))}
                                                         {maxBlock?.block_group_No === idx ? (
                                                             <div className={'timeText'}>
@@ -207,14 +243,29 @@ function TableBody() {
                                                         )}
                                                     </Area>
                                                     {fixedItemGroupData.some(y => y.startIdx === idx) && (
-                                                        <Item type={'fixed'} idx={idx} itemData={fixedItemData} itemGroupData={fixedItemGroupData} />
+                                                        <Item
+                                                            type={'fixed'}
+                                                            idx={idx}
+                                                            auth={auth}
+                                                            itemData={fixedItemData}
+                                                            itemGroupData={fixedItemGroupData}
+                                                            setItemObj={setItemObj}
+                                                            setIsAreaClickDown={setIsAreaClickDown}
+                                                            setMatchingItemData={setMatchingItemData}
+                                                        />
                                                     )}
                                                     {auth === 'admin' && matchingItemGroupData.some(y => y.startIdx === idx) && (
                                                         <Item
                                                             type={'matching'}
                                                             idx={idx}
+                                                            auth={auth}
                                                             itemData={matchingItemData}
                                                             itemGroupData={matchingItemGroupData}
+                                                            matchingItemData={matchingItemData}
+                                                            matchingItemGroupData={matchingItemGroupData}
+                                                            setItemObj={setItemObj}
+                                                            setIsAreaClickDown={setIsAreaClickDown}
+                                                            setMatchingItemData={setMatchingItemData}
                                                         />
                                                     )}
                                                 </td>

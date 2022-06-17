@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import styled from 'styled-components';
-import { setItemObj, setIsAreaClickDown } from '../../store/reducer/trigger.reducer';
 import { lecture } from '../../util/lecture';
 import { schedule } from '../../util/schedule';
 import { table } from '../../util/table';
@@ -58,36 +57,33 @@ const Layout = styled.div`
         -webkit-filter: brightness(215%);
     }
 `;
-function Item({ idx, type, itemData, itemGroupData }) {
-    const dispatch = useDispatch();
-    const { auth } = useSelector(state => state.user);
-    // const { matchingItemData, matchingItemGroupData } = useSelector(state => state.schedule);
-    const { itemObj } = useSelector(state => state.trigger);
+function Item({
+    auth,
+    idx,
+    type,
+    itemData,
+    itemGroupData,
+    setItemObj,
+    setIsAreaClickDown,
+    setMatchingItemData,
+    matchingItemData,
+    matchingItemGroupData,
+}) {
     const itemLectureName = lecture.getLectureNameByIdx(itemData, idx);
     const [menuPosition, setMenuPosition] = useState(null);
     const [showMenu, setShowMenu] = useState(false);
     const handleClick = () => {
         setShowMenu(false);
-        // dispatch(
-        //     setItemObj({
-        //         idx: idx,
-        //         type: type,
-        //         lectureId: lecture.getLectureId(itemData, idx),
-        //         time: lecture.getLectureRunningTime(itemGroupData, idx),
-        //         isShow: itemObj.isShow ? false : true,
-        //     }),
-        // );
     };
     const handleDragStart = () => {
-        dispatch(setIsAreaClickDown(false));
-        dispatch(
-            setItemObj({
-                idx: idx,
-                type: type,
-                lectureId: lecture.getLectureId(itemData, idx),
-                time: lecture.getLectureRunningTime(itemGroupData, idx),
-            }),
-        );
+        setIsAreaClickDown(false);
+
+        setItemObj({
+            idx: idx,
+            type: type,
+            lectureId: lecture.getLectureId(itemData, idx),
+            time: lecture.getLectureRunningTime(itemGroupData, idx),
+        });
     };
     const handleRightClick = e => {
         e.preventDefault();
@@ -126,7 +122,17 @@ function Item({ idx, type, itemData, itemGroupData }) {
                     </span>
                 </div>
             </div>
-            {auth === 'admin' && showMenu && <ItemMenu idx={idx} type={type} position={menuPosition} close={() => setShowMenu(false)} />}
+            {auth === 'admin' && showMenu && (
+                <ItemMenu
+                    setMatchingItemData={setMatchingItemData}
+                    matchingItemData={matchingItemData}
+                    matchingItemGroupData={matchingItemGroupData}
+                    idx={idx}
+                    type={type}
+                    position={menuPosition}
+                    close={() => setShowMenu(false)}
+                />
+            )}
         </Layout>
     );
 }

@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
-import { setMatchingItemData } from '../../store/reducer/schedule.reducer';
+// import { setMatchingItemData } from '../../store/reducer/schedule.reducer';
 import _ from 'lodash';
 import { setMessage } from '../../store/reducer/trigger.reducer';
 import { schedule } from '../../util/schedule';
@@ -36,9 +36,8 @@ const Layout = styled.div`
         opacity: 0.4;
     }
 `;
-function MatchingMenu({ idx, position, close }) {
+function MatchingMenu({ idx, position, close, matchingItemData, matchingItemGroupData, setMatchingItemData }) {
     const dispatch = useDispatch();
-    const { matchingItemData, matchingItemGroupData } = useSelector(state => state.schedule);
     const { lvt } = useSelector(state => state.user);
     const { time, weekcount } = useSelector(state => state.user.lessonOption);
     const boxRef = useRef();
@@ -77,7 +76,7 @@ function MatchingMenu({ idx, position, close }) {
             const data = _.range(idx, idx + time).map((e, i) => {
                 return { block_group_No: e, lecture_subject_Id: lvt };
             });
-            dispatch(setMatchingItemData([...matchingItemData, ...data]));
+            setMatchingItemData([...matchingItemData, ...data]);
         }
     };
     return (

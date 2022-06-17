@@ -1,30 +1,52 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import _, { bind } from 'lodash';
-import {
-    setAreaGrabbedObj,
-    setAreaMatchingObj,
-    setAreaObj,
-    setIsAreaAppend,
-    setIsAreaClickDown,
-    setItemObj,
-    setMatchingGrabbedObj,
-    setMessage,
-} from '../../store/reducer/trigger.reducer';
-import { setAreaData, setFixedItemData, setMatchingItemData } from '../../store/reducer/schedule.reducer';
+import _ from 'lodash';
+// import {
+//     setAreaGrabbedObj,
+//     setAreaMatchingObj,
+//     setAreaObj,
+//     setIsAreaAppend,
+//     setIsAreaClickDown,
+//     setItemObj,
+//     setMatchingGrabbedObj,
+//     setMessage,
+// } from '../../store/reducer/trigger.reducer';
 import { schedule } from '../../util/schedule';
 import { table } from '../../util/table';
 import SelectLecture from '../modal/SelectLecture';
 import AreaMenu from '../contextMenu/AreaMenu';
 import MatchingMenu from '../contextMenu/MatchingMenu';
 
-function Area({ children, idx, compareAreaData }) {
+function Area(props) {
+    const {
+        auth,
+        children,
+        idx,
+        compareAreaData,
+        areaData,
+        fixedItemData,
+        matchingItemData,
+        setAreaData,
+        setFixedItemData,
+        setMatchingItemData,
+        areaGrabbedObj,
+        areaMatchingObj,
+        matchingGrabbedObj,
+        itemObj,
+        areaObj,
+        setItemObj,
+        isAreaClickDown,
+        isAreaAppend,
+        setIsAreaClickDown,
+        setMatchingGrabbedObj,
+        setAreaObj,
+        setIsAreaAppend,
+        setAreaGrabbedObj,
+        setAreaMatchingObj,
+        matchingItemGroupData,
+    } = props;
     const dispatch = useDispatch();
-    const { areaData, fixedItemData, matchingItemData } = useSelector(state => state.schedule);
-    const { areaGrabbedObj, areaMatchingObj, matchingGrabbedObj, itemObj, areaObj, isAreaClickDown, isAreaAppend } = useSelector(
-        state => state.trigger,
-    );
-    const { selectMode, auth } = useSelector(state => state.user);
+    const { selectMode } = useSelector(state => state.user);
     const [showLectureModal, setShowLectureModal] = useState(false); //과목정보 모달
     const [modalPosition, setModalPosition] = useState(null);
     const [menuPosition, setMenuPosition] = useState(null);
@@ -32,8 +54,8 @@ function Area({ children, idx, compareAreaData }) {
     const [showMatchingMenu, setShowMatchingMenu] = useState(false);
 
     const init = () => {
-        dispatch(setAreaGrabbedObj([])); //좌클릭 드래그 영역
-        dispatch(setMatchingGrabbedObj([])); //가매칭 영역
+        setAreaGrabbedObj([]); //좌클릭 드래그 영역
+        setMatchingGrabbedObj([]); //가매칭 영역
         setShowLectureModal(false);
         setShowMenu(false);
         setShowMatchingMenu(false);
@@ -49,7 +71,7 @@ function Area({ children, idx, compareAreaData }) {
                 !bindLecture.some(item => item.block_group_No === e.block_group_No) && result.push(e);
                 return result;
             }, []);
-            dispatch(setAreaData([...newAreaData, ...bindLecture]));
+            setAreaData([...newAreaData, ...bindLecture]);
         } else if (type === 'add') {
             //추가하기
             const newAreaData = areaData.reduce((result, e) => {
@@ -59,7 +81,7 @@ function Area({ children, idx, compareAreaData }) {
                 target ? result.push({ ...target, areaActiveType: addData }) : result.push(e);
                 return result;
             }, []);
-            dispatch(setAreaData([...newAreaData, ..._.differenceBy(bindLecture, areaData, 'block_group_No')]));
+            setAreaData([...newAreaData, ..._.differenceBy(bindLecture, areaData, 'block_group_No')]);
         } else if (type === 'pop') {
             //빼기
             const newAreaData = areaData.reduce((result, e) => {
@@ -69,7 +91,7 @@ function Area({ children, idx, compareAreaData }) {
                 target ? !_.isEmpty(popData) && result.push({ ...target, areaActiveType: popData }) : result.push(e);
                 return result;
             }, []);
-            dispatch(setAreaData(newAreaData));
+            setAreaData(newAreaData);
         }
         init();
     };
@@ -77,7 +99,7 @@ function Area({ children, idx, compareAreaData }) {
         const removeResult = _.reject(areaData, o => {
             return areaGrabbedObj.some(item => item.block_group_No === o.block_group_No);
         });
-        dispatch(setAreaData(removeResult));
+        setAreaData(removeResult);
         init();
     };
     const cancel = () => {
@@ -86,20 +108,20 @@ function Area({ children, idx, compareAreaData }) {
     const handleAreaDown = e => {
         setShowMenu(false);
         setShowMatchingMenu(false);
-        dispatch(setMatchingGrabbedObj([])); //가매칭 영역
-        dispatch(
-            setAreaObj({
-                idx: idx,
-                startOverIdx: schedule.getTimeIdx(idx),
-                endOverIdx: schedule.getTimeIdx(idx + 1),
-                startOverDayIdx: schedule.getWeekIdx(idx),
-                endOverDayIdx: schedule.getWeekIdx(idx),
-            }),
-        );
+        setMatchingGrabbedObj([]); //가매칭 영역
+
+        setAreaObj({
+            idx: idx,
+            startOverIdx: schedule.getTimeIdx(idx),
+            endOverIdx: schedule.getTimeIdx(idx + 1),
+            startOverDayIdx: schedule.getWeekIdx(idx),
+            endOverDayIdx: schedule.getWeekIdx(idx),
+        });
+
         if (e.buttons !== 1) return false; //좌클릭 이외는 전부 false
-        dispatch(setIsAreaClickDown(true)); //클릭 상태
+        setIsAreaClickDown(true); //클릭 상태
         const isFill = table.isFillArea(areaMatchingObj, idx); //가매칭모드때 사용
-        dispatch(setIsAreaAppend(isFill)); //대상이 빈칸인지
+        setIsAreaAppend(isFill); //대상이 빈칸인지
     };
 
     const handleAreaOver = () => {
@@ -122,16 +144,15 @@ function Area({ children, idx, compareAreaData }) {
                 );
                 return result;
             }, []);
-            dispatch(setAreaGrabbedObj(_.flatten(selectedInfo)));
-            dispatch(
-                setAreaObj({
-                    ...areaObj,
-                    startOverIdx: startRange < endRange ? startRange : endRange,
-                    endOverIdx: startRange > endRange ? startRange + 1 : endRange + 1,
-                    startOverDayIdx: startOverDayIdx < endOverDayIdx ? startOverDayIdx : endOverDayIdx,
-                    endOverDayIdx: startOverDayIdx > endOverDayIdx ? startOverDayIdx : endOverDayIdx,
-                }),
-            );
+            setAreaGrabbedObj(_.flatten(selectedInfo));
+
+            setAreaObj({
+                ...areaObj,
+                startOverIdx: startRange < endRange ? startRange : endRange,
+                endOverIdx: startRange > endRange ? startRange + 1 : endRange + 1,
+                startOverDayIdx: startOverDayIdx < endOverDayIdx ? startOverDayIdx : endOverDayIdx,
+                endOverDayIdx: startOverDayIdx > endOverDayIdx ? startOverDayIdx : endOverDayIdx,
+            });
         }
     };
     const handleAreaUp = e => {
@@ -140,29 +161,26 @@ function Area({ children, idx, compareAreaData }) {
             //좌클릭일때만
             return false;
         }
-        dispatch(setIsAreaClickDown(false)); //클릭 상태
+        setIsAreaClickDown(false); //클릭 상태
         if (_.isEmpty(selectMode)) {
             //일반 과목 선택 모드
             if (_.isEmpty(areaGrabbedObj)) {
                 //셀 클릭시
                 setModalPosition({ x: e.clientX, y: e.clientY });
-                dispatch(
-                    setAreaObj({
-                        idx: idx,
-                        startOverIdx: schedule.getTimeIdx(idx),
-                        endOverIdx: schedule.getTimeIdx(idx + 4),
-                        startOverDayIdx: schedule.getWeekIdx(idx),
-                        endOverDayIdx: schedule.getWeekIdx(idx),
-                    }),
-                );
-                dispatch(
+
+                setAreaObj({
+                    idx: idx,
+                    startOverIdx: schedule.getTimeIdx(idx),
+                    endOverIdx: schedule.getTimeIdx(idx + 4),
+                    startOverDayIdx: schedule.getWeekIdx(idx),
+                    endOverDayIdx: schedule.getWeekIdx(idx),
+                }),
                     setAreaGrabbedObj(
                         _.range(idx, idx + 4).map(e => {
                             return { block_group_No: e };
                         }),
                     ),
-                );
-                setShowLectureModal(true);
+                    setShowLectureModal(true);
             } else {
                 //셀 드래그 앤 드롭
                 if (areaGrabbedObj.length > 0) {
@@ -176,20 +194,20 @@ function Area({ children, idx, compareAreaData }) {
                 const tempMatching = _.range(idx, idx + 6).map(e => {
                     return { block_group_No: e };
                 });
-                dispatch(setMatchingGrabbedObj(tempMatching));
+                setMatchingGrabbedObj(tempMatching);
                 setShowMatchingMenu(true);
                 setMenuPosition({ x: e.clientX, y: e.clientY });
                 // 정규 , 다른가매칭 시간 예외처리 후 post message to admin.
             } else {
                 //셀 드래그 앤 드롭
-                dispatch(setAreaGrabbedObj([]));
+                setAreaGrabbedObj([]);
                 if (!isAreaAppend) {
-                    dispatch(setAreaMatchingObj([...areaMatchingObj, ...areaGrabbedObj]));
+                    setAreaMatchingObj([...areaMatchingObj, ...areaGrabbedObj]);
                 } else {
                     const removeResult = _.reject(areaMatchingObj, o => {
                         return areaGrabbedObj.some(item => item.block_group_No === o.block_group_No);
                     });
-                    dispatch(setAreaMatchingObj(removeResult));
+                    setAreaMatchingObj(removeResult);
                 }
             }
         }
@@ -211,7 +229,7 @@ function Area({ children, idx, compareAreaData }) {
                 result.push({ block_group_No: e, lecture_subject_Id: itemObj.lectureId });
                 return result;
             }, []);
-            dispatch(setData([...removedLecture, ...addLecture]));
+            setData([...removedLecture, ...addLecture]);
         }
     };
     const handleItemDrop = e => {
@@ -225,7 +243,7 @@ function Area({ children, idx, compareAreaData }) {
                 dropEvent(matchingItemData, setMatchingItemData);
                 break;
         }
-        dispatch(setItemObj({}));
+        setItemObj({});
     };
     const handleDragEnter = e => {
         table.removeOver();
@@ -261,7 +279,7 @@ function Area({ children, idx, compareAreaData }) {
                 onDragOver={e => e.preventDefault()}
                 onDragEnter={handleDragEnter}
                 onContextMenu={handleAreaRightClick}
-                className={`item 
+                className={`item
                     ${areaData.some(item => item.block_group_No === idx) ? 'active' : ''}
                     ${areaGrabbedObj.some(item => item.block_group_No === idx) ? 'dragging' : ''}
                     ${areaMatchingObj.some(item => item.block_group_No === idx) ? 'matching' : ''}
@@ -271,10 +289,21 @@ function Area({ children, idx, compareAreaData }) {
             >
                 {children}
             </div>
-            {showLectureModal && <SelectLecture position={modalPosition} handleConfirm={update} handleRemove={remove} handleCancel={cancel} />}
+            {showLectureModal && (
+                <SelectLecture position={modalPosition} handleConfirm={update} handleRemove={remove} handleCancel={cancel} areaObj={areaObj} />
+            )}
             {/* {auth === 'admin' && showMenu && areaObj.idx == idx && <AreaMenu idx={idx} position={menuPosition} close={() => setShowMenu(false)} />} */}
             {auth === 'admin' && showMatchingMenu && areaObj.idx == idx && (
-                <MatchingMenu idx={idx} time={6} weekcount={4} position={menuPosition} close={init} />
+                <MatchingMenu
+                    idx={idx}
+                    time={6}
+                    weekcount={4}
+                    position={menuPosition}
+                    close={init}
+                    matchingItemData={matchingItemData}
+                    matchingItemGroupData={matchingItemGroupData}
+                    setMatchingItemData={setMatchingItemData}
+                />
             )}
         </React.Fragment>
     );
