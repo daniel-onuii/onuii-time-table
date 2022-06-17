@@ -13,6 +13,7 @@ import { distData } from '../mock/distData';
 import _ from 'lodash';
 import LectureItem from './area/LectureItem';
 import { post } from '../util/interface';
+import useArea from '../hooks/useArea';
 const Layout = styled.div`
     table {
         // border: 1px solid #cdcdcd;
@@ -136,14 +137,19 @@ const Layout = styled.div`
 
 function TableBody(props) {
     const tableRef = useRef();
+    const { selectMode } = useSelector(state => state.user);
+    const compareAreaData = useSelector(state => state.compare.areaData);
     const { auth } = props;
-    const [timeListData, setTimeListData] = useState([]);
+
+    //13개의 전역 state
     const [areaData, setAreaData] = useState(props.areaData || []);
     const [fixedItemData, setFixedItemData] = useState(props.fixedItemData || []);
     const [matchingItemData, setMatchingItemData] = useState(props.matchingItemData || []);
+    //-------- 인정
     const [areaGroupData, setAreaGroupData] = useState([]);
     const [fixedItemGroupData, setFixedItemGroupData] = useState([]);
     const [matchingItemGroupData, setMatchingItemGroupData] = useState([]);
+    //-------- 아마도 인정
     const [areaObj, setAreaObj] = useState({});
     const [itemObj, setItemObj] = useState({});
     const [areaGrabbedObj, setAreaGrabbedObj] = useState([]);
@@ -151,12 +157,8 @@ function TableBody(props) {
     const [matchingGrabbedObj, setMatchingGrabbedObj] = useState([]);
     const [isAreaClickDown, setIsAreaClickDown] = useState(false);
     const [isAreaAppend, setIsAreaAppend] = useState(false);
-    const { selectMode } = useSelector(state => state.user);
-    const compareAreaData = useSelector(state => state.compare.areaData);
 
-    useEffect(() => {
-        setTimeListData(schedule.getTimeList());
-    }, []);
+    const timeListData = schedule.getTimeList();
 
     useEffect(() => {
         setFixedItemGroupData(lecture.getGroupByLectureTime(fixedItemData));

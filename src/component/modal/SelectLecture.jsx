@@ -58,10 +58,6 @@ const Layout = styled.div`
 function SelectLecture({ position, handleConfirm, handleRemove, handleCancel, areaObj }) {
     const { lvt } = useSelector(state => state.user);
     const boxRef = useRef();
-    useEffect(() => {
-        // const intersection = _.intersectionBy(areaData, areaGrabbedObj, 'block_group_No').map(e => e.areaActiveType);
-        // setLecture([..._.union(_.flatMap(intersection))]);
-    }, []);
     const [dynamicX, setDynamicX] = useState();
     const [lecture, setLecture] = useState([]);
     const [message, setMessage] = useState('');

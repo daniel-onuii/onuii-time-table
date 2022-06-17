@@ -109,7 +109,6 @@ function Area(props) {
         setShowMenu(false);
         setShowMatchingMenu(false);
         setMatchingGrabbedObj([]); //가매칭 영역
-
         setAreaObj({
             idx: idx,
             startOverIdx: schedule.getTimeIdx(idx),
@@ -292,7 +291,6 @@ function Area(props) {
             {showLectureModal && (
                 <SelectLecture position={modalPosition} handleConfirm={update} handleRemove={remove} handleCancel={cancel} areaObj={areaObj} />
             )}
-            {/* {auth === 'admin' && showMenu && areaObj.idx == idx && <AreaMenu idx={idx} position={menuPosition} close={() => setShowMenu(false)} />} */}
             {auth === 'admin' && showMatchingMenu && areaObj.idx == idx && (
                 <MatchingMenu
                     idx={idx}
@@ -305,6 +303,7 @@ function Area(props) {
                     setMatchingItemData={setMatchingItemData}
                 />
             )}
+            {/* {auth === 'admin' && showMenu && areaObj.idx == idx && <AreaMenu idx={idx} position={menuPosition} close={() => setShowMenu(false)} />} */}
         </React.Fragment>
     );
 }
