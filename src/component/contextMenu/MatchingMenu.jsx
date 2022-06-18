@@ -5,7 +5,6 @@ import styled from 'styled-components';
 import _ from 'lodash';
 import { setMessage } from '../../store/reducer/trigger.reducer';
 import { schedule } from '../../util/schedule';
-import { post } from '../../util/interface';
 const Layout = styled.div`
     position: fixed;
     background: white;
@@ -36,10 +35,10 @@ const Layout = styled.div`
         opacity: 0.4;
     }
 `;
-function MatchingMenu({ idx, position, close, matchingItemData, matchingItemGroupData, setMatchingItemData }) {
+function MatchingMenu({ idx, position, close, matchingItemData, matchingItemGroupData, setMatchingItemData, interfaceHook }) {
     const dispatch = useDispatch();
-    const { lvt } = useSelector(state => state.user);
-    const { time, weekcount } = useSelector(state => state.user.lessonOption);
+    const lvt = interfaceHook.lvt;
+    const { time, weekcount } = interfaceHook.lessonOption;
     const boxRef = useRef();
     const newPositionX =
         position.x + boxRef?.current?.clientWidth >= document.body.clientWidth

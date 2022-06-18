@@ -34,8 +34,7 @@ const Layout = styled.div.attrs(props => ({
         top: -5px;
     }
 `;
-function LectureItem({ id, idx, areaHook }) {
-    const { lvt } = useSelector(state => state.user);
+function LectureItem({ id, idx, areaHook, interfaceHook }) {
     const [length, setLength] = useState(0);
     const [seq, setSeq] = useState(0);
     useEffect(() => {
@@ -54,7 +53,7 @@ function LectureItem({ id, idx, areaHook }) {
     const isFirst = isEmptyBefore || !isEqualBefore;
     const isLast = isEmptyNext || !isEqualNext;
     return (
-        <Layout lecture_id={id} className={`${isFirst ? 'head' : ''} ${isLast ? 'last' : ''} `} length={length} seq={seq} lvt={lvt}>
+        <Layout lecture_id={id} className={`${isFirst ? 'head' : ''} ${isLast ? 'last' : ''} `} length={length} seq={seq} lvt={interfaceHook.lvt}>
             <span className={`ignoreEnter`}>{isFirst ? `${lecture.getLectureName(id)}` : ''}</span>
         </Layout>
     );

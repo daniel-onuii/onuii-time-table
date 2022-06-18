@@ -12,10 +12,10 @@ function Area(props) {
         areaHook,
         itemHook,
         areaSelectHook,
+        interfaceHook,
         auth,
         children,
         idx,
-        compareAreaData,
         itemObj,
         areaObj,
         setItemObj,
@@ -25,12 +25,7 @@ function Area(props) {
         setAreaObj,
         setIsAreaAppend,
     } = props;
-    // useEffect(() => {
-    //     console.log('!!', areaHook);
-    //     // areaHook.setAreaGroupData('aa');
-    // }, [areaHook]);
     const dispatch = useDispatch();
-    const { selectMode } = useSelector(state => state.user);
     const [showLectureModal, setShowLectureModal] = useState(false); //과목정보 모달
     const [modalPosition, setModalPosition] = useState(null);
     const [menuPosition, setMenuPosition] = useState(null);
@@ -145,12 +140,11 @@ function Area(props) {
             return false;
         }
         setIsAreaClickDown(false); //클릭 상태
-        if (_.isEmpty(selectMode)) {
+        if (_.isEmpty(interfaceHook?.selectMode)) {
             //일반 과목 선택 모드
             if (_.isEmpty(areaSelectHook.lecture)) {
                 //셀 클릭시
                 setModalPosition({ x: e.clientX, y: e.clientY });
-
                 setAreaObj({
                     idx: idx,
                     startOverIdx: schedule.getTimeIdx(idx),
@@ -183,6 +177,7 @@ function Area(props) {
                 // 정규 , 다른가매칭 시간 예외처리 후 post message to admin.
             } else {
                 //셀 드래그 앤 드롭
+                console.log('?!!?1');
                 areaSelectHook.setLecture([]);
                 if (!isAreaAppend) {
                     areaSelectHook.setFilter([...areaSelectHook.filter, ...areaSelectHook.lecture]);
@@ -262,18 +257,32 @@ function Area(props) {
                 onDragOver={e => e.preventDefault()}
                 onDragEnter={handleDragEnter}
                 onContextMenu={handleAreaRightClick}
-                className={`item
+                className={
+                    `item
                     ${areaHook.areaData.some(item => item.block_group_No === idx) ? 'active' : ''}
                     ${areaSelectHook.lecture.some(item => item.block_group_No === idx) ? 'dragging' : ''}
                     ${areaSelectHook.filter.some(item => item.block_group_No === idx) ? 'matching' : ''}
                     ${areaSelectHook.matchingTarget.some(item => item.block_group_No === idx) ? 'tempMatching' : ''}
-                    ${compareAreaData.some(item => item.block_group_No === idx) ? 'equal' : ''}
-                `}
+                    ${
+                        _.intersectionBy(interfaceHook.teacherData, areaSelectHook.filter, 'block_group_No').some(item => item.block_group_No === idx)
+                            ? 'equal'
+                            : ''
+                    }
+                    
+                ` //클래스명 바꾸고싶다
+                }
             >
                 {children}
             </div>
             {showLectureModal && (
-                <SelectLecture position={modalPosition} handleConfirm={update} handleRemove={remove} handleCancel={cancel} areaObj={areaObj} />
+                <SelectLecture
+                    position={modalPosition}
+                    handleConfirm={update}
+                    handleRemove={remove}
+                    handleCancel={cancel}
+                    areaObj={areaObj}
+                    interfaceHook={interfaceHook}
+                />
             )}
             {auth === 'admin' && showMatchingMenu && areaObj.idx == idx && (
                 <MatchingMenu
@@ -282,9 +291,10 @@ function Area(props) {
                     weekcount={4}
                     position={menuPosition}
                     close={init}
-                    matchingItemData={itemHook.matchingItemData}
+                    matchingItemData={itemHook.matchingItemData} //여기 정리해야함
                     matchingItemGroupData={itemHook.matchingItemGroupData}
                     setMatchingItemData={itemHook.setMatchingItemData}
+                    interfaceHook={interfaceHook}
                 />
             )}
             {/* {auth === 'admin' && showMenu && areaObj.idx == idx && <AreaMenu idx={idx} position={menuPosition} close={() => setShowMenu(false)} />} */}

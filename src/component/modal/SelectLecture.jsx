@@ -55,8 +55,8 @@ const Layout = styled.div`
         font-size: 12px !important;
     }
 `;
-function SelectLecture({ position, handleConfirm, handleRemove, handleCancel, areaObj }) {
-    const { lvt } = useSelector(state => state.user);
+function SelectLecture({ position, handleConfirm, handleRemove, handleCancel, areaObj, interfaceHook }) {
+    const lvt = interfaceHook.lvt;
     const boxRef = useRef();
     const [dynamicX, setDynamicX] = useState();
     const [lecture, setLecture] = useState([]);
@@ -72,8 +72,8 @@ function SelectLecture({ position, handleConfirm, handleRemove, handleCancel, ar
     ]; //mock data
     const [visibleList, setVisibleList] = useState(lectureList);
     useEffect(() => {
-        !_.isNull(lvt) && setVisibleList([_.find(lectureList, { key: lvt.toString() })]);
-        !_.isNull(lvt) && setLecture([lvt.toString()]);
+        !_.isNull(lvt) && setVisibleList([_.find(lectureList, { key: lvt?.toString() })]);
+        !_.isNull(lvt) && setLecture([lvt?.toString()]);
     }, [lvt]);
     const handleConfirmExtend = type => {
         lecture.length === 0 ? setMessage(`${type}과목 선택 안함`) : handleConfirm(type, lecture);

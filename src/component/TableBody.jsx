@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { lecture } from '../util/lecture';
+import { useDispatch, useSelector } from 'react-redux';
 import { schedule } from '../util/schedule';
 import { table } from '../util/table';
 import Area from './area/Area';
@@ -14,6 +13,7 @@ import { post } from '../util/interface';
 import useAreaData from '../hooks/useAreaData';
 import useItemData from '../hooks/useItemData';
 import useAreaSelectData from '../hooks/useAreaSelectData';
+import useInterface from '../hooks/useInterface';
 const Layout = styled.div`
     table {
         // border: 1px solid #cdcdcd;
@@ -138,27 +138,28 @@ const Layout = styled.div`
 `;
 
 function TableBody(props) {
+    const interfaceHook = useInterface();
     const areaHook = useAreaData(props.areaData || []);
     const itemHook = useItemData({
         fixed: props.fixedItemData || [],
         matching: props.matchingItemData || [],
     });
     const areaSelectHook = useAreaSelectData();
+    useEffect(() => {
+        post.readyToListen(interfaceHook);
+        return () => {};
+    }, []);
 
     const tableRef = useRef();
-    const compareAreaData = useSelector(state => state.compare.areaData);
-    const { selectMode } = useSelector(state => state.user);
     const { auth } = props;
-
     const [areaObj, setAreaObj] = useState({});
     const [itemObj, setItemObj] = useState({});
     const [isAreaClickDown, setIsAreaClickDown] = useState(false);
     const [isAreaAppend, setIsAreaAppend] = useState(false);
-
     const timeListData = schedule.getTimeList();
 
     useEffect(() => {
-        post.sendMessage({ name: 'selectMatchingArea', data: { blocks: areaSelectHook.filter, lecture_id: selectMode.lecture_subject_Id } });
+        post.sendMessage({ name: 'selectMatchingArea', data: { blocks: areaSelectHook.filter } });
     }, [areaSelectHook.filter]);
 
     useEffect(() => {
@@ -192,6 +193,7 @@ function TableBody(props) {
                                                         areaHook={areaHook}
                                                         itemHook={itemHook}
                                                         areaSelectHook={areaSelectHook}
+                                                        interfaceHook={interfaceHook}
                                                         idx={idx}
                                                         auth={auth}
                                                         areaObj={areaObj}
@@ -202,11 +204,10 @@ function TableBody(props) {
                                                         setItemObj={setItemObj}
                                                         setIsAreaClickDown={setIsAreaClickDown}
                                                         setIsAreaAppend={setIsAreaAppend}
-                                                        compareAreaData={_.intersectionBy(compareAreaData, areaSelectHook.filter, 'block_group_No')}
                                                     >
                                                         {level && <Distribution level={level} />}
                                                         {lectureData?.map((e, i) => (
-                                                            <LectureItem key={i} id={e} idx={idx} areaHook={areaHook} />
+                                                            <LectureItem key={i} id={e} idx={idx} areaHook={areaHook} interfaceHook={interfaceHook} />
                                                         ))}
                                                         {maxBlock?.block_group_No === idx ? (
                                                             <div className={'timeText'}>
