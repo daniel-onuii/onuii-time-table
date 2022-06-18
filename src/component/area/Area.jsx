@@ -19,16 +19,16 @@ import MatchingMenu from '../contextMenu/MatchingMenu';
 
 function Area(props) {
     const {
+        areaHook,
+        itemHook,
         auth,
         children,
         idx,
         compareAreaData,
-        areaData,
-        fixedItemData,
-        matchingItemData,
-        setAreaData,
-        setFixedItemData,
-        setMatchingItemData,
+        // fixedItemData,
+        // matchingItemData,
+        // setFixedItemData,
+        // setMatchingItemData,
         areaGrabbedObj,
         areaMatchingObj,
         matchingGrabbedObj,
@@ -43,8 +43,11 @@ function Area(props) {
         setIsAreaAppend,
         setAreaGrabbedObj,
         setAreaMatchingObj,
-        matchingItemGroupData,
     } = props;
+    // useEffect(() => {
+    //     console.log('!!', areaHook);
+    //     // areaHook.setAreaGroupData('aa');
+    // }, [areaHook]);
     const dispatch = useDispatch();
     const { selectMode } = useSelector(state => state.user);
     const [showLectureModal, setShowLectureModal] = useState(false); //과목정보 모달
@@ -67,39 +70,39 @@ function Area(props) {
         });
         if (type === 'overlap') {
             //덮어쓰기
-            const newAreaData = areaData.reduce((result, e) => {
+            const newAreaData = areaHook.areaData.reduce((result, e) => {
                 !bindLecture.some(item => item.block_group_No === e.block_group_No) && result.push(e);
                 return result;
             }, []);
-            setAreaData([...newAreaData, ...bindLecture]);
+            areaHook.setAreaData([...newAreaData, ...bindLecture]);
         } else if (type === 'add') {
             //추가하기
-            const newAreaData = areaData.reduce((result, e) => {
+            const newAreaData = areaHook.areaData.reduce((result, e) => {
                 const target = _.find(bindLecture, { block_group_No: e.block_group_No });
                 const beforLecture = e.areaActiveType ? e.areaActiveType : [];
                 const addData = _.uniq([...beforLecture, ...items]);
                 target ? result.push({ ...target, areaActiveType: addData }) : result.push(e);
                 return result;
             }, []);
-            setAreaData([...newAreaData, ..._.differenceBy(bindLecture, areaData, 'block_group_No')]);
+            areaHook.setAreaData([...newAreaData, ..._.differenceBy(bindLecture, areaHook.areaData, 'block_group_No')]);
         } else if (type === 'pop') {
             //빼기
-            const newAreaData = areaData.reduce((result, e) => {
+            const newAreaData = areaHook.areaData.reduce((result, e) => {
                 const target = _.find(bindLecture, { block_group_No: e.block_group_No });
                 const beforLecture = e.areaActiveType ? e.areaActiveType : [];
                 const popData = _.without(beforLecture, ...items);
                 target ? !_.isEmpty(popData) && result.push({ ...target, areaActiveType: popData }) : result.push(e);
                 return result;
             }, []);
-            setAreaData(newAreaData);
+            areaHook.setAreaData(newAreaData);
         }
         init();
     };
     const remove = () => {
-        const removeResult = _.reject(areaData, o => {
+        const removeResult = _.reject(areaHook.areaData, o => {
             return areaGrabbedObj.some(item => item.block_group_No === o.block_group_No);
         });
-        setAreaData(removeResult);
+        areaHook.setAreaData(removeResult);
         init();
     };
     const cancel = () => {
@@ -236,10 +239,10 @@ function Area(props) {
         table.removeOver();
         switch (itemObj.type) {
             case 'fixed':
-                dropEvent(fixedItemData, setFixedItemData);
+                dropEvent(itemHook.fixedItemData, itemHook.setFixedItemData);
                 break;
             case 'matching':
-                dropEvent(matchingItemData, setMatchingItemData);
+                dropEvent(itemHook.matchingItemData, itemHook.setMatchingItemData);
                 break;
         }
         setItemObj({});
@@ -279,7 +282,7 @@ function Area(props) {
                 onDragEnter={handleDragEnter}
                 onContextMenu={handleAreaRightClick}
                 className={`item
-                    ${areaData.some(item => item.block_group_No === idx) ? 'active' : ''}
+                    ${areaHook.areaData.some(item => item.block_group_No === idx) ? 'active' : ''}
                     ${areaGrabbedObj.some(item => item.block_group_No === idx) ? 'dragging' : ''}
                     ${areaMatchingObj.some(item => item.block_group_No === idx) ? 'matching' : ''}
                     ${matchingGrabbedObj.some(item => item.block_group_No === idx) ? 'tempMatching' : ''}
@@ -298,9 +301,9 @@ function Area(props) {
                     weekcount={4}
                     position={menuPosition}
                     close={init}
-                    matchingItemData={matchingItemData}
-                    matchingItemGroupData={matchingItemGroupData}
-                    setMatchingItemData={setMatchingItemData}
+                    matchingItemData={itemHook.matchingItemData}
+                    matchingItemGroupData={itemHook.matchingItemGroupData}
+                    setMatchingItemData={itemHook.setMatchingItemData}
                 />
             )}
             {/* {auth === 'admin' && showMenu && areaObj.idx == idx && <AreaMenu idx={idx} position={menuPosition} close={() => setShowMenu(false)} />} */}

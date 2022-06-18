@@ -58,18 +58,20 @@ const Layout = styled.div`
     }
 `;
 function Item({
+    itemHook,
     auth,
     idx,
     type,
-    itemData,
-    itemGroupData,
+    // itemData,
+    // itemGroupData,
     setItemObj,
     setIsAreaClickDown,
-    setMatchingItemData,
-    matchingItemData,
-    matchingItemGroupData,
+    // setMatchingItemData,
+    // matchingItemData,
+    // matchingItemGroupData,
 }) {
-    const itemLectureName = lecture.getLectureNameByIdx(itemData, idx);
+    const itemLectureName = lecture.getLectureNameByIdx(type === 'fixed' ? itemHook.fixedItemData : itemHook.matchingItemData, idx);
+    const itemGroupData = type === 'fixed' ? itemHook.fixedItemGroupData : itemHook.matchingItemGroupData;
     const [menuPosition, setMenuPosition] = useState(null);
     const [showMenu, setShowMenu] = useState(false);
     const handleClick = () => {
@@ -81,7 +83,7 @@ function Item({
         setItemObj({
             idx: idx,
             type: type,
-            lectureId: lecture.getLectureId(itemData, idx),
+            lectureId: lecture.getLectureId(type === 'fixed' ? itemHook.fixedItemData : itemHook.matchingItemData, idx),
             time: lecture.getLectureRunningTime(itemGroupData, idx),
         });
     };
@@ -124,9 +126,9 @@ function Item({
             </div>
             {auth === 'admin' && showMenu && (
                 <ItemMenu
-                    setMatchingItemData={setMatchingItemData}
-                    matchingItemData={matchingItemData}
-                    matchingItemGroupData={matchingItemGroupData}
+                    setMatchingItemData={itemHook.setMatchingItemData}
+                    matchingItemData={itemHook.matchingItemData}
+                    matchingItemGroupData={itemHook.matchingItemGroupData}
                     idx={idx}
                     type={type}
                     position={menuPosition}

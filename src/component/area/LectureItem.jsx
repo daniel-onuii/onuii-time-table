@@ -34,19 +34,19 @@ const Layout = styled.div.attrs(props => ({
         top: -5px;
     }
 `;
-function LectureItem({ id, idx, areaData, areaGroupData }) {
+function LectureItem({ id, idx, areaHook }) {
     const { lvt } = useSelector(state => state.user);
     const [length, setLength] = useState(0);
     const [seq, setSeq] = useState(0);
     useEffect(() => {
-        const getGroupIdx = _.find(areaGroupData, e => {
+        const getGroupIdx = _.find(areaHook.areaGroupData, e => {
             return _.inRange(idx, e.startIdx, e.endIdx + 1);
         });
         setLength(getGroupIdx?.areaActiveType?.length);
         setSeq(_.indexOf(getGroupIdx?.areaActiveType, id));
-    }, [areaGroupData]);
-    const $before = _.find(areaData, { block_group_No: idx - 1 });
-    const $next = _.find(areaData, { block_group_No: idx + 1 });
+    }, [areaHook.areaGroupData]);
+    const $before = _.find(areaHook.areaData, { block_group_No: idx - 1 });
+    const $next = _.find(areaHook.areaData, { block_group_No: idx + 1 });
     const isEmptyBefore = _.isEmpty($before);
     const isEmptyNext = _.isEmpty($next);
     const isEqualBefore = _.indexOf($before?.areaActiveType, id) > -1;
