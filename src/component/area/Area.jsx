@@ -1,16 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import _ from 'lodash';
-// import {
-//     setAreaGrabbedObj,
-//     setAreaMatchingObj,
-//     setAreaObj,
-//     setIsAreaAppend,
-//     setIsAreaClickDown,
-//     setItemObj,
-//     setMatchingGrabbedObj,
-//     setMessage,
-// } from '../../store/reducer/trigger.reducer';
 import { schedule } from '../../util/schedule';
 import { table } from '../../util/table';
 import SelectLecture from '../modal/SelectLecture';
@@ -21,28 +11,19 @@ function Area(props) {
     const {
         areaHook,
         itemHook,
+        areaSelectHook,
         auth,
         children,
         idx,
         compareAreaData,
-        // fixedItemData,
-        // matchingItemData,
-        // setFixedItemData,
-        // setMatchingItemData,
-        areaGrabbedObj,
-        areaMatchingObj,
-        matchingGrabbedObj,
         itemObj,
         areaObj,
         setItemObj,
         isAreaClickDown,
         isAreaAppend,
         setIsAreaClickDown,
-        setMatchingGrabbedObj,
         setAreaObj,
         setIsAreaAppend,
-        setAreaGrabbedObj,
-        setAreaMatchingObj,
     } = props;
     // useEffect(() => {
     //     console.log('!!', areaHook);
@@ -57,15 +38,15 @@ function Area(props) {
     const [showMatchingMenu, setShowMatchingMenu] = useState(false);
 
     const init = () => {
-        setAreaGrabbedObj([]); //좌클릭 드래그 영역
-        setMatchingGrabbedObj([]); //가매칭 영역
+        areaSelectHook.setLecture([]); //좌클릭 드래그 영역
+        areaSelectHook.setMatchingTarget([]); //가매칭 영역
         setShowLectureModal(false);
         setShowMenu(false);
         setShowMatchingMenu(false);
     };
 
     const update = (type, items) => {
-        const bindLecture = areaGrabbedObj.map(e => {
+        const bindLecture = areaSelectHook.lecture.map(e => {
             return { ...e, areaActiveType: items };
         });
         if (type === 'overlap') {
@@ -100,7 +81,7 @@ function Area(props) {
     };
     const remove = () => {
         const removeResult = _.reject(areaHook.areaData, o => {
-            return areaGrabbedObj.some(item => item.block_group_No === o.block_group_No);
+            return areaSelectHook.lecture.some(item => item.block_group_No === o.block_group_No);
         });
         areaHook.setAreaData(removeResult);
         init();
@@ -111,7 +92,7 @@ function Area(props) {
     const handleAreaDown = e => {
         setShowMenu(false);
         setShowMatchingMenu(false);
-        setMatchingGrabbedObj([]); //가매칭 영역
+        areaSelectHook.setMatchingTarget([]); //가매칭 영역
         setAreaObj({
             idx: idx,
             startOverIdx: schedule.getTimeIdx(idx),
@@ -122,7 +103,7 @@ function Area(props) {
 
         if (e.buttons !== 1) return false; //좌클릭 이외는 전부 false
         setIsAreaClickDown(true); //클릭 상태
-        const isFill = table.isFillArea(areaMatchingObj, idx); //가매칭모드때 사용
+        const isFill = table.isFillArea(areaSelectHook.filter, idx); //가매칭모드때 사용
         setIsAreaAppend(isFill); //대상이 빈칸인지
     };
 
@@ -146,7 +127,7 @@ function Area(props) {
                 );
                 return result;
             }, []);
-            setAreaGrabbedObj(_.flatten(selectedInfo));
+            areaSelectHook.setLecture(_.flatten(selectedInfo));
 
             setAreaObj({
                 ...areaObj,
@@ -166,7 +147,7 @@ function Area(props) {
         setIsAreaClickDown(false); //클릭 상태
         if (_.isEmpty(selectMode)) {
             //일반 과목 선택 모드
-            if (_.isEmpty(areaGrabbedObj)) {
+            if (_.isEmpty(areaSelectHook.lecture)) {
                 //셀 클릭시
                 setModalPosition({ x: e.clientX, y: e.clientY });
 
@@ -177,7 +158,7 @@ function Area(props) {
                     startOverDayIdx: schedule.getWeekIdx(idx),
                     endOverDayIdx: schedule.getWeekIdx(idx),
                 }),
-                    setAreaGrabbedObj(
+                    areaSelectHook.setLecture(
                         _.range(idx, idx + 4).map(e => {
                             return { block_group_No: e };
                         }),
@@ -185,31 +166,31 @@ function Area(props) {
                     setShowLectureModal(true);
             } else {
                 //셀 드래그 앤 드롭
-                if (areaGrabbedObj.length > 0) {
+                if (areaSelectHook.lecture.length > 0) {
                     setModalPosition({ x: e.clientX, y: e.clientY });
                     setShowLectureModal(true);
                 }
             }
         } else {
             //가매칭 모드
-            if (_.isEmpty(areaGrabbedObj)) {
+            if (_.isEmpty(areaSelectHook.lecture)) {
                 const tempMatching = _.range(idx, idx + 6).map(e => {
                     return { block_group_No: e };
                 });
-                setMatchingGrabbedObj(tempMatching);
+                areaSelectHook.setMatchingTarget(tempMatching);
                 setShowMatchingMenu(true);
                 setMenuPosition({ x: e.clientX, y: e.clientY });
                 // 정규 , 다른가매칭 시간 예외처리 후 post message to admin.
             } else {
                 //셀 드래그 앤 드롭
-                setAreaGrabbedObj([]);
+                areaSelectHook.setLecture([]);
                 if (!isAreaAppend) {
-                    setAreaMatchingObj([...areaMatchingObj, ...areaGrabbedObj]);
+                    areaSelectHook.setFilter([...areaSelectHook.filter, ...areaSelectHook.lecture]);
                 } else {
-                    const removeResult = _.reject(areaMatchingObj, o => {
-                        return areaGrabbedObj.some(item => item.block_group_No === o.block_group_No);
+                    const removeResult = _.reject(areaSelectHook.filter, o => {
+                        return areaSelectHook.lecture.some(item => item.block_group_No === o.block_group_No);
                     });
-                    setAreaMatchingObj(removeResult);
+                    areaSelectHook.setFilter(removeResult);
                 }
             }
         }
@@ -283,9 +264,9 @@ function Area(props) {
                 onContextMenu={handleAreaRightClick}
                 className={`item
                     ${areaHook.areaData.some(item => item.block_group_No === idx) ? 'active' : ''}
-                    ${areaGrabbedObj.some(item => item.block_group_No === idx) ? 'dragging' : ''}
-                    ${areaMatchingObj.some(item => item.block_group_No === idx) ? 'matching' : ''}
-                    ${matchingGrabbedObj.some(item => item.block_group_No === idx) ? 'tempMatching' : ''}
+                    ${areaSelectHook.lecture.some(item => item.block_group_No === idx) ? 'dragging' : ''}
+                    ${areaSelectHook.filter.some(item => item.block_group_No === idx) ? 'matching' : ''}
+                    ${areaSelectHook.matchingTarget.some(item => item.block_group_No === idx) ? 'tempMatching' : ''}
                     ${compareAreaData.some(item => item.block_group_No === idx) ? 'equal' : ''}
                 `}
             >

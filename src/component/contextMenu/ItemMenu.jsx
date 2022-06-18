@@ -1,7 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
-// import { setMatchingItemData } from '../../store/reducer/schedule.reducer';
 import _ from 'lodash';
 import { setMessage } from '../../store/reducer/trigger.reducer';
 const Layout = styled.div`
@@ -34,9 +32,7 @@ const Layout = styled.div`
         opacity: 0.4;
     }
 `;
-function ItemMenu({ idx, type, position, close, setMatchingItemData, matchingItemData, matchingItemGroupData }) {
-    const dispatch = useDispatch();
-    // const { matchingItemData, matchingItemGroupData } = useSelector(state => state.schedule);
+function ItemMenu({ idx, position, close, itemHook }) {
     const boxRef = useRef();
     const newPositionX =
         position.x + boxRef?.current?.clientWidth >= document.body.clientWidth
@@ -59,9 +55,9 @@ function ItemMenu({ idx, type, position, close, setMatchingItemData, matchingIte
     }, []);
     const handleClick = e => {
         close();
-        const target = _.find(matchingItemGroupData, { startIdx: idx });
-        const result = _.reject(matchingItemData, o => _.inRange(o.block_group_No, target.startIdx, target.endIdx + 1));
-        setMatchingItemData(result);
+        const target = _.find(itemHook.matchingItemGroupData, { startIdx: idx });
+        const result = _.reject(itemHook.matchingItemData, o => _.inRange(o.block_group_No, target.startIdx, target.endIdx + 1));
+        itemHook.setMatchingItemData(result);
     };
     return (
         <Layout left={newPositionX} top={position.y + 3} ref={boxRef}>

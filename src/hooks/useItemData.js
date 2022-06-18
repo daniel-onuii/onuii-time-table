@@ -2,6 +2,7 @@ import { useState, useCallback, useEffect } from 'react';
 import { lecture } from '../util/lecture';
 
 function useItemData({ fixed, matching }) {
+    // 정규, 가매칭 관련
     const [fixedItemData, setFixedItemData] = useState(fixed);
     const [matchingItemData, setMatchingItemData] = useState(matching);
     const [fixedItemGroupData, setFixedItemGroupData] = useState([]);

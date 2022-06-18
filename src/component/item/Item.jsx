@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { lecture } from '../../util/lecture';
 import { schedule } from '../../util/schedule';
@@ -57,21 +56,10 @@ const Layout = styled.div`
         -webkit-filter: brightness(215%);
     }
 `;
-function Item({
-    itemHook,
-    auth,
-    idx,
-    type,
-    // itemData,
-    // itemGroupData,
-    setItemObj,
-    setIsAreaClickDown,
-    // setMatchingItemData,
-    // matchingItemData,
-    // matchingItemGroupData,
-}) {
-    const itemLectureName = lecture.getLectureNameByIdx(type === 'fixed' ? itemHook.fixedItemData : itemHook.matchingItemData, idx);
+function Item({ itemHook, auth, idx, type, setItemObj, setIsAreaClickDown }) {
+    const itemData = type === 'fixed' ? itemHook.fixedItemData : itemHook.matchingItemData;
     const itemGroupData = type === 'fixed' ? itemHook.fixedItemGroupData : itemHook.matchingItemGroupData;
+    const itemLectureName = lecture.getLectureNameByIdx(itemData, idx);
     const [menuPosition, setMenuPosition] = useState(null);
     const [showMenu, setShowMenu] = useState(false);
     const handleClick = () => {
@@ -83,7 +71,7 @@ function Item({
         setItemObj({
             idx: idx,
             type: type,
-            lectureId: lecture.getLectureId(type === 'fixed' ? itemHook.fixedItemData : itemHook.matchingItemData, idx),
+            lectureId: lecture.getLectureId(itemData, idx),
             time: lecture.getLectureRunningTime(itemGroupData, idx),
         });
     };
@@ -124,17 +112,7 @@ function Item({
                     </span>
                 </div>
             </div>
-            {auth === 'admin' && showMenu && (
-                <ItemMenu
-                    setMatchingItemData={itemHook.setMatchingItemData}
-                    matchingItemData={itemHook.matchingItemData}
-                    matchingItemGroupData={itemHook.matchingItemGroupData}
-                    idx={idx}
-                    type={type}
-                    position={menuPosition}
-                    close={() => setShowMenu(false)}
-                />
-            )}
+            {auth === 'admin' && showMenu && <ItemMenu itemHook={itemHook} idx={idx} position={menuPosition} close={() => setShowMenu(false)} />}
         </Layout>
     );
 }
