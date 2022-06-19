@@ -6,9 +6,6 @@ function useInterface() {
     const [selectMode, setSelectMode] = useState({});
 
     // auth: '',
-    // lvt: null,
-    // lessonOption: null,
-    // selectMode: {},
 
     const updateTeacherData = useCallback(value => {
         setTeacherData(value);

@@ -1,10 +1,5 @@
-import { setLessonOption, setLVT, setSelectMode } from '../store/reducer/user.reducer';
-import { setAreaMatchingObj } from '../store/reducer/trigger.reducer';
-import { setAreaData as setCompareAreaData } from '../store/reducer/compare.reducer';
 import _ from 'lodash';
-
 const common = { id: 'onuii-time-table' };
-
 export const post = {
     readyToListen: function (interfaceHook) {
         window.addEventListener('message', function (e) {
