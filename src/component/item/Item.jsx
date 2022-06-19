@@ -56,7 +56,7 @@ const Layout = styled.div`
         -webkit-filter: brightness(215%);
     }
 `;
-function Item({ itemHook, auth, idx, type, setItemObj, setIsAreaClickDown }) {
+function Item({ itemHook, interfaceHook, idx, type, setItemObj, setIsAreaClickDown }) {
     const itemData = type === 'fixed' ? itemHook.fixedItemData : itemHook.matchingItemData;
     const itemGroupData = type === 'fixed' ? itemHook.fixedItemGroupData : itemHook.matchingItemGroupData;
     const itemLectureName = lecture.getLectureNameByIdx(itemData, idx);
@@ -112,7 +112,9 @@ function Item({ itemHook, auth, idx, type, setItemObj, setIsAreaClickDown }) {
                     </span>
                 </div>
             </div>
-            {auth === 'admin' && showMenu && <ItemMenu itemHook={itemHook} idx={idx} position={menuPosition} close={() => setShowMenu(false)} />}
+            {interfaceHook.auth === 'admin' && showMenu && (
+                <ItemMenu itemHook={itemHook} idx={idx} position={menuPosition} close={() => setShowMenu(false)} />
+            )}
         </Layout>
     );
 }

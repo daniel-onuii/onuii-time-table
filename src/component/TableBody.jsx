@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import _ from 'lodash';
 import styled from 'styled-components';
 import Area from './area/Area';
@@ -27,17 +27,22 @@ function TableBody(props) {
     });
     const areaSelectHook = useAreaSelectData();
     const tableRef = useRef();
-    const { auth } = props;
     const [areaObj, setAreaObj] = useState({}); //trigger 관련 state도 custome hook 처리 해야함
     const [itemObj, setItemObj] = useState({});
     const [isAreaClickDown, setIsAreaClickDown] = useState(false);
     const [isAreaAppend, setIsAreaAppend] = useState(false);
     const timeListData = schedule.getTimeList();
+    useEffect(() => {
+        console.log(interfaceHook.auth);
+        post.readyToListen(interfaceHook);
+        return () => {
+            post.clearListen(interfaceHook);
+        };
+    }, []);
 
     useEffect(() => {
-        post.readyToListen(interfaceHook);
-        return () => {};
-    }, []);
+        console.log('auth!!', interfaceHook.auth);
+    }, [interfaceHook.auth]);
 
     useEffect(() => {
         post.sendMessage({ name: 'selectMatchingArea', data: { blocks: areaSelectHook.filter } });
@@ -76,7 +81,6 @@ function TableBody(props) {
                                                         areaSelectHook={areaSelectHook}
                                                         interfaceHook={interfaceHook}
                                                         idx={idx}
-                                                        auth={auth}
                                                         areaObj={areaObj}
                                                         itemObj={itemObj}
                                                         isAreaClickDown={isAreaClickDown}
@@ -102,23 +106,24 @@ function TableBody(props) {
                                                     {itemHook.fixedItemGroupData.some(y => y.startIdx === idx) && (
                                                         <Item
                                                             itemHook={itemHook}
+                                                            interfaceHook={interfaceHook}
                                                             type={'fixed'}
                                                             idx={idx}
-                                                            auth={auth}
                                                             setItemObj={setItemObj}
                                                             setIsAreaClickDown={setIsAreaClickDown}
                                                         />
                                                     )}
-                                                    {auth === 'admin' && itemHook.matchingItemGroupData.some(y => y.startIdx === idx) && (
-                                                        <Item
-                                                            itemHook={itemHook}
-                                                            type={'matching'}
-                                                            idx={idx}
-                                                            auth={auth}
-                                                            setItemObj={setItemObj}
-                                                            setIsAreaClickDown={setIsAreaClickDown}
-                                                        />
-                                                    )}
+                                                    {interfaceHook.auth === 'admin' &&
+                                                        itemHook.matchingItemGroupData.some(y => y.startIdx === idx) && (
+                                                            <Item
+                                                                itemHook={itemHook}
+                                                                interfaceHook={interfaceHook}
+                                                                type={'matching'}
+                                                                idx={idx}
+                                                                setItemObj={setItemObj}
+                                                                setIsAreaClickDown={setIsAreaClickDown}
+                                                            />
+                                                        )}
                                                 </td>
                                             );
                                         })}

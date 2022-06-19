@@ -13,7 +13,7 @@ function Area(props) {
         itemHook,
         areaSelectHook,
         interfaceHook,
-        auth,
+        // auth,
         children,
         idx,
         itemObj,
@@ -284,7 +284,7 @@ function Area(props) {
                     interfaceHook={interfaceHook}
                 />
             )}
-            {auth === 'admin' && showMatchingMenu && areaObj.idx == idx && (
+            {interfaceHook.auth === 'admin' && showMatchingMenu && areaObj.idx == idx && (
                 <MatchingMenu
                     idx={idx}
                     time={6}

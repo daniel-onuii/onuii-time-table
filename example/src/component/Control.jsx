@@ -28,9 +28,7 @@ function Control({ auth, setAuth }) {
             window.postMessage({ id: 'onuii-time-table', name: 'setSelectMode', data: {} }, '*');
             window.postMessage({ id: 'onuii-time-table', name: 'setTeacher', data: {} }, '*');
         } else {
-            //가매칭 - 수학
             setIsMatching(true);
-            //가매칭 모드, LVT
             window.postMessage({ id: 'onuii-time-table', name: 'setSelectMode', data: { type: 'matching' } }, '*');
         }
     };
@@ -40,7 +38,7 @@ function Control({ auth, setAuth }) {
 
     const handleEnterLvt = e => {
         setLvt(e);
-        window.postMessage({ id: 'onuii-time-table', name: 'setLVT', data: e }, '*'); //선택한 LVT 전달
+        window.postMessage({ id: 'onuii-time-table', name: 'setLvt', data: e }, '*'); //선택한 LVT 전달
         window.postMessage({ id: 'onuii-time-table', name: 'setLessonOption', data: { time: 6, weekcount: 3 } }, '*'); //선택한 과목 옵션
     };
 
@@ -48,13 +46,19 @@ function Control({ auth, setAuth }) {
         const flag = window.confirm('가매칭 정보 모달 생성 후 저장여부');
         flag && window.postMessage({ id: 'onuii-time-table', name: 'save' }, '*'); //차트 저장
     };
+
+    const handleAuth = e => {
+        const value = e.target.value;
+        setAuth(value);
+        window.postMessage({ id: 'onuii-time-table', name: 'setAuth', data: value }, '*'); //선택한 auth 전달
+    };
     return (
         <div style={{ padding: '10px 20px', height: '30px' }}>
-            <input id="radio_1" type="radio" name="auth" value="student" onChange={e => setAuth(e.target.value)} defaultChecked={true} />
+            <input id="radio_1" type="radio" name="auth" value="student" onChange={handleAuth} defaultChecked={true} />
             <label htmlFor="radio_1">학생</label>
-            <input id="radio_2" type="radio" name="auth" value="teacher" onChange={e => setAuth(e.target.value)} />
+            <input id="radio_2" type="radio" name="auth" value="teacher" onChange={handleAuth} />
             <label htmlFor="radio_2">선생님</label>
-            <input id="radio_3" type="radio" name="auth" value="admin" onChange={e => setAuth(e.target.value)} />
+            <input id="radio_3" type="radio" name="auth" value="admin" onChange={handleAuth} />
             <label htmlFor="radio_3">관리자</label>
             {auth === 'admin' && (
                 <>
