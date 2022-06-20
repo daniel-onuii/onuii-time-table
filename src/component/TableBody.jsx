@@ -8,7 +8,7 @@ import LectureItem from './area/LectureItem';
 import { schedule } from '../util/schedule';
 import { table } from '../util/table';
 import { distData } from '../mock/distData';
-import { post, LinkAdmin } from '../util/interface';
+import { LinkAdmin } from '../util/interface';
 import useAreaData from '../hooks/useAreaData';
 import useItemData from '../hooks/useItemData';
 import useAreaSelectData from '../hooks/useAreaSelectData';
@@ -19,7 +19,7 @@ const Layout = styled.div`
 `;
 
 function TableBody(props) {
-    const interfaceHook = useInterface();
+    const interfaceHook = useInterface(props);
     const areaHook = useAreaData(props.areaData || []);
     const itemHook = useItemData({
         fixed: props.fixedItemData || [],
@@ -32,19 +32,25 @@ function TableBody(props) {
     const [isAreaClickDown, setIsAreaClickDown] = useState(false);
     const [isAreaAppend, setIsAreaAppend] = useState(false);
     const timeListData = schedule.getTimeList();
-    const link = new LinkAdmin(interfaceHook); //admin interface link class
 
+    const link = new LinkAdmin(interfaceHook); //admin interface link class
     useEffect(() => {
         link.readyToListen(); //addEventMessage
         return () => {
             link.clearListen(); //removeEventMessage
         };
     }, []);
+    // useEffect(() => {
+    //     if (interfaceHook.target === 'teacher') {
+    //         console.log(interfaceHook.target, interfaceHook.teacherData);
+    //         // areaHook.setAreaData(interfaceHook.teacherData);
+    //     }
+    // }, [interfaceHook.teacherData]);
     useEffect(() => {
-        link.sendMessage({ name: 'selectMatchingArea', data: { blocks: areaSelectHook.filter } });
+        link.sendMessage({ name: 'selectMatchingArea', data: { blocks: areaSelectHook.filter } }); //가매칭 filter 영역 선택시 데이터 post
     }, [areaSelectHook.filter]);
     useEffect(() => {
-        link.sendMessage({ name: 'updateMatching', data: itemHook.matchingItemGroupData });
+        link.sendMessage({ name: 'updateMatching', data: itemHook.matchingItemGroupData }); //추가한 가매칭 그룹 정보
     }, [itemHook.matchingItemGroupData]);
 
     // useEffect(() => {

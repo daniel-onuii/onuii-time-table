@@ -35,7 +35,7 @@ const Layout = styled.div`
         opacity: 0.4;
     }
 `;
-function MatchingMenu({ idx, position, close, matchingItemData, matchingItemGroupData, setMatchingItemData, interfaceHook }) {
+function MatchingMenu({ idx, position, close, itemHook, interfaceHook }) {
     const dispatch = useDispatch();
     const lvt = interfaceHook.lvt;
     const { time, weekcount } = interfaceHook.lessonOption;
@@ -61,13 +61,13 @@ function MatchingMenu({ idx, position, close, matchingItemData, matchingItemGrou
     }, []);
     const handleClick = () => {
         close();
-        const lessonCount = _.filter(matchingItemGroupData, { lecture_subject_Id: lvt }).length;
+        const lessonCount = _.filter(itemHook.matchingItemGroupData, { lecture_subject_Id: lvt }).length;
         if (lessonCount >= weekcount) {
             dispatch(setMessage('횟수가 초과됨.'));
             return false;
         } else {
             const endTime = idx - 1 + time;
-            const checkCrash = schedule.checkCrashItemTime(matchingItemGroupData, idx, endTime, lvt);
+            const checkCrash = schedule.checkCrashItemTime(itemHook.matchingItemGroupData, idx, endTime, lvt);
             if (!_.isEmpty(checkCrash)) {
                 dispatch(setMessage(checkCrash));
                 return false;
@@ -75,7 +75,7 @@ function MatchingMenu({ idx, position, close, matchingItemData, matchingItemGrou
             const data = _.range(idx, idx + time).map((e, i) => {
                 return { block_group_No: e, lecture_subject_Id: lvt };
             });
-            setMatchingItemData([...matchingItemData, ...data]);
+            itemHook.setMatchingItemData([...itemHook.matchingItemData, ...data]);
         }
     };
     return (

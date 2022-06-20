@@ -2,9 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { lecture } from '../../util/lecture';
 import styled from 'styled-components';
 import _ from 'lodash';
-import { useSelector } from 'react-redux';
 const Layout = styled.div.attrs(props => ({
-    className: `area _${props.lecture_id} ${props.lvt && props.lvt != props.lecture_id && 'disabled'}`,
+    className: `area _${props.lecture_id} ${props.target === 'student' && props.lvt && props.lvt != props.lecture_id && 'disabled'}`,
 }))`
     display: inline-block;
     height: 100%;
@@ -53,7 +52,14 @@ function LectureItem({ id, idx, areaHook, interfaceHook }) {
     const isFirst = isEmptyBefore || !isEqualBefore;
     const isLast = isEmptyNext || !isEqualNext;
     return (
-        <Layout lecture_id={id} className={`${isFirst ? 'head' : ''} ${isLast ? 'last' : ''} `} length={length} seq={seq} lvt={interfaceHook.lvt}>
+        <Layout
+            lecture_id={id}
+            className={`${isFirst ? 'head' : ''} ${isLast ? 'last' : ''} `}
+            length={length}
+            seq={seq}
+            lvt={interfaceHook.lvt}
+            target={interfaceHook.target}
+        >
             <span className={`ignoreEnter`}>{isFirst ? `${lecture.getLectureName(id)}` : ''}</span>
         </Layout>
     );

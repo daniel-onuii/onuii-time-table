@@ -1,12 +1,15 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import App from './App';
 import { store } from './store/config';
 import { Provider } from 'react-redux';
 
 export const OnuiiTimeTable = props => {
+    useEffect(() => {
+        console.log(props.target);
+    }, [props]);
     return (
         <Provider store={store}>
-            <App auth={props.auth} areaData={props.areaData} fixedItemData={props.fixedItemData} matchingItemData={props.matchingItemData} />
+            <App {...props} />
         </Provider>
     );
 };

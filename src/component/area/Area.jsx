@@ -177,7 +177,6 @@ function Area(props) {
                 // 정규 , 다른가매칭 시간 예외처리 후 post message to admin.
             } else {
                 //셀 드래그 앤 드롭
-                console.log('?!!?1');
                 areaSelectHook.setLecture([]);
                 if (!isAreaAppend) {
                     areaSelectHook.setFilter([...areaSelectHook.filter, ...areaSelectHook.lecture]);
@@ -291,10 +290,8 @@ function Area(props) {
                     weekcount={4}
                     position={menuPosition}
                     close={init}
-                    matchingItemData={itemHook.matchingItemData} //여기 정리해야함
-                    matchingItemGroupData={itemHook.matchingItemGroupData}
-                    setMatchingItemData={itemHook.setMatchingItemData}
                     interfaceHook={interfaceHook}
+                    itemHook={itemHook}
                 />
             )}
             {/* {auth === 'admin' && showMenu && areaObj.idx == idx && <AreaMenu idx={idx} position={menuPosition} close={() => setShowMenu(false)} />} */}

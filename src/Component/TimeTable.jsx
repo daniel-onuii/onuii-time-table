@@ -12,12 +12,7 @@ function TimeTable(props) {
         <React.Fragment>
             <Layout>
                 <TableHead />
-                <TableBody
-                    auth={props.auth}
-                    areaData={props.areaData}
-                    fixedItemData={props.fixedItemData}
-                    matchingItemData={props.matchingItemData}
-                />
+                <TableBody {...props} />
             </Layout>
         </React.Fragment>
     );

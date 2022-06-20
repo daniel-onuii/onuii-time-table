@@ -1,6 +1,7 @@
 import { useState, useCallback } from 'react';
-function useInterface() {
-    const [auth, setAuth] = useState();
+function useInterface(props) {
+    const [auth, setAuth] = useState(props.auth);
+    const [target, setTarget] = useState(props.target);
     const [teacherData, setTeacherData] = useState();
     const [lvt, setLvt] = useState(null);
     const [lessonOption, setLessonOption] = useState(null);
@@ -8,6 +9,9 @@ function useInterface() {
 
     const updateAuth = useCallback(value => {
         setAuth(value);
+    }, []);
+    const updateTarget = useCallback(value => {
+        setTarget(value);
     }, []);
     const updateTeacherData = useCallback(value => {
         setTeacherData(value);
@@ -28,6 +32,8 @@ function useInterface() {
         lessonOption: lessonOption,
         selectMode: selectMode,
         auth: auth,
+        target: target,
+        setTarget: updateTarget,
         setAuth: updateAuth,
         setTeacherData: updateTeacherData,
         setLvt: updateLvt,

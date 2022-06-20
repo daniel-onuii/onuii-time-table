@@ -61,20 +61,28 @@ function SelectLecture({ position, handleConfirm, handleRemove, handleCancel, ar
     const [dynamicX, setDynamicX] = useState();
     const [lecture, setLecture] = useState([]);
     const [message, setMessage] = useState('');
-    const lectureList = [
-        { key: '9168', value: '국어' },
-        { key: '9169', value: '영어' },
-        { key: '8906', value: '수학' },
-        { key: '9170', value: '사회' },
-        { key: '9171', value: '과학' },
-        { key: '18492', value: '입시' },
-        { key: '9813', value: '고1 통합과학' },
-    ]; //mock data
+    const lectureList =
+        interfaceHook.target === 'student'
+            ? [
+                  { key: '9168', value: '국어' },
+                  { key: '9169', value: '영어' },
+                  { key: '8906', value: '수학' },
+                  { key: '9170', value: '사회' },
+                  { key: '9171', value: '과학' },
+                  { key: '18492', value: '입시' },
+                  { key: '9813', value: '고1 통합과학' },
+              ]
+            : [{ key: 'all', value: '가능' }]; //mock data
     const [visibleList, setVisibleList] = useState(lectureList);
     useEffect(() => {
-        !_.isNull(lvt) && setVisibleList([_.find(lectureList, { key: lvt?.toString() })]);
-        !_.isNull(lvt) && setLecture([lvt?.toString()]);
-    }, [lvt]);
+        if (interfaceHook.target === 'student') {
+            //학생일때
+            !_.isNull(lvt) && setVisibleList([_.find(lectureList, { key: lvt?.toString() })]);
+            !_.isNull(lvt) && setLecture([lvt?.toString()]); //lvt값 자동체크
+        } else {
+            setLecture(['all']);
+        }
+    }, [lvt, interfaceHook.target]);
     const handleConfirmExtend = type => {
         lecture.length === 0 ? setMessage(`${type}과목 선택 안함`) : handleConfirm(type, lecture);
     };
@@ -92,7 +100,7 @@ function SelectLecture({ position, handleConfirm, handleRemove, handleCancel, ar
             e.preventDefault();
             switch (e.code) {
                 case 'Enter':
-                    handleConfirmExtend('overlap');
+                    handleConfirmExtend('add');
                     break;
                 case 'Backspace':
                     handleRemove();

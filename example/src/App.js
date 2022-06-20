@@ -1,17 +1,23 @@
 import React, { useState } from 'react';
-import _ from 'lodash';
 import Control from './component/Control';
 import Admin from './component/Admin';
-import Landing from './component/Landing';
+import Student from './component/landing/Student';
+import Teacher from './component/landing/Teacher';
 
 const App = () => {
-    const [auth, setAuth] = useState('student'); //권한
+    const [auth, setAuth] = useState('user'); //유저, 관리자
+    const [target, setTarget] = useState('student'); //학생, 선생님
     return (
         <>
             <h1 style={{ marginLeft: '20px' }}>타임테이블</h1>
-            <div style={{ height: '20px' }}></div>
-            <Control auth={auth} setAuth={setAuth} />
-            {auth === 'admin' ? <Admin auth={auth} /> : <Landing auth={auth} />}
+            <Control auth={auth} setAuth={setAuth} target={target} setTarget={setTarget} />
+            {auth === 'admin' ? (
+                <Admin auth={auth} />
+            ) : target === 'student' ? (
+                <Student auth={auth} target={target} />
+            ) : (
+                <Teacher auth={auth} target={target} />
+            )}
         </>
     );
 };

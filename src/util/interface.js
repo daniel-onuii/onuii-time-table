@@ -7,6 +7,9 @@ export function LinkAdmin(interfaceHook) {
                 case 'setAuth': // auth
                     interfaceHook.setAuth(e.data.data);
                     break;
+                case 'setTarget': // target
+                    interfaceHook.setTarget(e.data.data);
+                    break;
                 case 'setLvt': // admin LVT
                     interfaceHook.setLvt(e.data.data);
                     break;

@@ -43,7 +43,7 @@ export const lecture = {
 
     getLectureName: function (id) {
         const subjectList = [
-            // '상관없음',
+            '',
             '수학',
             '국어',
             '영어',
@@ -83,7 +83,7 @@ export const lecture = {
             '입시상담',
         ];
         const subjectIdList = [
-            // 'all',
+            'all',
             '8906',
             '9168',
             '9169',

@@ -1,8 +1,8 @@
 import React from 'react';
 import { OnuiiTimeTable } from 'onuii-time-table';
-import { mock } from '../mock/data';
+import { mock } from '../../mock/data';
 
-function Landing({ auth, target }) {
+function Student({ auth, target }) {
     return (
         <OnuiiTimeTable
             auth={auth}
@@ -14,4 +14,4 @@ function Landing({ auth, target }) {
     );
 }
 
-export default Landing;
+export default Student;

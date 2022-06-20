@@ -47,6 +47,9 @@ table {
 .area._9813 {
     background: steelblue;
 }
+.area._all {
+    background: #5c55f7;
+}
 .area.disabled {
     opacity: 0.2;
 }
