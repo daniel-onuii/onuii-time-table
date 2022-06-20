@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import _ from 'lodash';
 import styled from 'styled-components';
 import Area from './area/Area';
@@ -8,7 +8,7 @@ import LectureItem from './area/LectureItem';
 import { schedule } from '../util/schedule';
 import { table } from '../util/table';
 import { distData } from '../mock/distData';
-import { post } from '../util/interface';
+import { post, LinkAdmin } from '../util/interface';
 import useAreaData from '../hooks/useAreaData';
 import useItemData from '../hooks/useItemData';
 import useAreaSelectData from '../hooks/useAreaSelectData';
@@ -32,24 +32,19 @@ function TableBody(props) {
     const [isAreaClickDown, setIsAreaClickDown] = useState(false);
     const [isAreaAppend, setIsAreaAppend] = useState(false);
     const timeListData = schedule.getTimeList();
+    const link = new LinkAdmin(interfaceHook); //admin interface link class
+
     useEffect(() => {
-        console.log(interfaceHook.auth);
-        post.readyToListen(interfaceHook);
+        link.readyToListen(); //addEventMessage
         return () => {
-            post.clearListen(interfaceHook);
+            link.clearListen(); //removeEventMessage
         };
     }, []);
-
     useEffect(() => {
-        console.log('auth!!', interfaceHook.auth);
-    }, [interfaceHook.auth]);
-
-    useEffect(() => {
-        post.sendMessage({ name: 'selectMatchingArea', data: { blocks: areaSelectHook.filter } });
+        link.sendMessage({ name: 'selectMatchingArea', data: { blocks: areaSelectHook.filter } });
     }, [areaSelectHook.filter]);
-
     useEffect(() => {
-        post.sendMessage({ name: 'updateMatching', data: itemHook.matchingItemGroupData });
+        link.sendMessage({ name: 'updateMatching', data: itemHook.matchingItemGroupData });
     }, [itemHook.matchingItemGroupData]);
 
     // useEffect(() => {
