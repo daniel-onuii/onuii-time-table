@@ -61,35 +61,20 @@ function Control({ auth, setAuth, target, setTarget }) {
     };
     return (
         <div style={{ padding: '10px 20px', height: '30px' }}>
-            <input id="radio_1" type="radio" name="auth" value="user" onChange={handleAuth} defaultChecked={true} />
-            <label htmlFor="radio_1">유저</label>
-            <input id="radio_2" type="radio" name="auth" value="admin" onChange={handleAuth} />
-            <label htmlFor="radio_2">관리자</label>
-            {auth === 'admin' && (
-                <>
-                    <button onClick={() => handleEnterLvt(8906)}>수학</button>
-                    <button onClick={() => handleEnterLvt(9168)}>국어</button>
-                    <button onClick={() => handleEnterLvt(9169)} style={{ marginRight: '5px' }}>
-                        영어
-                    </button>
-                    {isMatching && <button onClick={() => handleMode(1)}>가매칭모드 초기화</button>}
-                    {!isMatching && lvt != null && <button onClick={() => handleMode(2)}>가매칭 영역 선택</button>}
-                    {isAddMatching && <button onClick={handleSave}>가매칭</button>}
-                    <select size="2" style={{ position: 'absolute' }}>
-                        <option onClick={() => handleChooseTeacher(0)}>후보 선생님 A</option>
-                        <option onClick={() => handleChooseTeacher(1)}>후보 선생님 B</option>
-                    </select>
-                </>
-            )}
-            <br />
-            {auth === 'user' && (
-                <>
-                    <input id="radio_3" type="radio" name="target" value="student" onChange={handleTarget} defaultChecked={true} />
-                    <label htmlFor="radio_3">학생</label>
-                    <input id="radio_4" type="radio" name="target" value="teacher" onChange={handleTarget} />
-                    <label htmlFor="radio_4">선생님</label>
-                </>
-            )}
+            <>
+                <button onClick={() => handleEnterLvt(8906)}>수학</button>
+                <button onClick={() => handleEnterLvt(9168)}>국어</button>
+                <button onClick={() => handleEnterLvt(9169)} style={{ marginRight: '5px' }}>
+                    영어
+                </button>
+                {isMatching && <button onClick={() => handleMode(1)}>가매칭모드 초기화</button>}
+                {!isMatching && lvt != null && <button onClick={() => handleMode(2)}>가매칭 영역 선택</button>}
+                {isAddMatching && <button onClick={handleSave}>가매칭</button>}
+                <select size="2" style={{ position: 'absolute' }}>
+                    <option onClick={() => handleChooseTeacher(0)}>후보 선생님 A</option>
+                    <option onClick={() => handleChooseTeacher(1)}>후보 선생님 B</option>
+                </select>
+            </>
         </div>
     );
 }

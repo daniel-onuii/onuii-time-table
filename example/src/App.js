@@ -1,8 +1,16 @@
 import React, { useState } from 'react';
 import Control from './component/Control';
 import Admin from './component/Admin';
-import Student from './component/landing/Student';
-import Teacher from './component/landing/Teacher';
+import Landing from './component/Landing';
+import { mock } from './mock/data';
+import { OnuiiTimeTable } from 'onuii-time-table';
+import styled from 'styled-components';
+const Layout = styled.div`
+    display: inline-block;
+    > div {
+        display: inline-block;
+    }
+`;
 
 const App = () => {
     const [auth, setAuth] = useState('user'); //유저, 관리자
@@ -10,14 +18,34 @@ const App = () => {
     return (
         <>
             <h1 style={{ marginLeft: '20px' }}>타임테이블</h1>
+            {/* {auth === 'admin' ? <Admin auth={auth} /> : <Landing auth={auth} target={target} />} */}
+            <Layout>
+                <OnuiiTimeTable
+                    auth={'user'}
+                    target={'student'}
+                    areaData={mock.areaData}
+                    fixedItemData={mock.fixedItemData}
+                    matchingItemData={mock.matchingItemData}
+                />
+                <OnuiiTimeTable
+                    auth={'user'}
+                    target={'teacher'}
+                    areaData={mock.teacherAreaData}
+                    fixedItemData={mock.fixedItemData}
+                    matchingItemData={mock.matchingItemData}
+                />
+            </Layout>
             <Control auth={auth} setAuth={setAuth} target={target} setTarget={setTarget} />
-            {auth === 'admin' ? (
-                <Admin auth={auth} />
-            ) : target === 'student' ? (
-                <Student auth={auth} target={target} />
-            ) : (
-                <Teacher auth={auth} target={target} />
-            )}
+            <Layout>
+                <OnuiiTimeTable
+                    auth={'admin'}
+                    target={'student'}
+                    areaData={mock.areaData}
+                    fixedItemData={mock.fixedItemData}
+                    matchingItemData={mock.matchingItemData}
+                />
+                <OnuiiTimeTable auth={'admin'} target={'teacher'} areaData={[]} fixedItemData={[]} matchingItemData={[]} />
+            </Layout>
         </>
     );
 };

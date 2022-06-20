@@ -40,12 +40,17 @@ function TableBody(props) {
             link.clearListen(); //removeEventMessage
         };
     }, []);
-    // useEffect(() => {
-    //     if (interfaceHook.target === 'teacher') {
-    //         console.log(interfaceHook.target, interfaceHook.teacherData);
-    //         // areaHook.setAreaData(interfaceHook.teacherData);
-    //     }
-    // }, [interfaceHook.teacherData]);
+    useEffect(() => {
+        //실제 분리되면 사용되지않을???
+        areaHook.setAreaData(props.areaData);
+        itemHook.setFixedItemData(props.fixedItemData);
+        itemHook.setMatchingItemData(props.matchingItemData);
+    }, [interfaceHook.target]);
+    useEffect(() => {
+        if (interfaceHook.target === 'teacher') {
+            !_.isEmpty(interfaceHook.teacherData) && areaHook.setAreaData(interfaceHook.teacherData);
+        }
+    }, [interfaceHook.teacherData]);
     useEffect(() => {
         link.sendMessage({ name: 'selectMatchingArea', data: { blocks: areaSelectHook.filter } }); //가매칭 filter 영역 선택시 데이터 post
     }, [areaSelectHook.filter]);

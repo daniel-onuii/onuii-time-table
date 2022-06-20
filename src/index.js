@@ -4,9 +4,9 @@ import { store } from './store/config';
 import { Provider } from 'react-redux';
 
 export const OnuiiTimeTable = props => {
-    useEffect(() => {
-        console.log(props.target);
-    }, [props]);
+    // useEffect(() => {
+    //     console.log(props, props.target, props.areaData);
+    // }, [props]);
     return (
         <Provider store={store}>
             <App {...props} />

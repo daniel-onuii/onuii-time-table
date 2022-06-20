@@ -7,9 +7,9 @@ function Landing({ auth, target }) {
         <OnuiiTimeTable
             auth={auth}
             target={target}
-            areaData={mock.areaData}
-            fixedItemData={mock.fixedItemData}
-            matchingItemData={mock.matchingItemData}
+            areaData={target === 'student' ? mock.areaData : mock.teacherAreaData}
+            fixedItemData={target === 'student' ? mock.fixedItemData : []}
+            matchingItemData={target === 'student' ? mock.matchingItemData : []}
         />
     );
 }

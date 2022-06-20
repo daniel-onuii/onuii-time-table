@@ -21,7 +21,7 @@ function Admin({ auth }) {
                 />
             </Layout>
             <Layout>
-                <OnuiiTimeTable auth={auth} target={'teacher'} />
+                <OnuiiTimeTable auth={auth} target={'teacher'} areaData={[]} fixedItemData={[]} matchingItemData={[]} />
             </Layout>
         </React.Fragment>
     );
