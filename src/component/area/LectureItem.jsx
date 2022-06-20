@@ -3,7 +3,9 @@ import { lecture } from '../../util/lecture';
 import styled from 'styled-components';
 import _ from 'lodash';
 const Layout = styled.div.attrs(props => ({
-    className: `area _${props.lecture_id} ${props.target === 'student' && props.lvt && props.lvt != props.lecture_id && 'disabled'}`,
+    className: `area _${props.lecture_id} ${
+        props.target === 'student' && props.auth === 'admin' && props.lvt && props.lvt != props.lecture_id && 'disabled'
+    }`,
 }))`
     display: inline-block;
     height: 100%;
@@ -59,6 +61,7 @@ function LectureItem({ id, idx, areaHook, interfaceHook }) {
             seq={seq}
             lvt={interfaceHook.lvt}
             target={interfaceHook.target}
+            auth={interfaceHook.auth}
         >
             <span className={`ignoreEnter`}>{isFirst ? `${lecture.getLectureName(id)}` : ''}</span>
         </Layout>

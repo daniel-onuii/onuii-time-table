@@ -40,14 +40,14 @@ function TableBody(props) {
             link.clearListen(); //removeEventMessage
         };
     }, []);
+    // useEffect(() => {
+    //     //실제 분리되면 사용되지않을???
+    //     areaHook.setAreaData(props.areaData);
+    //     itemHook.setFixedItemData(props.fixedItemData);
+    //     itemHook.setMatchingItemData(props.matchingItemData);
+    // }, [interfaceHook.target]);
     useEffect(() => {
-        //실제 분리되면 사용되지않을???
-        areaHook.setAreaData(props.areaData);
-        itemHook.setFixedItemData(props.fixedItemData);
-        itemHook.setMatchingItemData(props.matchingItemData);
-    }, [interfaceHook.target]);
-    useEffect(() => {
-        if (interfaceHook.target === 'teacher') {
+        if (interfaceHook.target === 'teacher' && interfaceHook.auth === 'admin') {
             !_.isEmpty(interfaceHook.teacherData) && areaHook.setAreaData(interfaceHook.teacherData);
         }
     }, [interfaceHook.teacherData]);

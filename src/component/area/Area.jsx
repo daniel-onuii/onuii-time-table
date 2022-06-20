@@ -13,7 +13,6 @@ function Area(props) {
         itemHook,
         areaSelectHook,
         interfaceHook,
-        // auth,
         children,
         idx,
         itemObj,
@@ -95,8 +94,8 @@ function Area(props) {
             startOverDayIdx: schedule.getWeekIdx(idx),
             endOverDayIdx: schedule.getWeekIdx(idx),
         });
-
         if (e.buttons !== 1) return false; //좌클릭 이외는 전부 false
+        if (interfaceHook.auth === 'admin' && interfaceHook.target === 'teacher') return false; //관리자 + 선생은 가매칭 추가만 가능
         setIsAreaClickDown(true); //클릭 상태
         const isFill = table.isFillArea(areaSelectHook.filter, idx); //가매칭모드때 사용
         setIsAreaAppend(isFill); //대상이 빈칸인지
@@ -140,7 +139,9 @@ function Area(props) {
             return false;
         }
         setIsAreaClickDown(false); //클릭 상태
-        if (_.isEmpty(interfaceHook?.selectMode)) {
+        // if (_.isEmpty(interfaceHook?.selectMode) && interfaceHook.auth === 'user') {
+        if (interfaceHook.auth === 'user') {
+            //과목 추가는 유저 모드에서만 가능(어드민도 과목 추가 화면은 유저기능으로)
             //일반 과목 선택 모드
             if (_.isEmpty(areaSelectHook.lecture)) {
                 //셀 클릭시
@@ -166,25 +167,31 @@ function Area(props) {
                 }
             }
         } else {
-            //가매칭 모드
+            //admin
             if (_.isEmpty(areaSelectHook.lecture)) {
-                const tempMatching = _.range(idx, idx + 6).map(e => {
-                    return { block_group_No: e };
-                });
-                areaSelectHook.setMatchingTarget(tempMatching);
-                setShowMatchingMenu(true);
-                setMenuPosition({ x: e.clientX, y: e.clientY });
+                //셀 클릭시c
+                if (interfaceHook.target === 'teacher' && !_.isNull(interfaceHook.lvt)) {
+                    const tempMatching = _.range(idx, idx + 6).map(e => {
+                        return { block_group_No: e };
+                    });
+                    areaSelectHook.setMatchingTarget(tempMatching);
+                    setShowMatchingMenu(true);
+                    setMenuPosition({ x: e.clientX, y: e.clientY });
+                }
+
                 // 정규 , 다른가매칭 시간 예외처리 후 post message to admin.
             } else {
                 //셀 드래그 앤 드롭
-                areaSelectHook.setLecture([]);
-                if (!isAreaAppend) {
-                    areaSelectHook.setFilter([...areaSelectHook.filter, ...areaSelectHook.lecture]);
-                } else {
-                    const removeResult = _.reject(areaSelectHook.filter, o => {
-                        return areaSelectHook.lecture.some(item => item.block_group_No === o.block_group_No);
-                    });
-                    areaSelectHook.setFilter(removeResult);
+                if (interfaceHook.target === 'student') {
+                    areaSelectHook.setLecture([]);
+                    if (!isAreaAppend) {
+                        areaSelectHook.setFilter([...areaSelectHook.filter, ...areaSelectHook.lecture]);
+                    } else {
+                        const removeResult = _.reject(areaSelectHook.filter, o => {
+                            return areaSelectHook.lecture.some(item => item.block_group_No === o.block_group_No);
+                        });
+                        areaSelectHook.setFilter(removeResult);
+                    }
                 }
             }
         }

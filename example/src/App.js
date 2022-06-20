@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
 import Control from './component/Control';
-import Admin from './component/Admin';
-import Landing from './component/Landing';
 import { mock } from './mock/data';
 import { OnuiiTimeTable } from 'onuii-time-table';
 import styled from 'styled-components';
@@ -10,16 +8,18 @@ const Layout = styled.div`
     > div {
         display: inline-block;
     }
+    a {
+        position: absolute;
+        color: red;
+    }
 `;
 
 const App = () => {
-    const [auth, setAuth] = useState('user'); //유저, 관리자
-    const [target, setTarget] = useState('student'); //학생, 선생님
     return (
         <>
             <h1 style={{ marginLeft: '20px' }}>타임테이블</h1>
-            {/* {auth === 'admin' ? <Admin auth={auth} /> : <Landing auth={auth} target={target} />} */}
             <Layout>
+                <a>유저 - 학생</a>
                 <OnuiiTimeTable
                     auth={'user'}
                     target={'student'}
@@ -27,6 +27,7 @@ const App = () => {
                     fixedItemData={mock.fixedItemData}
                     matchingItemData={mock.matchingItemData}
                 />
+                <a>유저 - 선생님</a>
                 <OnuiiTimeTable
                     auth={'user'}
                     target={'teacher'}
@@ -35,8 +36,9 @@ const App = () => {
                     matchingItemData={mock.matchingItemData}
                 />
             </Layout>
-            <Control auth={auth} setAuth={setAuth} target={target} setTarget={setTarget} />
+            <Control />
             <Layout>
+                <a>관리자 - 학생</a>
                 <OnuiiTimeTable
                     auth={'admin'}
                     target={'student'}
@@ -44,6 +46,7 @@ const App = () => {
                     fixedItemData={mock.fixedItemData}
                     matchingItemData={mock.matchingItemData}
                 />
+                <a>관리자 - 선생님</a>
                 <OnuiiTimeTable auth={'admin'} target={'teacher'} areaData={[]} fixedItemData={[]} matchingItemData={[]} />
             </Layout>
         </>

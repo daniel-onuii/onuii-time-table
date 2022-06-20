@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { mock } from '../mock/data';
-function Control({ auth, setAuth, target, setTarget }) {
+function Control() {
     const [isSelect, setIsSelect] = useState(false); //선택모드
     const [isMatching, setIsMatching] = useState(false); //가매칭 영역 설정
     const [isAddMatching, setIsAddMatching] = useState(false); //가매칭 추가삭제
@@ -11,6 +11,7 @@ function Control({ auth, setAuth, target, setTarget }) {
             if (e.data.id === 'onuii-time-table') {
                 switch (e.data.name) {
                     case 'selectMatchingArea':
+                        //matching filter select!!
                         e.data.data.blocks.length > 0 ? setIsSelect(true) : setIsSelect(false);
                         break;
                     case 'updateMatching':
@@ -34,7 +35,6 @@ function Control({ auth, setAuth, target, setTarget }) {
     };
     const handleChooseTeacher = v => {
         window.postMessage({ id: 'onuii-time-table', name: 'setTeacher', data: mock.teacherData[v] }, '*');
-        // window.postMessage({ id: 'onuii-time-table', target: 'teacher', name: 'setTeacher', data: mock.teacherData[v] }, '*');
     };
 
     const handleEnterLvt = e => {
@@ -46,18 +46,6 @@ function Control({ auth, setAuth, target, setTarget }) {
     const handleSave = () => {
         const flag = window.confirm('가매칭 정보 모달 생성 후 저장여부');
         flag && window.postMessage({ id: 'onuii-time-table', name: 'save' }, '*'); //차트 저장
-    };
-
-    const handleAuth = e => {
-        const value = e.target.value;
-        setAuth(value);
-        window.postMessage({ id: 'onuii-time-table', name: 'setAuth', data: value }, '*'); //선택한 auth 전달
-    };
-
-    const handleTarget = e => {
-        const value = e.target.value;
-        setTarget(value);
-        window.postMessage({ id: 'onuii-time-table', name: 'setTarget', data: value }, '*'); //선택한 target 전달
     };
     return (
         <div style={{ padding: '10px 20px', height: '30px' }}>
