@@ -64,7 +64,6 @@ function Control() {
     const handleEnterLvt = e => {
         setLvt(e);
         window.postMessage({ id: 'onuii-time-table', name: 'setLvt', data: e }, '*'); //선택한 LVT 전달
-        window.postMessage({ id: 'onuii-time-table', name: 'setLessonOption', data: { time: 6, weekcount: 3 } }, '*'); //선택한 과목 옵션
     };
 
     const handleSave = () => {

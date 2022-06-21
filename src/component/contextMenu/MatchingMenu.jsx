@@ -38,7 +38,7 @@ const Layout = styled.div`
 function MatchingMenu({ idx, position, close, itemHook, interfaceHook }) {
     const dispatch = useDispatch();
     const lvt = interfaceHook.lvt;
-    const { time, weekcount } = interfaceHook.lessonOption;
+    const { time, weekCount } = _.find(interfaceHook.userData.lectureData, { lecture_subject_Id: lvt.toString() });
     const boxRef = useRef();
     const newPositionX =
         position.x + boxRef?.current?.clientWidth >= document.body.clientWidth
@@ -62,7 +62,7 @@ function MatchingMenu({ idx, position, close, itemHook, interfaceHook }) {
     const handleClick = () => {
         close();
         const lessonCount = _.filter(itemHook.matchingItemGroupData, { lecture_subject_Id: lvt }).length;
-        if (lessonCount >= weekcount) {
+        if (lessonCount >= weekCount) {
             dispatch(setMessage('횟수가 초과됨.'));
             return false;
         } else {

@@ -6,7 +6,6 @@ function useInterface(props) {
     const [teacherData, setTeacherData] = useState();
     const [studentData, setStudentData] = useState();
     const [lvt, setLvt] = useState(null);
-    const [lessonOption, setLessonOption] = useState(null);
     const [selectMode, setSelectMode] = useState({});
 
     const updateUserData = useCallback(value => {
@@ -27,9 +26,6 @@ function useInterface(props) {
     const updateLvt = useCallback(value => {
         setLvt(value);
     }, []);
-    const updateLessonOption = useCallback(value => {
-        setLessonOption(value);
-    }, []);
     const updateSelectMode = useCallback(value => {
         setSelectMode(value);
     }, []);
@@ -39,7 +35,6 @@ function useInterface(props) {
         teacherData: teacherData,
         studentData: studentData,
         lvt: lvt,
-        lessonOption: lessonOption,
         selectMode: selectMode,
         auth: auth,
         target: target,
@@ -49,7 +44,6 @@ function useInterface(props) {
         setTarget: updateTarget,
         setAuth: updateAuth,
         setLvt: updateLvt,
-        setLessonOption: updateLessonOption,
         setSelectMode: updateSelectMode,
     };
 }

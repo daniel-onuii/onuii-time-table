@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import _ from 'lodash';
 import styled from 'styled-components';
 import Area from './area/Area';
@@ -19,15 +19,15 @@ const Layout = styled.div`
 `;
 
 function TableBody(props) {
+    const tableRef = useRef();
+    const timeListData = schedule.getTimeList();
     const interfaceHook = useInterface(props);
     const areaHook = useAreaData(props.areaData || []);
+    const areaSelectHook = useAreaSelectData();
     const itemHook = useItemData({
         fixed: props.fixedItemData || [],
         matching: props.matchingItemData || [],
     });
-    const areaSelectHook = useAreaSelectData();
-    const tableRef = useRef();
-    const timeListData = schedule.getTimeList();
     const link = new LinkAdmin(interfaceHook); //admin interface link class
     useEffect(() => {
         link.readyToListen(); //addEventMessage
@@ -35,6 +35,7 @@ function TableBody(props) {
             link.clearListen(); //removeEventMessage
         };
     }, []);
+
     useEffect(() => {
         //admin에서 학생 변경시
         if (!_.isEmpty(interfaceHook.studentData) && interfaceHook.auth === 'admin' && interfaceHook.target === 'student') {
@@ -83,11 +84,11 @@ function TableBody(props) {
                                             return (
                                                 <td key={ii} className={`${e >= 6 ? 'weekend' : ''}`}>
                                                     <Area
+                                                        idx={idx}
                                                         areaHook={areaHook}
                                                         itemHook={itemHook}
                                                         areaSelectHook={areaSelectHook}
                                                         interfaceHook={interfaceHook}
-                                                        idx={idx}
                                                     >
                                                         {level && <Distribution level={level} />}
                                                         {lectureData?.map((e, i) => (
@@ -104,21 +105,21 @@ function TableBody(props) {
                                                     </Area>
                                                     {itemHook.fixedItemGroupData.some(y => y.startIdx === idx) && (
                                                         <Item
+                                                            type={'fixed'}
+                                                            idx={idx}
                                                             itemHook={itemHook}
                                                             areaHook={areaHook}
                                                             interfaceHook={interfaceHook}
-                                                            type={'fixed'}
-                                                            idx={idx}
                                                         />
                                                     )}
                                                     {interfaceHook.auth === 'admin' &&
                                                         itemHook.matchingItemGroupData.some(y => y.startIdx === idx) && (
                                                             <Item
+                                                                idx={idx}
+                                                                type={'matching'}
                                                                 itemHook={itemHook}
                                                                 areaHook={areaHook}
                                                                 interfaceHook={interfaceHook}
-                                                                type={'matching'}
-                                                                idx={idx}
                                                             />
                                                         )}
                                                 </td>

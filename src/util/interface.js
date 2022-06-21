@@ -16,9 +16,6 @@ export function LinkAdmin(interfaceHook) {
                 case 'setLvt': // admin LVT
                     interfaceHook.setLvt(e.data.data);
                     break;
-                case 'setLessonOption': // admin lesson option
-                    interfaceHook.setLessonOption(e.data.data);
-                    break;
                 case 'setSelectMode': //가매칭모드
                     interfaceHook.setSelectMode(e.data.data);
                     break;

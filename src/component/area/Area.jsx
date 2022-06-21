@@ -4,7 +4,6 @@ import _ from 'lodash';
 import { schedule } from '../../util/schedule';
 import { table } from '../../util/table';
 import SelectLecture from '../modal/SelectLecture';
-import AreaMenu from '../contextMenu/AreaMenu';
 import MatchingMenu from '../contextMenu/MatchingMenu';
 
 function Area(props) {
@@ -13,14 +12,12 @@ function Area(props) {
     const [showLectureModal, setShowLectureModal] = useState(false); //과목정보 모달
     const [modalPosition, setModalPosition] = useState(null);
     const [menuPosition, setMenuPosition] = useState(null);
-    const [showMenu, setShowMenu] = useState(false);
     const [showMatchingMenu, setShowMatchingMenu] = useState(false);
 
     const init = () => {
         areaSelectHook.setLecture([]); //좌클릭 드래그 영역
         areaSelectHook.setMatchingTarget([]); //가매칭 영역
         setShowLectureModal(false);
-        setShowMenu(false);
         setShowMatchingMenu(false);
     };
 
@@ -69,7 +66,6 @@ function Area(props) {
         init();
     };
     const handleAreaDown = e => {
-        setShowMenu(false);
         setShowMatchingMenu(false);
         areaSelectHook.setMatchingTarget([]); //가매칭 영역
         areaHook.setAreaObj({
@@ -228,16 +224,6 @@ function Area(props) {
             ee && ee.childNodes[ee.childNodes.length === 8 ? weekIdx + 1 : weekIdx].childNodes[0].classList.add(`over`);
         });
     };
-    const handleAreaRightClick = e => {
-        e.preventDefault();
-        //     const isEmpty = _.isEmpty(_.find(matchingItemData, { block_group_No: idx }));
-        //     if (isEmpty) {
-        //         setShowMenu(true);
-        //         setMenuPosition({ x: e.clientX, y: e.clientY });
-        //     } else {
-        //         dispatch(setMessage('해당 범위에 가매칭 과목이있음'));
-        //     }
-    };
     return (
         <React.Fragment>
             <div
@@ -245,9 +231,9 @@ function Area(props) {
                 onMouseOver={handleAreaOver}
                 onMouseUp={handleAreaUp}
                 onDrop={handleItemDrop}
-                onDragOver={e => e.preventDefault()}
                 onDragEnter={handleDragEnter}
-                onContextMenu={handleAreaRightClick}
+                onContextMenu={e => e.preventDefault()}
+                onDragOver={e => e.preventDefault()}
                 className={
                     `item
                     ${areaHook.areaData.some(item => item.block_group_No === idx) ? 'active' : ''}
@@ -288,7 +274,6 @@ function Area(props) {
                     itemHook={itemHook}
                 />
             )}
-            {/* {auth === 'admin' && showMenu && areaObj.idx == idx && <AreaMenu idx={idx} position={menuPosition} close={() => setShowMenu(false)} />} */}
         </React.Fragment>
     );
 }
