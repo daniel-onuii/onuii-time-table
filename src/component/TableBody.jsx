@@ -27,12 +27,7 @@ function TableBody(props) {
     });
     const areaSelectHook = useAreaSelectData();
     const tableRef = useRef();
-    const [areaObj, setAreaObj] = useState({}); //trigger 관련 state도 custome hook 처리 해야함
-    const [itemObj, setItemObj] = useState({});
-    const [isAreaClickDown, setIsAreaClickDown] = useState(false);
-    const [isAreaAppend, setIsAreaAppend] = useState(false);
     const timeListData = schedule.getTimeList();
-
     const link = new LinkAdmin(interfaceHook); //admin interface link class
     useEffect(() => {
         link.readyToListen(); //addEventMessage
@@ -40,17 +35,23 @@ function TableBody(props) {
             link.clearListen(); //removeEventMessage
         };
     }, []);
-    // useEffect(() => {
-    //     //실제 분리되면 사용되지않을???
-    //     areaHook.setAreaData(props.areaData);
-    //     itemHook.setFixedItemData(props.fixedItemData);
-    //     itemHook.setMatchingItemData(props.matchingItemData);
-    // }, [interfaceHook.target]);
     useEffect(() => {
-        if (interfaceHook.target === 'teacher' && interfaceHook.auth === 'admin') {
-            !_.isEmpty(interfaceHook.teacherData) && areaHook.setAreaData(interfaceHook.teacherData);
+        //admin에서 학생 변경시
+        if (!_.isEmpty(interfaceHook.studentData) && interfaceHook.auth === 'admin' && interfaceHook.target === 'student') {
+            areaHook.setAreaData(interfaceHook.studentData.areaData);
+            itemHook.setFixedItemData(interfaceHook.studentData.fixedItemData);
+            itemHook.setMatchingItemData(interfaceHook.studentData.matchingItemData);
+        }
+    }, [interfaceHook.studentData]);
+    useEffect(() => {
+        //admin에서 선생님 변경시
+        if (!_.isEmpty(interfaceHook.teacherData) && interfaceHook.auth === 'admin' && interfaceHook.target === 'teacher') {
+            areaHook.setAreaData(interfaceHook.teacherData.areaData);
+            itemHook.setFixedItemData(interfaceHook.teacherData.fixedItemData);
+            itemHook.setMatchingItemData(interfaceHook.teacherData.matchingItemData);
         }
     }, [interfaceHook.teacherData]);
+
     useEffect(() => {
         link.sendMessage({ name: 'selectMatchingArea', data: { blocks: areaSelectHook.filter } }); //가매칭 filter 영역 선택시 데이터 post
     }, [areaSelectHook.filter]);
@@ -87,14 +88,6 @@ function TableBody(props) {
                                                         areaSelectHook={areaSelectHook}
                                                         interfaceHook={interfaceHook}
                                                         idx={idx}
-                                                        areaObj={areaObj}
-                                                        itemObj={itemObj}
-                                                        isAreaClickDown={isAreaClickDown}
-                                                        isAreaAppend={isAreaAppend}
-                                                        setAreaObj={setAreaObj}
-                                                        setItemObj={setItemObj}
-                                                        setIsAreaClickDown={setIsAreaClickDown}
-                                                        setIsAreaAppend={setIsAreaAppend}
                                                     >
                                                         {level && <Distribution level={level} />}
                                                         {lectureData?.map((e, i) => (
@@ -102,8 +95,8 @@ function TableBody(props) {
                                                         ))}
                                                         {maxBlock?.block_group_No === idx ? (
                                                             <div className={'timeText'}>
-                                                                <span>{`${schedule.getTime(areaObj.startOverIdx)}`}</span> {` - `}
-                                                                <span>{`${schedule.getTime(areaObj.endOverIdx)}`}</span>
+                                                                <span>{`${schedule.getTime(areaHook.areaObj.startOverIdx)}`}</span> {` - `}
+                                                                <span>{`${schedule.getTime(areaHook.areaObj.endOverIdx)}`}</span>
                                                             </div>
                                                         ) : (
                                                             ''
@@ -112,22 +105,20 @@ function TableBody(props) {
                                                     {itemHook.fixedItemGroupData.some(y => y.startIdx === idx) && (
                                                         <Item
                                                             itemHook={itemHook}
+                                                            areaHook={areaHook}
                                                             interfaceHook={interfaceHook}
                                                             type={'fixed'}
                                                             idx={idx}
-                                                            setItemObj={setItemObj}
-                                                            setIsAreaClickDown={setIsAreaClickDown}
                                                         />
                                                     )}
                                                     {interfaceHook.auth === 'admin' &&
                                                         itemHook.matchingItemGroupData.some(y => y.startIdx === idx) && (
                                                             <Item
                                                                 itemHook={itemHook}
+                                                                areaHook={areaHook}
                                                                 interfaceHook={interfaceHook}
                                                                 type={'matching'}
                                                                 idx={idx}
-                                                                setItemObj={setItemObj}
-                                                                setIsAreaClickDown={setIsAreaClickDown}
                                                             />
                                                         )}
                                                 </td>

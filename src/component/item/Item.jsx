@@ -56,7 +56,7 @@ const Layout = styled.div`
         -webkit-filter: brightness(215%);
     }
 `;
-function Item({ itemHook, interfaceHook, idx, type, setItemObj, setIsAreaClickDown }) {
+function Item({ itemHook, interfaceHook, idx, type, areaHook }) {
     const itemData = type === 'fixed' ? itemHook.fixedItemData : itemHook.matchingItemData;
     const itemGroupData = type === 'fixed' ? itemHook.fixedItemGroupData : itemHook.matchingItemGroupData;
     const itemLectureName = lecture.getLectureNameByIdx(itemData, idx);
@@ -66,9 +66,9 @@ function Item({ itemHook, interfaceHook, idx, type, setItemObj, setIsAreaClickDo
         setShowMenu(false);
     };
     const handleDragStart = () => {
-        setIsAreaClickDown(false);
+        areaHook.setIsAreaClickDown(false);
 
-        setItemObj({
+        itemHook.setItemObj({
             idx: idx,
             type: type,
             lectureId: lecture.getLectureId(itemData, idx),

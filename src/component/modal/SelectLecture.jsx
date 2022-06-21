@@ -62,22 +62,12 @@ function SelectLecture({ position, handleConfirm, handleRemove, handleCancel, ar
     const [lecture, setLecture] = useState([]);
     const [message, setMessage] = useState('');
     const lectureList =
-        interfaceHook.target === 'student'
-            ? [
-                  { key: '9168', value: '국어' },
-                  { key: '9169', value: '영어' },
-                  { key: '8906', value: '수학' },
-                  { key: '9170', value: '사회' },
-                  { key: '9171', value: '과학' },
-                  { key: '18492', value: '입시' },
-                  { key: '9813', value: '고1 통합과학' },
-              ]
-            : [{ key: 'all', value: '가능' }]; //mock data
+        interfaceHook.target === 'student' ? interfaceHook?.userData.lectureData : [{ lecture_subject_Id: 'all', lecture_name: '가능' }]; //mock data
     const [visibleList, setVisibleList] = useState(lectureList);
     useEffect(() => {
         if (interfaceHook.target === 'student') {
             //학생일때
-            !_.isNull(lvt) && setVisibleList([_.find(lectureList, { key: lvt?.toString() })]);
+            !_.isNull(lvt) && setVisibleList([_.find(lectureList, { lecture_subject_Id: lvt?.toString() })]);
             !_.isNull(lvt) && setLecture([lvt?.toString()]); //lvt값 자동체크
         } else {
             setLecture(['all']);
@@ -146,7 +136,13 @@ function SelectLecture({ position, handleConfirm, handleRemove, handleCancel, ar
                             <React.Fragment key={i}>
                                 {i == 4 && <br />}
                                 <div style={{ display: 'inline-block' }}>
-                                    <Input text={e.value} id={e.key} value={e.key} checked={lecture.includes(e.key)} handleChange={handleLecture} />
+                                    <Input
+                                        text={e.lecture_name}
+                                        id={e.lecture_subject_Id}
+                                        value={e.lecture_subject_Id}
+                                        checked={lecture.includes(e.lecture_subject_Id)}
+                                        handleChange={handleLecture}
+                                    />
                                 </div>
                             </React.Fragment>
                         );

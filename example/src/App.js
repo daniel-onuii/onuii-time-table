@@ -23,6 +23,7 @@ const App = () => {
                 <OnuiiTimeTable
                     auth={'user'}
                     target={'student'}
+                    userData={mock.userData}
                     areaData={mock.areaData}
                     fixedItemData={mock.fixedItemData}
                     matchingItemData={mock.matchingItemData}
@@ -31,6 +32,7 @@ const App = () => {
                 <OnuiiTimeTable
                     auth={'user'}
                     target={'teacher'}
+                    userData={mock.userData}
                     areaData={mock.teacherAreaData}
                     fixedItemData={mock.fixedItemData}
                     matchingItemData={mock.matchingItemData}
@@ -39,13 +41,7 @@ const App = () => {
             <Control />
             <Layout>
                 <a>관리자 - 학생</a>
-                <OnuiiTimeTable
-                    auth={'admin'}
-                    target={'student'}
-                    areaData={mock.areaData}
-                    fixedItemData={mock.fixedItemData}
-                    matchingItemData={mock.matchingItemData}
-                />
+                <OnuiiTimeTable auth={'admin'} target={'student'} areaData={[]} fixedItemData={[]} matchingItemData={[]} />
                 <a>관리자 - 선생님</a>
                 <OnuiiTimeTable auth={'admin'} target={'teacher'} areaData={[]} fixedItemData={[]} matchingItemData={[]} />
             </Layout>

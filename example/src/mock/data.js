@@ -1,4 +1,57 @@
 export const mock = {
+    userData: {
+        lectureData: [
+            {
+                lecture_subject_Id: '8906',
+                lecture_name: '수학',
+                time: 90,
+                week: 3,
+                status: 'PAYMENT',
+            },
+            {
+                lecture_subject_Id: '9168',
+                lecture_name: '국어',
+                time: 60,
+                week: 2,
+                status: 'PAYMENT',
+            },
+            {
+                lecture_subject_Id: '9169',
+                lecture_name: '영어',
+                time: 60,
+                week: 2,
+                status: 'PAYMENT',
+            },
+            {
+                lecture_subject_Id: '9171',
+                lecture_name: '과학',
+                time: 60,
+                week: 2,
+                status: 'MATCHED',
+            },
+            {
+                lecture_subject_Id: '9170',
+                lecture_name: '사회',
+                time: 60,
+                week: 2,
+                status: 'MATCHED',
+            },
+            {
+                lecture_subject_Id: '18492',
+                lecture_name: '입시',
+                time: 60,
+                week: 2,
+                status: 'MATCHED',
+            },
+            {
+                lecture_subject_Id: '9813',
+                lecture_name: '고1 통합과학',
+                time: 60,
+                week: 2,
+                status: 'MATCHED',
+            },
+        ],
+    },
     areaData: [
         { block_group_No: 36, areaActiveType: ['8906', '9168'] },
         { block_group_No: 37, areaActiveType: ['8906', '9168'] },

@@ -1,8 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { mock } from '../mock/data';
+import styled from 'styled-components';
+const Button = styled.div`
+    display: inline-block;
+    .active {
+        background: yellow;
+    }
+`;
 function Control() {
-    const [isSelect, setIsSelect] = useState(false); //선택모드
-    const [isMatching, setIsMatching] = useState(false); //가매칭 영역 설정
+    const [isSelect, setIsSelect] = useState(false); //매칭 필터 선택 여부
+    // const [isMatching, setIsMatching] = useState(false);
     const [isAddMatching, setIsAddMatching] = useState(false); //가매칭 추가삭제
     const [lvt, setLvt] = useState();
 
@@ -12,6 +19,7 @@ function Control() {
                 switch (e.data.name) {
                     case 'selectMatchingArea':
                         //matching filter select!!
+                        // console.log(e.data.data);
                         e.data.data.blocks.length > 0 ? setIsSelect(true) : setIsSelect(false);
                         break;
                     case 'updateMatching':
@@ -22,19 +30,35 @@ function Control() {
         });
     }, []);
 
-    const handleMode = mode => {
-        if (mode === 1) {
-            //초기화
-            setIsMatching(false);
-            window.postMessage({ id: 'onuii-time-table', name: 'setSelectMode', data: {} }, '*');
-            window.postMessage({ id: 'onuii-time-table', name: 'setTeacher', data: {} }, '*');
-        } else {
-            setIsMatching(true);
-            window.postMessage({ id: 'onuii-time-table', name: 'setSelectMode', data: { type: 'matching' } }, '*');
-        }
+    const handleChooseStudent = v => {
+        window.postMessage(
+            {
+                id: 'onuii-time-table',
+                name: 'setStudent',
+                data: {
+                    areaData: mock.areaData,
+                    fixedItemData: mock.fixedItemData,
+                    matchingItemData: mock.matchingItemData,
+                },
+            },
+            '*',
+        );
+        window.postMessage({ id: 'onuii-time-table', name: 'setUserData', data: mock.userData }, '*'); //선택한 LVT 전달
     };
+
     const handleChooseTeacher = v => {
-        window.postMessage({ id: 'onuii-time-table', name: 'setTeacher', data: mock.teacherData[v] }, '*');
+        window.postMessage(
+            {
+                id: 'onuii-time-table',
+                name: 'setTeacher',
+                data: {
+                    areaData: mock.teacherData[v],
+                    fixedItemData: mock.fixedItemData,
+                    matchingItemData: mock.matchingItemData,
+                },
+            },
+            '*',
+        );
     };
 
     const handleEnterLvt = e => {
@@ -50,13 +74,25 @@ function Control() {
     return (
         <div style={{ padding: '10px 20px', height: '30px' }}>
             <>
-                <button onClick={() => handleEnterLvt(8906)}>수학</button>
-                <button onClick={() => handleEnterLvt(9168)}>국어</button>
-                <button onClick={() => handleEnterLvt(9169)} style={{ marginRight: '5px' }}>
-                    영어
-                </button>
-                {isMatching && <button onClick={() => handleMode(1)}>가매칭모드 초기화</button>}
-                {!isMatching && lvt != null && <button onClick={() => handleMode(2)}>가매칭 영역 선택</button>}
+                <select size="2">
+                    <option onClick={() => handleChooseStudent(0)}>학생 A</option>
+                    <option onClick={() => handleChooseStudent(1)}>학생 B</option>
+                </select>
+                <Button>
+                    <button className={lvt == 8906 ? 'active' : ''} onClick={() => handleEnterLvt(8906)}>
+                        수학
+                    </button>
+                </Button>
+                <Button>
+                    <button className={lvt == 9168 ? 'active' : ''} onClick={() => handleEnterLvt(9168)}>
+                        국어
+                    </button>
+                </Button>
+                <Button>
+                    <button className={lvt == 9169 ? 'active' : ''} onClick={() => handleEnterLvt(9169)} style={{ marginRight: '5px' }}>
+                        영어
+                    </button>
+                </Button>
                 {isAddMatching && <button onClick={handleSave}>가매칭</button>}
                 <select size="2" style={{ position: 'absolute' }}>
                     <option onClick={() => handleChooseTeacher(0)}>후보 선생님 A</option>

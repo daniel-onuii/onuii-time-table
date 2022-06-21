@@ -8,22 +8,7 @@ import AreaMenu from '../contextMenu/AreaMenu';
 import MatchingMenu from '../contextMenu/MatchingMenu';
 
 function Area(props) {
-    const {
-        areaHook,
-        itemHook,
-        areaSelectHook,
-        interfaceHook,
-        children,
-        idx,
-        itemObj,
-        areaObj,
-        setItemObj,
-        isAreaClickDown,
-        isAreaAppend,
-        setIsAreaClickDown,
-        setAreaObj,
-        setIsAreaAppend,
-    } = props;
+    const { areaHook, itemHook, areaSelectHook, interfaceHook, children, idx } = props;
     const dispatch = useDispatch();
     const [showLectureModal, setShowLectureModal] = useState(false); //과목정보 모달
     const [modalPosition, setModalPosition] = useState(null);
@@ -87,7 +72,7 @@ function Area(props) {
         setShowMenu(false);
         setShowMatchingMenu(false);
         areaSelectHook.setMatchingTarget([]); //가매칭 영역
-        setAreaObj({
+        areaHook.setAreaObj({
             idx: idx,
             startOverIdx: schedule.getTimeIdx(idx),
             endOverIdx: schedule.getTimeIdx(idx + 1),
@@ -96,14 +81,14 @@ function Area(props) {
         });
         if (e.buttons !== 1) return false; //좌클릭 이외는 전부 false
         if (interfaceHook.auth === 'admin' && interfaceHook.target === 'teacher') return false; //관리자 + 선생은 가매칭 추가만 가능
-        setIsAreaClickDown(true); //클릭 상태
+        areaHook.setIsAreaClickDown(true); //클릭 상태
         const isFill = table.isFillArea(areaSelectHook.filter, idx); //가매칭모드때 사용
-        setIsAreaAppend(isFill); //대상이 빈칸인지
+        areaHook.setIsAreaAppend(isFill); //대상이 빈칸인지
     };
 
     const handleAreaOver = () => {
-        if (isAreaClickDown) {
-            const startOverIdx = areaObj.idx;
+        if (areaHook.isAreaClickDown) {
+            const startOverIdx = areaHook.areaObj.idx;
             const endOverIdx = idx;
             const startOverDayIdx = schedule.getWeekIdx(startOverIdx);
             const endOverDayIdx = schedule.getWeekIdx(endOverIdx);
@@ -123,8 +108,8 @@ function Area(props) {
             }, []);
             areaSelectHook.setLecture(_.flatten(selectedInfo));
 
-            setAreaObj({
-                ...areaObj,
+            areaHook.setAreaObj({
+                ...areaHook.areaObj,
                 startOverIdx: startRange < endRange ? startRange : endRange,
                 endOverIdx: startRange > endRange ? startRange + 1 : endRange + 1,
                 startOverDayIdx: startOverDayIdx < endOverDayIdx ? startOverDayIdx : endOverDayIdx,
@@ -138,7 +123,7 @@ function Area(props) {
             //좌클릭일때만
             return false;
         }
-        setIsAreaClickDown(false); //클릭 상태
+        areaHook.setIsAreaClickDown(false); //클릭 상태
         // if (_.isEmpty(interfaceHook?.selectMode) && interfaceHook.auth === 'user') {
         if (interfaceHook.auth === 'user') {
             //과목 추가는 유저 모드에서만 가능(어드민도 과목 추가 화면은 유저기능으로)
@@ -146,7 +131,7 @@ function Area(props) {
             if (_.isEmpty(areaSelectHook.lecture)) {
                 //셀 클릭시
                 setModalPosition({ x: e.clientX, y: e.clientY });
-                setAreaObj({
+                areaHook.setAreaObj({
                     idx: idx,
                     startOverIdx: schedule.getTimeIdx(idx),
                     endOverIdx: schedule.getTimeIdx(idx + 4),
@@ -184,7 +169,7 @@ function Area(props) {
                 //셀 드래그 앤 드롭
                 if (interfaceHook.target === 'student') {
                     areaSelectHook.setLecture([]);
-                    if (!isAreaAppend) {
+                    if (!areaHook.isAreaAppend) {
                         areaSelectHook.setFilter([...areaSelectHook.filter, ...areaSelectHook.lecture]);
                     } else {
                         const removeResult = _.reject(areaSelectHook.filter, o => {
@@ -198,19 +183,19 @@ function Area(props) {
     };
 
     const dropEvent = (data, setData) => {
-        const endTime = idx + itemObj.time - 1;
-        if (!schedule.checkValidSchedule(endTime, idx, data, itemObj.lectureId, dispatch)) {
+        const endTime = idx + itemHook.itemObj.time - 1;
+        if (!schedule.checkValidSchedule(endTime, idx, data, itemHook.itemObj.lectureId, dispatch)) {
             return false;
         }
         if (idx != 0) {
             const removedLecture = _.reject(
                 [...data],
                 o =>
-                    (o.block_group_No >= itemObj.idx && o.block_group_No < itemObj.idx + itemObj.time) ||
-                    (o.block_group_No >= idx && o.block_group_No < idx + itemObj.time),
+                    (o.block_group_No >= itemHook.itemObj.idx && o.block_group_No < itemHook.itemObj.idx + itemHook.itemObj.time) ||
+                    (o.block_group_No >= idx && o.block_group_No < idx + itemHook.itemObj.time),
             );
-            const addLecture = _.range(idx, idx + itemObj.time).reduce((result, e) => {
-                result.push({ block_group_No: e, lecture_subject_Id: itemObj.lectureId });
+            const addLecture = _.range(idx, idx + itemHook.itemObj.time).reduce((result, e) => {
+                result.push({ block_group_No: e, lecture_subject_Id: itemHook.itemObj.lectureId });
                 return result;
             }, []);
             setData([...removedLecture, ...addLecture]);
@@ -219,7 +204,7 @@ function Area(props) {
     const handleItemDrop = e => {
         e.preventDefault();
         table.removeOver();
-        switch (itemObj.type) {
+        switch (itemHook.itemObj.type) {
             case 'fixed':
                 dropEvent(itemHook.fixedItemData, itemHook.setFixedItemData);
                 break;
@@ -227,7 +212,7 @@ function Area(props) {
                 dropEvent(itemHook.matchingItemData, itemHook.setMatchingItemData);
                 break;
         }
-        setItemObj({});
+        itemHook.setItemObj({});
     };
     const handleDragEnter = e => {
         table.removeOver();
@@ -236,7 +221,7 @@ function Area(props) {
         const $tr = e.currentTarget.parentNode.parentNode;
         $this.classList.add(`over`);
         const arrTr = [];
-        for (var i = 0; i < itemObj.time - 1; i++) {
+        for (var i = 0; i < itemHook.itemObj.time - 1; i++) {
             _.isEmpty(arrTr) ? arrTr.push($tr.nextSibling) : arrTr.push(arrTr[i - 1]?.nextSibling);
         }
         arrTr.map(ee => {
@@ -270,7 +255,9 @@ function Area(props) {
                     ${areaSelectHook.filter.some(item => item.block_group_No === idx) ? 'matching' : ''}
                     ${areaSelectHook.matchingTarget.some(item => item.block_group_No === idx) ? 'tempMatching' : ''}
                     ${
-                        _.intersectionBy(interfaceHook.teacherData, areaSelectHook.filter, 'block_group_No').some(item => item.block_group_No === idx)
+                        _.intersectionBy(interfaceHook.teacherData?.areaData, areaSelectHook.filter, 'block_group_No').some(
+                            item => item.block_group_No === idx,
+                        )
                             ? 'equal'
                             : ''
                     }
@@ -286,11 +273,11 @@ function Area(props) {
                     handleConfirm={update}
                     handleRemove={remove}
                     handleCancel={cancel}
-                    areaObj={areaObj}
+                    areaObj={areaHook.areaObj}
                     interfaceHook={interfaceHook}
                 />
             )}
-            {interfaceHook.auth === 'admin' && showMatchingMenu && areaObj.idx == idx && (
+            {interfaceHook.auth === 'admin' && showMatchingMenu && areaHook.areaObj.idx == idx && (
                 <MatchingMenu
                     idx={idx}
                     time={6}

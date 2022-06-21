@@ -4,6 +4,9 @@ export function LinkAdmin(interfaceHook) {
     this.handler = e => {
         if (e.data.id === 'onuii-time-table') {
             switch (e.data.name) {
+                case 'setUserData': // userData
+                    interfaceHook.setUserData(e.data.data);
+                    break;
                 case 'setAuth': // auth
                     interfaceHook.setAuth(e.data.data);
                     break;
@@ -18,10 +21,12 @@ export function LinkAdmin(interfaceHook) {
                     break;
                 case 'setSelectMode': //가매칭모드
                     interfaceHook.setSelectMode(e.data.data);
-                    // _.isEmpty(e.data.data) && dispatch(setAreaMatchingObj([]));//가매칭 초록 영역 제거하는 로직같음
                     break;
-                case 'setTeacher': //후보선생 설정
+                case 'setTeacher': //후보선생 설정, 희망시간, 정규시간, 가매칭시간 데이터 모두 set
                     interfaceHook.setTeacherData(e.data.data);
+                    break;
+                case 'setStudent': //학생 설정
+                    interfaceHook.setStudentData(e.data.data);
                     break;
                 case 'save': //테이블 저장
                     alert('saved');
