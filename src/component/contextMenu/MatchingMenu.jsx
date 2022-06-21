@@ -37,8 +37,10 @@ const Layout = styled.div`
 `;
 function MatchingMenu({ idx, position, close, itemHook, interfaceHook }) {
     const dispatch = useDispatch();
+    const [time, setTime] = useState();
+    const [weekCount, setWeekCount] = useState();
     const lvt = interfaceHook.lvt;
-    const { time, weekCount } = _.find(interfaceHook.userData.lectureData, { lecture_subject_Id: lvt.toString() });
+    // const { time, weekCount } = _.find(interfaceHook?.userData?.lectureData, { lecture_subject_Id: lvt.toString() });
     const boxRef = useRef();
     const newPositionX =
         position.x + boxRef?.current?.clientWidth >= document.body.clientWidth
@@ -54,6 +56,9 @@ function MatchingMenu({ idx, position, close, itemHook, interfaceHook }) {
         }
     };
     useEffect(() => {
+        const lectureOption = _.find(interfaceHook.userData?.lectureData, { lecture_subject_Id: lvt.toString() });
+        setTime(lectureOption?.time);
+        setWeekCount(lectureOption?.weekCount);
         document.addEventListener('keydown', inputKey);
         return () => {
             document.removeEventListener('keydown', inputKey);
@@ -61,6 +66,7 @@ function MatchingMenu({ idx, position, close, itemHook, interfaceHook }) {
     }, []);
     const handleClick = () => {
         close();
+        if (_.isEmpty(interfaceHook.userData)) return false;
         const lessonCount = _.filter(itemHook.matchingItemGroupData, { lecture_subject_Id: lvt }).length;
         if (lessonCount >= weekCount) {
             dispatch(setMessage('횟수가 초과됨.'));

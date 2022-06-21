@@ -5,15 +5,16 @@ import Area from './area/Area';
 import Item from './item/Item';
 import Distribution from './area/Distribution';
 import LectureItem from './area/LectureItem';
-import { schedule } from '../util/schedule';
-import { table } from '../util/table';
-import { distData } from '../mock/distData';
-import { LinkAdmin } from '../util/interface';
 import useAreaData from '../hooks/useAreaData';
 import useItemData from '../hooks/useItemData';
 import useAreaSelectData from '../hooks/useAreaSelectData';
 import useInterface from '../hooks/useInterface';
+import { schedule } from '../util/schedule';
+import { table } from '../util/table';
+import { distData } from '../mock/distData';
 import { tableBody } from '../style/tableBody';
+import { LinkAdmin } from '../util/interface';
+import { AreaEvent } from '../util/event';
 const Layout = styled.div`
     ${tableBody}
 `;
@@ -29,6 +30,8 @@ function TableBody(props) {
         matching: props.matchingItemData || [],
     });
     const link = new LinkAdmin(interfaceHook); //admin interface link class
+    const areaEvent = new AreaEvent({ areaHook: areaHook, areaSelectHook: areaSelectHook, interfaceHook: interfaceHook, itemHook: itemHook });
+
     useEffect(() => {
         link.readyToListen(); //addEventMessage
         return () => {
@@ -89,6 +92,7 @@ function TableBody(props) {
                                                         itemHook={itemHook}
                                                         areaSelectHook={areaSelectHook}
                                                         interfaceHook={interfaceHook}
+                                                        areaEvent={areaEvent}
                                                     >
                                                         {level && <Distribution level={level} />}
                                                         {lectureData?.map((e, i) => (

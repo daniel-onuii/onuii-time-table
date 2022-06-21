@@ -67,7 +67,6 @@ function Item({ itemHook, interfaceHook, idx, type, areaHook }) {
     };
     const handleDragStart = () => {
         areaHook.setIsAreaClickDown(false);
-
         itemHook.setItemObj({
             idx: idx,
             type: type,
