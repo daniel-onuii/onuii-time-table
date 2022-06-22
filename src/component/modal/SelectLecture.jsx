@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import _ from 'lodash';
 import Button from '../../module/button/Button';
 import Input from '../../module/input/Input';
-import { useSelector } from 'react-redux';
 import { schedule } from '../../util/schedule';
 const Layout = styled.div`
     position: fixed;
@@ -67,8 +66,9 @@ function SelectLecture({ position, handleConfirm, handleRemove, handleCancel, ar
     useEffect(() => {
         if (interfaceHook.target === 'student') {
             //학생일때
-            !_.isNull(lvt) && setVisibleList([_.find(lectureList, { lecture_subject_Id: lvt?.toString() })]);
-            !_.isNull(lvt) && setLecture([lvt?.toString()]); //lvt값 자동체크
+            console.log(interfaceHook, lvt, lectureList);
+            !_.isNull(lvt) && setVisibleList([_.find(lectureList, { lecture_subject_Id: lvt })]);
+            !_.isNull(lvt) && setLecture([lvt]); //lvt값 자동체크
         } else {
             setLecture(['all']);
         }
@@ -77,7 +77,7 @@ function SelectLecture({ position, handleConfirm, handleRemove, handleCancel, ar
         lecture.length === 0 ? setMessage(`${type}과목 선택 안함`) : handleConfirm(type, lecture);
     };
     const handleLecture = e => {
-        const value = e.target.value;
+        const value = Number(e.target.value);
         if (value === 'all') {
             lecture.includes(value) ? setLecture(_.without(lecture, value)) : setLecture(['all']);
         } else {

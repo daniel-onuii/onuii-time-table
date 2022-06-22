@@ -10,7 +10,7 @@ export function AreaEvent({ areaHook, areaSelectHook, interfaceHook, itemHook })
 
 AreaEvent.prototype.overlap = function (bindLecture) {
     const newAreaData = this.areaHook.areaData.reduce((result, e) => {
-        !bindLecture.some(item => item.block_group_No === e.block_group_No) && result.push(e);
+        !bindLecture.some(item => item.timeBlockId === e.timeBlockId) && result.push(e);
         return result;
     }, []);
     this.areaHook.setAreaData([...newAreaData, ...bindLecture]);
@@ -18,21 +18,21 @@ AreaEvent.prototype.overlap = function (bindLecture) {
 
 AreaEvent.prototype.add = function (bindLecture, items) {
     const newAreaData = this.areaHook.areaData.reduce((result, e) => {
-        const target = _.find(bindLecture, { block_group_No: e.block_group_No });
-        const beforLecture = e.areaActiveType ? e.areaActiveType : [];
+        const target = _.find(bindLecture, { timeBlockId: e.timeBlockId });
+        const beforLecture = e.lectureIds ? e.lectureIds : [];
         const addData = _.uniq([...beforLecture, ...items]);
-        target ? result.push({ ...target, areaActiveType: addData }) : result.push(e);
+        target ? result.push({ ...target, lectureIds: addData }) : result.push(e);
         return result;
     }, []);
-    this.areaHook.setAreaData([...newAreaData, ..._.differenceBy(bindLecture, this.areaHook.areaData, 'block_group_No')]);
+    this.areaHook.setAreaData([...newAreaData, ..._.differenceBy(bindLecture, this.areaHook.areaData, 'timeBlockId')]);
 };
 
 AreaEvent.prototype.pop = function (bindLecture, items) {
     const newAreaData = this.areaHook.areaData.reduce((result, e) => {
-        const target = _.find(bindLecture, { block_group_No: e.block_group_No });
-        const beforLecture = e.areaActiveType ? e.areaActiveType : [];
+        const target = _.find(bindLecture, { timeBlockId: e.timeBlockId });
+        const beforLecture = e.lectureIds ? e.lectureIds : [];
         const popData = _.without(beforLecture, ...items);
-        target ? !_.isEmpty(popData) && result.push({ ...target, areaActiveType: popData }) : result.push(e);
+        target ? !_.isEmpty(popData) && result.push({ ...target, lectureIds: popData }) : result.push(e);
         return result;
     }, []);
     this.areaHook.setAreaData(newAreaData);
@@ -40,7 +40,7 @@ AreaEvent.prototype.pop = function (bindLecture, items) {
 
 AreaEvent.prototype.removeAll = function () {
     const removeResult = _.reject(this.areaHook.areaData, o => {
-        return this.areaSelectHook.lecture.some(item => item.block_group_No === o.block_group_No);
+        return this.areaSelectHook.lecture.some(item => item.timeBlockId === o.timeBlockId);
     });
     this.areaHook.setAreaData(removeResult);
 };
@@ -75,7 +75,7 @@ AreaEvent.prototype.clickOver = function (idx) {
         const selectedInfo = intervalDay.reduce((result, e) => {
             result.push(
                 _.range(e * 96 + 32 + startRange, e * 96 + 32 + endRange + (startRange < endRange ? 1 : -1)).map(ee => {
-                    return { block_group_No: ee };
+                    return { timeBlockId: ee };
                 }),
             );
             return result;
@@ -109,7 +109,7 @@ AreaEvent.prototype.clickUp = function (e, idx, openLectureModal, openMatchingMo
             });
             this.areaSelectHook.setLecture(
                 _.range(idx, idx + 4).map(e => {
-                    return { block_group_No: e };
+                    return { timeBlockId: e };
                 }),
             );
         } else {
@@ -124,7 +124,7 @@ AreaEvent.prototype.clickUp = function (e, idx, openLectureModal, openMatchingMo
             //셀 클릭시c
             if (this.interfaceHook.target === 'teacher' && !_.isNull(this.interfaceHook.lvt)) {
                 const tempMatching = _.range(idx, idx + 6).map(e => {
-                    return { block_group_No: e };
+                    return { timeBlockId: e };
                 });
                 this.areaSelectHook.setMatchingTarget(tempMatching);
                 openMatchingModal();
@@ -138,7 +138,7 @@ AreaEvent.prototype.clickUp = function (e, idx, openLectureModal, openMatchingMo
                     this.areaSelectHook.setFilter([...this.areaSelectHook.filter, ...this.areaSelectHook.lecture]);
                 } else {
                     const removeResult = _.reject(this.areaSelectHook.filter, o => {
-                        return this.areaSelectHook.lecture.some(item => item.block_group_No === o.block_group_No);
+                        return this.areaSelectHook.lecture.some(item => item.timeBlockId === o.timeBlockId);
                     });
                     this.areaSelectHook.setFilter(removeResult);
                 }
@@ -175,11 +175,11 @@ AreaEvent.prototype.itemDragEnd = function (e, idx) {
             const removedLecture = _.reject(
                 [...data],
                 o =>
-                    (o.block_group_No >= this.itemHook.itemObj.idx && o.block_group_No < this.itemHook.itemObj.idx + this.itemHook.itemObj.time) ||
-                    (o.block_group_No >= idx && o.block_group_No < idx + this.itemHook.itemObj.time),
+                    (o.timeBlockId >= this.itemHook.itemObj.idx && o.timeBlockId < this.itemHook.itemObj.idx + this.itemHook.itemObj.time) ||
+                    (o.timeBlockId >= idx && o.timeBlockId < idx + this.itemHook.itemObj.time),
             );
             const addLecture = _.range(idx, idx + this.itemHook.itemObj.time).reduce((result, e) => {
-                result.push({ block_group_No: e, lecture_subject_Id: this.itemHook.itemObj.lectureId });
+                result.push({ timeBlockId: e, lecture_subject_Id: this.itemHook.itemObj.lectureId });
                 return result;
             }, []);
             setData([...removedLecture, ...addLecture]);

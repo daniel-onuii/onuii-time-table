@@ -81,9 +81,9 @@ function TableBody(props) {
                                         {isOntime ? <th rowSpan="4">{e}</th> : null}
                                         {_.range(0, 7).map((e, ii) => {
                                             const idx = table.getBlockId(e, i);
-                                            const level = _.find(distData, { block_group_No: idx })?.level;
-                                            const lectureData = _.find(areaHook.areaData, { block_group_No: idx })?.areaActiveType;
-                                            const maxBlock = _.maxBy(areaSelectHook.lecture, 'block_group_No');
+                                            const level = _.find(distData, { timeBlockId: idx })?.level;
+                                            const lectureData = _.find(areaHook.areaData, { timeBlockId: idx })?.lectureIds;
+                                            const maxBlock = _.maxBy(areaSelectHook.lecture, 'timeBlockId');
                                             return (
                                                 <td key={ii} className={`${e >= 6 ? 'weekend' : ''}`}>
                                                     <Area
@@ -98,7 +98,7 @@ function TableBody(props) {
                                                         {lectureData?.map((e, i) => (
                                                             <LectureItem key={i} id={e} idx={idx} areaHook={areaHook} interfaceHook={interfaceHook} />
                                                         ))}
-                                                        {maxBlock?.block_group_No === idx ? (
+                                                        {maxBlock?.timeBlockId === idx ? (
                                                             <div className={'timeText'}>
                                                                 <span>{`${schedule.getTime(areaHook.areaObj.startOverIdx)}`}</span> {` - `}
                                                                 <span>{`${schedule.getTime(areaHook.areaObj.endOverIdx)}`}</span>

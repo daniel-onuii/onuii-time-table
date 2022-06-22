@@ -56,7 +56,7 @@ function ItemMenu({ idx, position, close, itemHook }) {
     const handleClick = e => {
         close();
         const target = _.find(itemHook.matchingItemGroupData, { startIdx: idx });
-        const result = _.reject(itemHook.matchingItemData, o => _.inRange(o.block_group_No, target.startIdx, target.endIdx + 1));
+        const result = _.reject(itemHook.matchingItemData, o => _.inRange(o.timeBlockId, target.startIdx, target.endIdx + 1));
         itemHook.setMatchingItemData(result);
     };
     return (

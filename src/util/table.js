@@ -4,7 +4,7 @@ export const table = {
         return dayOfweekIdx * 96 + 32 + i;
     },
     isFillArea: function (data, idx) {
-        return data.some(item => item.block_group_No === idx);
+        return data.some(item => item.timeBlockId === idx);
     },
     removeOver: function () {
         const overItems = document.querySelectorAll('.item.over');

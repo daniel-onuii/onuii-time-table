@@ -41,9 +41,9 @@ export const schedule = {
             return false;
         } else {
             const isInvalidEndtime = fixedItemRowData.some(
-                item => item.lecture_subject_Id !== itemLectureId && (item.block_group_No === endTime || item.block_group_No === endTime + 2),
+                item => item.lecture_subject_Id !== itemLectureId && (item.timeBlockId === endTime || item.timeBlockId === endTime + 2),
             );
-            const isInvalidStart = fixedItemRowData.some(item => item.lecture_subject_Id !== itemLectureId && item.block_group_No === startTime - 2);
+            const isInvalidStart = fixedItemRowData.some(item => item.lecture_subject_Id !== itemLectureId && item.timeBlockId === startTime - 2);
             if (isInvalidEndtime || isInvalidStart) {
                 dispatch(setMessage('강의 사이에 최소 30분의 시간이 필요합니다.'));
                 return false;
@@ -77,6 +77,7 @@ export const schedule = {
             // }
             // //과외 시간 충돌 체크
             // else
+            console.log(targetGroupData);
             if (targetGroupData.some(e => _.inRange(e.startIdx, startTime, endTime + 1) || _.inRange(e.endIdx, startTime, endTime + 1))) {
                 return '해당 범위에 다른 강의가 존재합니다.';
             } else if (targetGroupData.some(e => e.startIdx - 1 == endTime && e.lecture_subject_Id == id)) {

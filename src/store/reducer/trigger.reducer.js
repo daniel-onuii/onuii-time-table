@@ -6,7 +6,7 @@ const initialState = {
     areaMatchingObj: [], //후보선생님 필터링을 위한 범위
     isAreaAppend: false,
     isAreaClickDown: false,
-    areaActiveType: null,
+    lectureIds: null,
     message: '',
     matchingGrabbedObj: [], //가매칭으로 추가 될 범위(60,90분)
 };
@@ -33,7 +33,7 @@ const slice = createSlice({
             state.isAreaClickDown = action.payload;
         },
         setAreaActiveType(state, action) {
-            state.areaActiveType = action.payload;
+            state.lectureIds = action.payload;
         },
         setMessage(state, action) {
             state.message = action.payload;

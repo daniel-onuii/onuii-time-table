@@ -40,7 +40,6 @@ function MatchingMenu({ idx, position, close, itemHook, interfaceHook }) {
     const [time, setTime] = useState();
     const [weekCount, setWeekCount] = useState();
     const lvt = interfaceHook.lvt;
-    // const { time, weekCount } = _.find(interfaceHook?.userData?.lectureData, { lecture_subject_Id: lvt.toString() });
     const boxRef = useRef();
     const newPositionX =
         position.x + boxRef?.current?.clientWidth >= document.body.clientWidth
@@ -56,7 +55,7 @@ function MatchingMenu({ idx, position, close, itemHook, interfaceHook }) {
         }
     };
     useEffect(() => {
-        const lectureOption = _.find(interfaceHook.userData?.lectureData, { lecture_subject_Id: lvt.toString() });
+        const lectureOption = _.find(interfaceHook.userData?.lectureData, { lecture_subject_Id: lvt });
         setTime(lectureOption?.time);
         setWeekCount(lectureOption?.weekCount);
         document.addEventListener('keydown', inputKey);
@@ -79,7 +78,7 @@ function MatchingMenu({ idx, position, close, itemHook, interfaceHook }) {
                 return false;
             }
             const data = _.range(idx, idx + time).map((e, i) => {
-                return { block_group_No: e, lecture_subject_Id: lvt };
+                return { timeBlockId: e, lecture_subject_Id: lvt };
             });
             itemHook.setMatchingItemData([...itemHook.matchingItemData, ...data]);
         }

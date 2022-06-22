@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Control from './component/Control';
 import { mock } from './mock/data';
+import { getTimetable } from './mock/apiData';
 import { OnuiiTimeTable } from 'onuii-time-table';
 import styled from 'styled-components';
+import _ from 'lodash';
 const Layout = styled.div`
     display: inline-block;
     > div {
@@ -19,6 +21,16 @@ const App = () => {
         <>
             <h1 style={{ marginLeft: '20px' }}>타임테이블</h1>
             <Layout>
+                {/* <a>테슷</a>
+                <OnuiiTimeTable
+                    auth={'user'}
+                    target={'student'}
+                    blockData={getTimetable}
+                    userData={mock.userData}
+                    areaData={mock.areaData}
+                    fixedItemData={mock.fixedItemData}
+                    matchingItemData={mock.matchingItemData}
+                /> */}
                 <a>유저 - 학생</a>
                 <OnuiiTimeTable
                     auth={'user'}

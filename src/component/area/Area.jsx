@@ -20,7 +20,7 @@ function Area(props) {
 
     const update = (type, items) => {
         const bindLecture = areaSelectHook.lecture.map(e => {
-            return { ...e, areaActiveType: items };
+            return { ...e, lectureIds: items };
         });
         if (type === 'overlap') {
             areaEvent.overlap(bindLecture); //덮어쓰기
@@ -75,13 +75,13 @@ function Area(props) {
                 onDragOver={e => e.preventDefault()}
                 className={
                     `item
-                    ${areaHook.areaData.some(item => item.block_group_No === idx) ? 'active' : ''}
-                    ${areaSelectHook.lecture.some(item => item.block_group_No === idx) ? 'dragging' : ''}
-                    ${areaSelectHook.filter.some(item => item.block_group_No === idx) ? 'matching' : ''}
-                    ${areaSelectHook.matchingTarget.some(item => item.block_group_No === idx) ? 'tempMatching' : ''}
+                    ${areaHook.areaData.some(item => item.timeBlockId === idx) ? 'active' : ''}
+                    ${areaSelectHook.lecture.some(item => item.timeBlockId === idx) ? 'dragging' : ''}
+                    ${areaSelectHook.filter.some(item => item.timeBlockId === idx) ? 'matching' : ''}
+                    ${areaSelectHook.matchingTarget.some(item => item.timeBlockId === idx) ? 'tempMatching' : ''}
                     ${
-                        _.intersectionBy(interfaceHook.teacherData?.areaData, areaSelectHook.filter, 'block_group_No').some(
-                            item => item.block_group_No === idx,
+                        _.intersectionBy(interfaceHook.teacherData?.areaData, areaSelectHook.filter, 'timeBlockId').some(
+                            item => item.timeBlockId === idx,
                         )
                             ? 'equal'
                             : ''
@@ -103,15 +103,7 @@ function Area(props) {
                 />
             )}
             {interfaceHook.auth === 'admin' && showMatchingMenu && areaHook.areaObj.idx == idx && (
-                <MatchingMenu
-                    idx={idx}
-                    time={6}
-                    weekcount={4}
-                    position={menuPosition}
-                    close={init}
-                    interfaceHook={interfaceHook}
-                    itemHook={itemHook}
-                />
+                <MatchingMenu idx={idx} position={menuPosition} close={init} interfaceHook={interfaceHook} itemHook={itemHook} />
             )}
         </React.Fragment>
     );

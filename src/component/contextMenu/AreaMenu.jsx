@@ -82,7 +82,7 @@ function AreaMenu({ idx, position, close }) {
                 return false;
             }
             const data = _.range(idx, idx + time).map((e, i) => {
-                return { block_group_No: e, lecture_subject_Id: lecture };
+                return { timeBlockId: e, lecture_subject_Id: lecture };
             });
             dispatch(setMatchingItemData([...matchingItemData, ...data]));
         }
