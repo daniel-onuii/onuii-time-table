@@ -86,7 +86,6 @@ function Area(props) {
                             ? 'equal'
                             : ''
                     }
-                    
                 ` //클래스명 바꾸고싶다
                 }
             >

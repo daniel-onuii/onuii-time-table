@@ -31,20 +31,20 @@ function Control({ setDataStudent, setDataTeacher, setUserInfo, setTeacherInfo }
 
     const handleChooseStudent = v => {
         //학생 변경
-        setDataStudent(getTimetableS);
+        setDataStudent(getTimetableS[v]);
         setUserInfo(mock.userData);
         window.postMessage({ id: 'onuii-time-table', name: 'setSubject', data: 8906 }, '*'); //선택한 subject 전달
     };
 
     const handleChooseTeacher = v => {
         //선생님 변경
-        setDataTeacher(getTimetableT);
+        setDataTeacher(getTimetableT[v]);
         setTeacherInfo(mock.userData);
         window.postMessage(
             {
                 id: 'onuii-time-table',
                 name: 'setTeacher',
-                data: getTimetableT,
+                data: getTimetableT[v],
                 userInfo: mock.userData,
             },
             '*',
