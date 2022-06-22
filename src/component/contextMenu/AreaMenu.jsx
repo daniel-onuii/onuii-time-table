@@ -38,9 +38,9 @@ const Layout = styled.div`
 function AreaMenu({ idx, position, close }) {
     const userLectureInfo = [
         //유저의 가매칭 대기중인 mock data
-        { lecture_subject_Id: 9168, count: 1, time: 6, title: '국어' },
-        { lecture_subject_Id: 8906, count: 3, time: 4, title: '수학' },
-        { lecture_subject_Id: 9171, count: 2, time: 6, title: '과학' },
+        { lectureId: 9168, count: 1, time: 6, title: '국어' },
+        { lectureId: 8906, count: 3, time: 4, title: '수학' },
+        { lectureId: 9171, count: 2, time: 6, title: '과학' },
     ];
 
     const dispatch = useDispatch();
@@ -70,7 +70,7 @@ function AreaMenu({ idx, position, close }) {
         const lecture = Number(e.target.getAttribute('lecture'));
         const time = Number(e.target.getAttribute('time'));
         const weekCount = Number(e.target.getAttribute('weekcount'));
-        const lessonCount = _.filter(matchingItemGroupData, { lecture_subject_Id: lecture }).length;
+        const lessonCount = _.filter(matchingItemGroupData, { lectureId: lecture }).length;
         if (lessonCount >= weekCount) {
             dispatch(setMessage('횟수가 초과됨.'));
             return false;
@@ -82,7 +82,7 @@ function AreaMenu({ idx, position, close }) {
                 return false;
             }
             const data = _.range(idx, idx + time).map((e, i) => {
-                return { timeBlockId: e, lecture_subject_Id: lecture };
+                return { timeBlockId: e, lectureId: lecture };
             });
             dispatch(setMatchingItemData([...matchingItemData, ...data]));
         }
@@ -92,10 +92,9 @@ function AreaMenu({ idx, position, close }) {
             <ul onContextMenu={e => e.preventDefault()}>
                 {userLectureInfo &&
                     userLectureInfo.map((e, i) => {
-                        const isDisabled =
-                            _.filter(matchingItemGroupData, { lecture_subject_Id: e.lecture_subject_Id }).length >= e.count ? 'disabled' : '';
+                        const isDisabled = _.filter(matchingItemGroupData, { lectureId: e.lectureId }).length >= e.count ? 'disabled' : '';
                         return (
-                            <li key={i} lecture={e.lecture_subject_Id} time={e.time} weekcount={e.count} onClick={handleClick} className={isDisabled}>
+                            <li key={i} lecture={e.lectureId} time={e.time} weekcount={e.count} onClick={handleClick} className={isDisabled}>
                                 {`${e.title} ${e.time * 15}분 주${e.count}회`}
                             </li>
                         );

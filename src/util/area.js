@@ -7,7 +7,7 @@ export const area = {
             result.push({
                 seq: isCheckSeq ? seq : (seq += 1),
                 timeBlockId: e.timeBlockId,
-                lectureIds: e.lectureIds,
+                lectureSubjectIds: e.lectureSubjectIds,
             });
             return result;
         }, []);
@@ -15,8 +15,8 @@ export const area = {
             .groupBy(x => x.seq)
             .map((value, key) => ({
                 seq: key,
-                // lectureIds: _.sortBy(_.uniq(_.flatMap(value.map(e => e.lectureIds)))),
-                lectureIds: _.uniq(_.flatMap(value.map(e => e.lectureIds))),
+                // lectureSubjectIds: _.sortBy(_.uniq(_.flatMap(value.map(e => e.lectureSubjectIds)))),
+                lectureSubjectIds: _.uniq(_.flatMap(value.map(e => e.lectureSubjectIds))),
                 startIdx: value.slice(0, 1)[0]?.timeBlockId,
                 endIdx: value.slice(-1)[0]?.timeBlockId,
             }))

@@ -55,7 +55,7 @@ function MatchingMenu({ idx, position, close, itemHook, interfaceHook }) {
         }
     };
     useEffect(() => {
-        const lectureOption = _.find(interfaceHook.userData?.lectureData, { lecture_subject_Id: lvt });
+        const lectureOption = _.find(interfaceHook.userData?.lectureData, { lectureId: lvt });
         setTime(lectureOption?.time);
         setWeekCount(lectureOption?.weekCount);
         document.addEventListener('keydown', inputKey);
@@ -66,7 +66,7 @@ function MatchingMenu({ idx, position, close, itemHook, interfaceHook }) {
     const handleClick = () => {
         close();
         if (_.isEmpty(interfaceHook.userData)) return false;
-        const lessonCount = _.filter(itemHook.matchingItemGroupData, { lecture_subject_Id: lvt }).length;
+        const lessonCount = _.filter(itemHook.matchingItemGroupData, { lectureId: lvt }).length;
         if (lessonCount >= weekCount) {
             dispatch(setMessage('횟수가 초과됨.'));
             return false;
@@ -78,7 +78,7 @@ function MatchingMenu({ idx, position, close, itemHook, interfaceHook }) {
                 return false;
             }
             const data = _.range(idx, idx + time).map((e, i) => {
-                return { timeBlockId: e, lecture_subject_Id: lvt };
+                return { timeBlockId: e, lectureId: lvt };
             });
             itemHook.setMatchingItemData([...itemHook.matchingItemData, ...data]);
         }

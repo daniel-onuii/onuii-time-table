@@ -42,15 +42,15 @@ function LectureItem({ id, idx, areaHook, interfaceHook }) {
         const getGroupIdx = _.find(areaHook.areaGroupData, e => {
             return _.inRange(idx, e.startIdx, e.endIdx + 1);
         });
-        setLength(getGroupIdx?.lectureIds?.length);
-        setSeq(_.indexOf(getGroupIdx?.lectureIds, id));
+        setLength(getGroupIdx?.lectureSubjectIds?.length);
+        setSeq(_.indexOf(getGroupIdx?.lectureSubjectIds, id));
     }, [areaHook.areaGroupData]);
     const $before = _.find(areaHook.areaData, { timeBlockId: idx - 1 });
     const $next = _.find(areaHook.areaData, { timeBlockId: idx + 1 });
     const isEmptyBefore = _.isEmpty($before);
     const isEmptyNext = _.isEmpty($next);
-    const isEqualBefore = _.indexOf($before?.lectureIds, id) > -1;
-    const isEqualNext = _.indexOf($next?.lectureIds, id) > -1;
+    const isEqualBefore = _.indexOf($before?.lectureSubjectIds, id) > -1;
+    const isEqualNext = _.indexOf($next?.lectureSubjectIds, id) > -1;
     const isFirst = isEmptyBefore || !isEqualBefore;
     const isLast = isEmptyNext || !isEqualNext;
     return (

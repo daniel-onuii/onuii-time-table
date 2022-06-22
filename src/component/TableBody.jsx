@@ -25,6 +25,7 @@ function TableBody(props) {
     const interfaceHook = useInterface(props);
     const areaHook = useAreaData(props.areaData || []);
     const areaSelectHook = useAreaSelectData();
+
     const itemHook = useItemData({
         fixed: props.fixedItemData || [],
         matching: props.matchingItemData || [],
@@ -33,6 +34,7 @@ function TableBody(props) {
     const areaEvent = new AreaEvent({ areaHook: areaHook, areaSelectHook: areaSelectHook, interfaceHook: interfaceHook, itemHook: itemHook });
 
     useEffect(() => {
+        console.log(props);
         link.readyToListen(); //addEventMessage
         return () => {
             link.clearListen(); //removeEventMessage
@@ -82,7 +84,7 @@ function TableBody(props) {
                                         {_.range(0, 7).map((e, ii) => {
                                             const idx = table.getBlockId(e, i);
                                             const level = _.find(distData, { timeBlockId: idx })?.level;
-                                            const lectureData = _.find(areaHook.areaData, { timeBlockId: idx })?.lectureIds;
+                                            const lectureData = _.find(areaHook.areaData, { timeBlockId: idx })?.lectureSubjectIds;
                                             const maxBlock = _.maxBy(areaSelectHook.lecture, 'timeBlockId');
                                             return (
                                                 <td key={ii} className={`${e >= 6 ? 'weekend' : ''}`}>

@@ -19,9 +19,9 @@ AreaEvent.prototype.overlap = function (bindLecture) {
 AreaEvent.prototype.add = function (bindLecture, items) {
     const newAreaData = this.areaHook.areaData.reduce((result, e) => {
         const target = _.find(bindLecture, { timeBlockId: e.timeBlockId });
-        const beforLecture = e.lectureIds ? e.lectureIds : [];
+        const beforLecture = e.lectureSubjectIds ? e.lectureSubjectIds : [];
         const addData = _.uniq([...beforLecture, ...items]);
-        target ? result.push({ ...target, lectureIds: addData }) : result.push(e);
+        target ? result.push({ ...target, lectureSubjectIds: addData }) : result.push(e);
         return result;
     }, []);
     this.areaHook.setAreaData([...newAreaData, ..._.differenceBy(bindLecture, this.areaHook.areaData, 'timeBlockId')]);
@@ -30,9 +30,9 @@ AreaEvent.prototype.add = function (bindLecture, items) {
 AreaEvent.prototype.pop = function (bindLecture, items) {
     const newAreaData = this.areaHook.areaData.reduce((result, e) => {
         const target = _.find(bindLecture, { timeBlockId: e.timeBlockId });
-        const beforLecture = e.lectureIds ? e.lectureIds : [];
+        const beforLecture = e.lectureSubjectIds ? e.lectureSubjectIds : [];
         const popData = _.without(beforLecture, ...items);
-        target ? !_.isEmpty(popData) && result.push({ ...target, lectureIds: popData }) : result.push(e);
+        target ? !_.isEmpty(popData) && result.push({ ...target, lectureSubjectIds: popData }) : result.push(e);
         return result;
     }, []);
     this.areaHook.setAreaData(newAreaData);
@@ -179,7 +179,7 @@ AreaEvent.prototype.itemDragEnd = function (e, idx) {
                     (o.timeBlockId >= idx && o.timeBlockId < idx + this.itemHook.itemObj.time),
             );
             const addLecture = _.range(idx, idx + this.itemHook.itemObj.time).reduce((result, e) => {
-                result.push({ timeBlockId: e, lecture_subject_Id: this.itemHook.itemObj.lectureId });
+                result.push({ timeBlockId: e, lectureId: this.itemHook.itemObj.lectureId });
                 return result;
             }, []);
             setData([...removedLecture, ...addLecture]);

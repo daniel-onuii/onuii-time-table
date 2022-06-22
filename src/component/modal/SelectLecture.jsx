@@ -60,14 +60,13 @@ function SelectLecture({ position, handleConfirm, handleRemove, handleCancel, ar
     const [dynamicX, setDynamicX] = useState();
     const [lecture, setLecture] = useState([]);
     const [message, setMessage] = useState('');
-    const lectureList =
-        interfaceHook.target === 'student' ? interfaceHook?.userData.lectureData : [{ lecture_subject_Id: 'all', lecture_name: '가능' }]; //mock data
+    const lectureList = interfaceHook.target === 'student' ? interfaceHook?.userData.lectureData : [{ lectureId: 'all', lecture_name: '가능' }]; //mock data
     const [visibleList, setVisibleList] = useState(lectureList);
     useEffect(() => {
         if (interfaceHook.target === 'student') {
             //학생일때
             console.log(interfaceHook, lvt, lectureList);
-            !_.isNull(lvt) && setVisibleList([_.find(lectureList, { lecture_subject_Id: lvt })]);
+            !_.isNull(lvt) && setVisibleList([_.find(lectureList, { lectureId: lvt })]);
             !_.isNull(lvt) && setLecture([lvt]); //lvt값 자동체크
         } else {
             setLecture(['all']);
@@ -138,9 +137,9 @@ function SelectLecture({ position, handleConfirm, handleRemove, handleCancel, ar
                                 <div style={{ display: 'inline-block' }}>
                                     <Input
                                         text={e.lecture_name}
-                                        id={e.lecture_subject_Id}
-                                        value={e.lecture_subject_Id}
-                                        checked={lecture.includes(e.lecture_subject_Id)}
+                                        id={e.lectureId}
+                                        value={e.lectureId}
+                                        checked={lecture.includes(e.lectureId)}
                                         handleChange={handleLecture}
                                     />
                                 </div>

@@ -2,7 +2,7 @@ import { schedule } from './schedule';
 import _ from 'lodash';
 export const lecture = {
     getLectureId: function (data, idx) {
-        return _.find(data, { timeBlockId: idx })?.lecture_subject_Id;
+        return _.find(data, { timeBlockId: idx })?.lectureId;
     },
     getLectureNameByIdx: function (data, idx) {
         return this.getLectureName(this.getLectureId(data, idx));
@@ -15,13 +15,12 @@ export const lecture = {
         let seq = 0;
         const rowData = _.sortBy(data, 'timeBlockId').reduce((result, e) => {
             const isCheckSeq =
-                _.isEqual(result.slice(-1)[0]?.timeBlockId, e.timeBlockId - 1) &&
-                _.isEqual(result.slice(-1)[0]?.lecture_subject_Id, e.lecture_subject_Id);
+                _.isEqual(result.slice(-1)[0]?.timeBlockId, e.timeBlockId - 1) && _.isEqual(result.slice(-1)[0]?.lectureId, e.lectureId);
 
             result.push({
                 week: schedule.getWeekIdx(e.timeBlockId),
                 timeBlockId: e.timeBlockId,
-                lecture_subject_Id: e.lecture_subject_Id,
+                lectureId: e.lectureId,
                 seq: isCheckSeq ? seq : (seq += 1),
             });
             return result;
@@ -31,7 +30,7 @@ export const lecture = {
             .map((value, key) => ({
                 seq: key,
                 week: value[0]?.week,
-                lecture_subject_Id: value[0]?.lecture_subject_Id,
+                lectureId: value[0]?.lectureId,
                 startIdx: value.slice(0, 1)[0]?.timeBlockId,
                 endIdx: value.slice(-1)[0]?.timeBlockId,
                 startTimeIdx: schedule.getTimeIdx(value.slice(0, 1)[0]?.timeBlockId),

@@ -9,10 +9,13 @@ function useAreaData(data) {
     const [isAreaClickDown, setIsAreaClickDown] = useState(false);
     const [isAreaAppend, setIsAreaAppend] = useState(false);
 
+    useEffect(() => {
+        setAreaData(data);
+    }, [data]);
+
     const updateAreaData = useCallback(value => {
         setAreaData(value);
     }, []);
-
     useEffect(() => {
         setAreaGroupData(area.getAreaGroupData(areaData));
     }, [areaData]);

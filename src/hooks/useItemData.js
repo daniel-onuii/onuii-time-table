@@ -10,6 +10,11 @@ function useItemData({ fixed, matching }) {
     const [itemObj, setItemObj] = useState({});
 
     useEffect(() => {
+        setFixedItemData(fixed);
+        setMatchingItemData(matching);
+    }, [fixed, matching]);
+
+    useEffect(() => {
         setFixedItemGroupData(lecture.getGroupByLectureTime(fixedItemData));
         setMatchingItemGroupData(lecture.getGroupByLectureTime(matchingItemData));
     }, [fixedItemData, matchingItemData]);
