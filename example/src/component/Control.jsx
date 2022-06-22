@@ -17,11 +17,11 @@ function Control({ setDataStudent, setDataTeacher, setUserInfo, setTeacherInfo }
             if (e.data.id === 'onuii-time-table') {
                 switch (e.data.name) {
                     case 'selectMatchingArea':
-                        //matching filter select!!
-                        // console.log(e.data.data);
+                        // console.log(e.data.data); //가매칭 필터 추가 이벤트
                         e.data.data.blocks.length > 0 ? setIsSelect(true) : setIsSelect(false);
                         break;
                     case 'updateMatching':
+                        // console.log(e.data.data); //가매칭 아이템 추가 이벤트
                         e.data.data.length > 0 ? setIsAddMatching(true) : setIsAddMatching(false);
                         break;
                 }

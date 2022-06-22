@@ -41,7 +41,9 @@ function TableBody(props) {
 
     useEffect(() => {
         //어드민에서 유저 변경시 필터 영역 초기화
-        areaSelectHook.setFilter([]);
+        if (interfaceHook.target === 'student') {
+            // areaSelectHook.setFilter([]);
+        }
         areaSelectHook.setMatchingTarget([]);
         areaHook.setAreaObj({});
     }, [areaHook.areaData]);
