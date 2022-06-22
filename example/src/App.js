@@ -17,13 +17,8 @@ const Layout = styled.div`
 `;
 
 const App = () => {
-    const [test, setTest] = useState(getTimetableS);
-    const handleclick = () => {
-        setTest(getTimetableT);
-    };
     return (
         <>
-            <button onClick={handleclick}>test</button>
             <h1 style={{ marginLeft: '20px' }}>타임테이블</h1>
             <Layout>
                 <a>유저 - 학생</a>

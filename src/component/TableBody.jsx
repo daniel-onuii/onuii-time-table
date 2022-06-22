@@ -23,9 +23,8 @@ function TableBody(props) {
     const tableRef = useRef();
     const timeListData = schedule.getTimeList();
     const interfaceHook = useInterface(props);
-    const areaHook = useAreaData(props.areaData || []);
     const areaSelectHook = useAreaSelectData();
-
+    const areaHook = useAreaData(props.areaData || []);
     const itemHook = useItemData({
         fixed: props.fixedItemData || [],
         matching: props.matchingItemData || [],
@@ -34,7 +33,6 @@ function TableBody(props) {
     const areaEvent = new AreaEvent({ areaHook: areaHook, areaSelectHook: areaSelectHook, interfaceHook: interfaceHook, itemHook: itemHook });
 
     useEffect(() => {
-        console.log(props);
         link.readyToListen(); //addEventMessage
         return () => {
             link.clearListen(); //removeEventMessage
