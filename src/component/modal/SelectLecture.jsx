@@ -55,7 +55,7 @@ const Layout = styled.div`
     }
 `;
 function SelectLecture({ position, handleConfirm, handleRemove, handleCancel, areaObj, interfaceHook }) {
-    const lvt = interfaceHook.lvt;
+    const subject = interfaceHook.subject;
     const boxRef = useRef();
     const [dynamicX, setDynamicX] = useState();
     const [lecture, setLecture] = useState([]);
@@ -65,13 +65,12 @@ function SelectLecture({ position, handleConfirm, handleRemove, handleCancel, ar
     useEffect(() => {
         if (interfaceHook.target === 'student') {
             //학생일때
-            console.log(interfaceHook, lvt, lectureList);
-            !_.isNull(lvt) && setVisibleList([_.find(lectureList, { lectureId: lvt })]);
-            !_.isNull(lvt) && setLecture([lvt]); //lvt값 자동체크
+            !_.isNull(subject) && setVisibleList([_.find(lectureList, { lectureId: subject })]);
+            !_.isNull(subject) && setLecture([subject]); //subject값 자동체크
         } else {
             setLecture(['all']);
         }
-    }, [lvt, interfaceHook.target]);
+    }, [subject, interfaceHook.target]);
     const handleConfirmExtend = type => {
         lecture.length === 0 ? setMessage(`${type}과목 선택 안함`) : handleConfirm(type, lecture);
     };

@@ -24,10 +24,10 @@ function TableBody(props) {
     const timeListData = schedule.getTimeList();
     const interfaceHook = useInterface(props);
     const areaSelectHook = useAreaSelectData();
-    const areaHook = useAreaData(props.areaData || []);
+    const areaHook = useAreaData(props?.areaData || []);
     const itemHook = useItemData({
-        fixed: props.fixedItemData || [],
-        matching: props.matchingItemData || [],
+        fixed: props?.fixedItemData || [],
+        matching: props?.matchingItemData || [],
     });
     const link = new LinkAdmin(interfaceHook); //admin interface link class
     const areaEvent = new AreaEvent({ areaHook: areaHook, areaSelectHook: areaSelectHook, interfaceHook: interfaceHook, itemHook: itemHook });
@@ -38,23 +38,6 @@ function TableBody(props) {
             link.clearListen(); //removeEventMessage
         };
     }, []);
-
-    useEffect(() => {
-        //admin에서 학생 변경시
-        if (!_.isEmpty(interfaceHook.studentData) && interfaceHook.auth === 'admin' && interfaceHook.target === 'student') {
-            areaHook.setAreaData(interfaceHook.studentData.areaData);
-            itemHook.setFixedItemData(interfaceHook.studentData.fixedItemData);
-            itemHook.setMatchingItemData(interfaceHook.studentData.matchingItemData);
-        }
-    }, [interfaceHook.studentData]);
-    useEffect(() => {
-        //admin에서 선생님 변경시
-        if (!_.isEmpty(interfaceHook.teacherData) && interfaceHook.auth === 'admin' && interfaceHook.target === 'teacher') {
-            areaHook.setAreaData(interfaceHook.teacherData.areaData);
-            itemHook.setFixedItemData(interfaceHook.teacherData.fixedItemData);
-            itemHook.setMatchingItemData(interfaceHook.teacherData.matchingItemData);
-        }
-    }, [interfaceHook.teacherData]);
 
     useEffect(() => {
         link.sendMessage({ name: 'selectMatchingArea', data: { blocks: areaSelectHook.filter } }); //가매칭 filter 영역 선택시 데이터 post

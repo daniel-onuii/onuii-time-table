@@ -39,7 +39,7 @@ function MatchingMenu({ idx, position, close, itemHook, interfaceHook }) {
     const dispatch = useDispatch();
     const [time, setTime] = useState();
     const [weekCount, setWeekCount] = useState();
-    const lvt = interfaceHook.lvt;
+    const subject = interfaceHook.subject;
     const boxRef = useRef();
     const newPositionX =
         position.x + boxRef?.current?.clientWidth >= document.body.clientWidth
@@ -55,7 +55,7 @@ function MatchingMenu({ idx, position, close, itemHook, interfaceHook }) {
         }
     };
     useEffect(() => {
-        const lectureOption = _.find(interfaceHook.userData?.lectureData, { lectureId: lvt });
+        const lectureOption = _.find(interfaceHook.userData?.lectureData, { lectureId: subject });
         setTime(lectureOption?.time);
         setWeekCount(lectureOption?.weekCount);
         document.addEventListener('keydown', inputKey);
@@ -66,19 +66,19 @@ function MatchingMenu({ idx, position, close, itemHook, interfaceHook }) {
     const handleClick = () => {
         close();
         if (_.isEmpty(interfaceHook.userData)) return false;
-        const lessonCount = _.filter(itemHook.matchingItemGroupData, { lectureId: lvt }).length;
+        const lessonCount = _.filter(itemHook.matchingItemGroupData, { lectureId: subject }).length;
         if (lessonCount >= weekCount) {
             dispatch(setMessage('횟수가 초과됨.'));
             return false;
         } else {
             const endTime = idx - 1 + time;
-            const checkCrash = schedule.checkCrashItemTime(itemHook.matchingItemGroupData, idx, endTime, lvt);
+            const checkCrash = schedule.checkCrashItemTime(itemHook.matchingItemGroupData, idx, endTime, subject);
             if (!_.isEmpty(checkCrash)) {
                 dispatch(setMessage(checkCrash));
                 return false;
             }
             const data = _.range(idx, idx + time).map((e, i) => {
-                return { timeBlockId: e, lectureId: lvt };
+                return { timeBlockId: e, lectureId: subject };
             });
             itemHook.setMatchingItemData([...itemHook.matchingItemData, ...data]);
         }

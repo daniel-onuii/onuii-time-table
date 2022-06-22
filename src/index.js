@@ -3,80 +3,22 @@ import App from './App';
 import { store } from './store/config';
 import { Provider } from 'react-redux';
 import _ from 'lodash';
+import { schedule } from './util/schedule';
 
 export const OnuiiTimeTable = props => {
+    const [userData, setUserData] = useState();
     const [areaData, setAreaData] = useState();
     const [fixedItemData, setFixedItemData] = useState();
     const [matchingItemData, setMatchingItemData] = useState();
-    // const areaData = props.blockData?.timeBlocks.reduce((result, e) => {
-    //     // !_.isEmpty(e.lectureSubjectIds) &&
-    //     result.push({
-    //         timeBlockId: e.timeBlockId,
-    //         lectureSubjectIds: _.isEmpty(e.lectureSubjectIds) ? ['all'] : e.lectureSubjectIds,
-    //     });
-    //     return result;
-    // }, []);
-
-    // const fixedItemData = props.blockData?.timeBlocks.reduce((result, e) => {
-    //     !_.isEmpty(e.lectureVtId) ||
-    //         (!_.isNull(e.lectureVtId) &&
-    //             result.push({
-    //                 timeBlockId: e.timeBlockId,
-    //                 lectureId: _.find(props.userData?.lectureData, { lectureVtId: e.lectureVtId }).lectureId,
-    //                 lectureVtId: e.lectureVtId,
-    //             }));
-    //     return result;
-    // }, []);
-
-    // const matchingItemData = props.blockData?.timeBlocks.reduce((result, e) => {
-    //     !_.isEmpty(e.tempLectureVtId) ||
-    //         (!_.isNull(e.tempLectureVtId) &&
-    //             result.push({
-    //                 timeBlockId: e.timeBlockId,
-    //                 lectureId: _.find(props.userData?.lectureData, { lectureVtId: e.tempLectureVtId }).lectureId,
-    //                 lectureVtId: e.tempLectureVtId,
-    //             }));
-    //     return result;
-    // }, []);
     useEffect(() => {
-        const areaDatat = props.blockData?.timeBlocks.reduce((result, e) => {
-            // !_.isEmpty(e.lectureSubjectIds) &&
-            result.push({
-                timeBlockId: e.timeBlockId,
-                lectureSubjectIds: _.isEmpty(e.lectureSubjectIds) ? ['all'] : e.lectureSubjectIds,
-            });
-            return result;
-        }, []);
-
-        const fixedItemDatat = props.blockData?.timeBlocks.reduce((result, e) => {
-            !_.isEmpty(e.lectureVtId) ||
-                (!_.isNull(e.lectureVtId) &&
-                    result.push({
-                        timeBlockId: e.timeBlockId,
-                        lectureId: _.find(props.userData?.lectureData, { lectureVtId: e.lectureVtId }).lectureId,
-                        lectureVtId: e.lectureVtId,
-                    }));
-            return result;
-        }, []);
-
-        const matchingItemDatat = props.blockData?.timeBlocks.reduce((result, e) => {
-            !_.isEmpty(e.tempLectureVtId) ||
-                (!_.isNull(e.tempLectureVtId) &&
-                    result.push({
-                        timeBlockId: e.timeBlockId,
-                        lectureId: _.find(props.userData?.lectureData, { lectureVtId: e.tempLectureVtId }).lectureId,
-                        lectureVtId: e.tempLectureVtId,
-                    }));
-            return result;
-        }, []);
-        setAreaData(areaDatat);
-        setFixedItemData(fixedItemDatat);
-        setMatchingItemData(matchingItemDatat);
-        console.log(props);
+        setUserData(props?.userData);
+        setAreaData(schedule.getParseAreaData(props?.blockData?.timeBlocks) || []);
+        setFixedItemData(schedule.getParseFixedData(props?.blockData?.timeBlocks, props.userData?.lectureData) || []);
+        setMatchingItemData(schedule.getParseMatchingData(props?.blockData?.timeBlocks, props.userData?.lectureData) || []);
     }, [props]);
     return (
         <Provider store={store}>
-            <App {...props} areaData={areaData} fixedItemData={fixedItemData} matchingItemData={matchingItemData} />
+            <App {...props} userData={userData} areaData={areaData} fixedItemData={fixedItemData} matchingItemData={matchingItemData} />
         </Provider>
     );
 };

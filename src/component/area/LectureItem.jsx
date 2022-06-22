@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import _ from 'lodash';
 const Layout = styled.div.attrs(props => ({
     className: `area _${props.lecture_id} ${
-        props.target === 'student' && props.auth === 'admin' && props.lvt && props.lvt != props.lecture_id && 'disabled'
+        props.target === 'student' && props.auth === 'admin' && props.subject && props.subject != props.lecture_id && 'disabled'
     }`,
 }))`
     display: inline-block;
@@ -59,7 +59,7 @@ function LectureItem({ id, idx, areaHook, interfaceHook }) {
             className={`${isFirst ? 'head' : ''} ${isLast ? 'last' : ''} `}
             length={length}
             seq={seq}
-            lvt={interfaceHook.lvt}
+            subject={interfaceHook.subject}
             target={interfaceHook.target}
             auth={interfaceHook.auth}
         >

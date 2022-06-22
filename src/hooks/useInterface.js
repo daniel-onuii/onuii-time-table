@@ -1,50 +1,28 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 function useInterface(props) {
-    const [userData, setUserData] = useState(props.userData);
-    const [auth, setAuth] = useState(props.auth);
-    const [target, setTarget] = useState(props.target);
-    const [teacherData, setTeacherData] = useState();
-    const [studentData, setStudentData] = useState();
-    const [lvt, setLvt] = useState(null);
-    const [selectMode, setSelectMode] = useState({});
+    const [userData, setUserData] = useState(props.userData); //user 정보
+    const auth = props.auth; //고정됨
+    const target = props.target; //고정됨
+    const [teacherData, setTeacherData] = useState(); //postmessage
+    const [subject, setSubject] = useState(null); //postmessage
 
-    const updateUserData = useCallback(value => {
-        setUserData(value);
-    }, []);
-    const updateAuth = useCallback(value => {
-        setAuth(value);
-    }, []);
-    const updateTarget = useCallback(value => {
-        setTarget(value);
-    }, []);
+    useEffect(() => {
+        setUserData(props.userData);
+    }, [props.userData]);
+
     const updateTeacherData = useCallback(value => {
         setTeacherData(value);
-    }, []);
-    const updateStudentData = useCallback(value => {
-        setStudentData(value);
-    }, []);
-    const updateLvt = useCallback(value => {
-        setLvt(value);
-    }, []);
-    const updateSelectMode = useCallback(value => {
-        setSelectMode(value);
     }, []);
 
     return {
         userData: userData,
         teacherData: teacherData,
-        studentData: studentData,
-        lvt: lvt,
-        selectMode: selectMode,
         auth: auth,
         target: target,
-        setUserData: updateUserData,
+        subject: subject,
+        setUserData: setUserData,
         setTeacherData: updateTeacherData,
-        setStudentData: updateStudentData,
-        setTarget: updateTarget,
-        setAuth: updateAuth,
-        setLvt: updateLvt,
-        setSelectMode: updateSelectMode,
+        setSubject: setSubject,
     };
 }
 export default useInterface;

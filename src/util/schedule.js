@@ -86,4 +86,53 @@ export const schedule = {
             }
         }
     },
+
+    getParseAreaData: obj => {
+        const data = _.reduce(
+            obj,
+            (result, e) => {
+                result.push({
+                    timeBlockId: e.timeBlockId,
+                    lectureSubjectIds: _.isEmpty(e.lectureSubjectIds) ? ['all'] : e.lectureSubjectIds,
+                });
+                return result;
+            },
+            [],
+        );
+        return data;
+    },
+    getParseFixedData: (obj, userObj) => {
+        const data = _.reduce(
+            obj,
+            (result, e) => {
+                !_.isEmpty(e.lectureVtId) ||
+                    (!_.isNull(e.lectureVtId) &&
+                        result.push({
+                            timeBlockId: e.timeBlockId,
+                            lectureId: _.find(userObj, { lectureVtId: e.lectureVtId })?.lectureId,
+                            lectureVtId: e.lectureVtId,
+                        }));
+                return result;
+            },
+            [],
+        );
+        return data;
+    },
+    getParseMatchingData: (obj, userObj) => {
+        const data = _.reduce(
+            obj,
+            (result, e) => {
+                !_.isEmpty(e.tempLectureVtId) ||
+                    (!_.isNull(e.tempLectureVtId) &&
+                        result.push({
+                            timeBlockId: e.timeBlockId,
+                            lectureId: _.find(userObj, { lectureVtId: e.tempLectureVtId })?.lectureId,
+                            lectureVtId: e.tempLectureVtId,
+                        }));
+                return result;
+            },
+            [],
+        );
+        return data;
+    },
 };

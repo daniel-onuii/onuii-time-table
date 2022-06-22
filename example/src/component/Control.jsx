@@ -1,17 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { mock } from '../mock/data';
 import styled from 'styled-components';
+import { getTimetableS, getTimetableT } from '../mock/apiData';
 const Button = styled.div`
     display: inline-block;
     .active {
         background: yellow;
     }
 `;
-function Control() {
+function Control({ setDataStudent, setDataTeacher, setUserInfo, setTeacherInfo }) {
     const [isSelect, setIsSelect] = useState(false); //매칭 필터 선택 여부
-    // const [isMatching, setIsMatching] = useState(false);
     const [isAddMatching, setIsAddMatching] = useState(false); //가매칭 추가삭제
-    const [lvt, setLvt] = useState();
 
     useEffect(() => {
         window.addEventListener('message', function (e) {
@@ -31,39 +30,29 @@ function Control() {
     }, []);
 
     const handleChooseStudent = v => {
-        window.postMessage(
-            {
-                id: 'onuii-time-table',
-                name: 'setStudent',
-                data: {
-                    areaData: mock.areaData,
-                    fixedItemData: mock.fixedItemData,
-                    matchingItemData: mock.matchingItemData,
-                },
-            },
-            '*',
-        );
-        window.postMessage({ id: 'onuii-time-table', name: 'setUserData', data: mock.userData }, '*'); //선택한 LVT 전달
+        //학생 변경
+        setDataStudent(getTimetableS);
+        setUserInfo(mock.userData);
+        window.postMessage({ id: 'onuii-time-table', name: 'setSubject', data: 8906 }, '*'); //선택한 subject 전달
     };
 
     const handleChooseTeacher = v => {
+        //선생님 변경
+        setDataTeacher(getTimetableT);
+        setTeacherInfo(mock.userData);
         window.postMessage(
             {
                 id: 'onuii-time-table',
                 name: 'setTeacher',
-                data: {
-                    areaData: mock.teacherData[v],
-                    fixedItemData: mock.fixedItemData,
-                    matchingItemData: mock.matchingItemData,
-                },
+                data: getTimetableT,
+                userInfo: mock.userData,
             },
             '*',
         );
     };
 
-    const handleEnterLvt = e => {
-        setLvt(e);
-        window.postMessage({ id: 'onuii-time-table', name: 'setLvt', data: e }, '*'); //선택한 LVT 전달
+    const handleClickSubject = e => {
+        window.postMessage({ id: 'onuii-time-table', name: 'setSubject', data: e }, '*'); //선택한 subject 전달
     };
 
     const handleSave = () => {
@@ -78,17 +67,13 @@ function Control() {
                     <option onClick={() => handleChooseStudent(1)}>학생 B</option>
                 </select>
                 <Button>
-                    <button className={lvt == 8906 ? 'active' : ''} onClick={() => handleEnterLvt(8906)}>
-                        수학
-                    </button>
+                    <button onClick={() => handleClickSubject(8906)}>수학</button>
                 </Button>
                 <Button>
-                    <button className={lvt == 9168 ? 'active' : ''} onClick={() => handleEnterLvt(9168)}>
-                        국어
-                    </button>
+                    <button onClick={() => handleClickSubject(9168)}>국어</button>
                 </Button>
                 <Button>
-                    <button className={lvt == 9169 ? 'active' : ''} onClick={() => handleEnterLvt(9169)} style={{ marginRight: '5px' }}>
+                    <button onClick={() => handleClickSubject(9169)} style={{ marginRight: '5px' }}>
                         영어
                     </button>
                 </Button>

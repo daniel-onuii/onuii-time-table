@@ -17,6 +17,10 @@ const Layout = styled.div`
 `;
 
 const App = () => {
+    const [dataStudent, setDataStudent] = useState();
+    const [dataTeacher, setDataTeacher] = useState();
+    const [userInfo, setUserInfo] = useState();
+    const [teacherInfo, setTeacherInfo] = useState();
     return (
         <>
             <h1 style={{ marginLeft: '20px' }}>타임테이블</h1>
@@ -26,12 +30,12 @@ const App = () => {
                 <a>유저 - 선생님</a>
                 <OnuiiTimeTable auth={'user'} target={'teacher'} userData={mock.userData} blockData={getTimetableT} />
             </Layout>
-            <Control />
+            <Control setDataStudent={setDataStudent} setDataTeacher={setDataTeacher} setUserInfo={setUserInfo} setTeacherInfo={setTeacherInfo} />
             <Layout>
                 <a>관리자 - 학생</a>
-                <OnuiiTimeTable auth={'admin'} target={'student'} userData={mock.userData} blockData={getTimetableS} />
+                <OnuiiTimeTable auth={'admin'} target={'student'} userData={userInfo} blockData={dataStudent} />
                 <a>관리자 - 선생님</a>
-                <OnuiiTimeTable auth={'admin'} target={'teacher'} userData={mock.userData} blockData={getTimetableT} />
+                <OnuiiTimeTable auth={'admin'} target={'teacher'} userData={teacherInfo} blockData={dataTeacher} />
             </Layout>
         </>
     );

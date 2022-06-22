@@ -122,7 +122,7 @@ AreaEvent.prototype.clickUp = function (e, idx, openLectureModal, openMatchingMo
         //admin
         if (_.isEmpty(this.areaSelectHook.lecture)) {
             //셀 클릭시c
-            if (this.interfaceHook.target === 'teacher' && !_.isNull(this.interfaceHook.lvt)) {
+            if (this.interfaceHook.target === 'teacher' && !_.isNull(this.interfaceHook.subject)) {
                 const tempMatching = _.range(idx, idx + 6).map(e => {
                     return { timeBlockId: e };
                 });
