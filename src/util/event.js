@@ -21,7 +21,11 @@ AreaEvent.prototype.add = function (bindLecture, items) {
         const target = _.find(bindLecture, { timeBlockId: e.timeBlockId });
         const beforLecture = e.lectureSubjectIds ? e.lectureSubjectIds : [];
         const addData = _.uniq([...beforLecture, ...items]);
-        target ? result.push({ ...target, lectureSubjectIds: addData }) : result.push(e);
+        // if (addData.lengt > 4) {
+        //     console.log(beforLecture.sli);
+        // }
+        //addData가 4초과면 items에서 잘라야함
+        target ? result.push({ ...target, lectureSubjectIds: addData.slice(0, 4) }) : result.push(e);
         return result;
     }, []);
     this.areaHook.setAreaData([...newAreaData, ..._.differenceBy(bindLecture, this.areaHook.areaData, 'timeBlockId')]);

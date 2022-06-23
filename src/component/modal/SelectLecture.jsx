@@ -53,6 +53,12 @@ const Layout = styled.div`
         padding: 5px !important;
         font-size: 12px !important;
     }
+    input.disabled {
+        filter: brightness(80%);
+    }
+    .disabled {
+        pointer-events: none;
+    }
 `;
 function SelectLecture({ position, handleConfirm, handleRemove, handleCancel, areaObj, interfaceHook }) {
     const subject = interfaceHook.subject;
@@ -82,6 +88,20 @@ function SelectLecture({ position, handleConfirm, handleRemove, handleCancel, ar
             lecture.includes(value) ? setLecture(_.without(lecture, value)) : setLecture(_.without([...lecture, value], 'all'));
         }
     };
+    useEffect(() => {
+        const overItems = document.querySelectorAll('.lectureSelect input:not(:checked)');
+        if (lecture.length >= 4) {
+            _.flatMap(overItems).map(e => {
+                e.classList.add('disabled');
+                e.nextSibling.classList.add('disabled');
+            });
+        } else {
+            _.flatMap(overItems).map(e => {
+                e.classList.remove('disabled');
+                e.nextSibling.classList.remove('disabled');
+            });
+        }
+    }, [lecture]);
     useEffect(() => {
         setMessage('');
         const inputKey = e => {
@@ -128,7 +148,7 @@ function SelectLecture({ position, handleConfirm, handleRemove, handleCancel, ar
                     <span>{`${schedule.getWeekText(areaObj.endOverDayIdx)} ${schedule.getTime(areaObj.endOverIdx)}`}</span>
                     <span>({(areaObj.endOverIdx - areaObj.startOverIdx) * 15}분)</span>
                 </div>
-                <div style={{ display: 'inline-block' }}>
+                <div className={'lectureSelect'} style={{ display: 'inline-block' }}>
                     {visibleList.map((e, i) => {
                         return (
                             <React.Fragment key={i}>
