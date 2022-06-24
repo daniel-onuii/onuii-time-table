@@ -3,11 +3,11 @@ export const area = {
     getAreaGroupData: function (data) {
         let seq = 0;
         const rowData = _.sortBy(data, 'timeBlockId').reduce((result, e) => {
-            const isCheckSeq =
+            const isCheckEqual =
                 result.slice(-1)[0]?.timeBlockId === e.timeBlockId - 1 &&
                 _.isEqual(_.sortBy(result.slice(-1)[0]?.lectureSubjectIds), _.sortBy(e.lectureSubjectIds));
             result.push({
-                seq: isCheckSeq ? seq : (seq += 1),
+                seq: isCheckEqual ? seq : (seq += 1),
                 timeBlockId: e.timeBlockId,
                 lectureSubjectIds: e.lectureSubjectIds,
             });
@@ -23,52 +23,58 @@ export const area = {
             }))
             .value();
 
+        const lengthForRowData = _.sortBy(data, 'timeBlockId').reduce((result, e) => {
+            //과목의 길이값을 구하기 위한 배열
+            const isCheckEqual =
+                result.slice(-1)[0]?.timeBlockId === e.timeBlockId - 1 &&
+                _.intersection(e.lectureSubjectIds, result.slice(-1)[0]?.lectureSubjectIds).length > 0;
+            result.push({
+                seq: isCheckEqual ? seq : (seq += 1),
+                timeBlockId: e.timeBlockId,
+                lectureSubjectIds: e.lectureSubjectIds,
+                length: e.lectureSubjectIds.length,
+            });
+            return result;
+        }, []);
+        const lengthForGroup = _(lengthForRowData)
+            .groupBy(x => x.seq)
+            .map(value => ({
+                startIdx: value.slice(0, 1)[0]?.timeBlockId,
+                endIdx: value.slice(-1)[0]?.timeBlockId,
+                length: _.maxBy(value, 'length').length,
+            }))
+            .value();
         const alignObj = areaGroupObj.reduce((result, e, i) => {
             const before = result.slice(-1)[0];
-            const after = areaGroupObj[i + 1];
             const isStuckBefore =
                 e.startIdx - 1 === before?.endIdx && _.intersection(e.lectureSubjectIds, before?.lectureSubjectIds).length > 0 ? true : false;
-            const isStuckAfter =
-                e.endIdx + 1 === after?.startIdx && _.intersection(e.lectureSubjectIds, after?.lectureSubjectIds).length > 0 ? true : false;
-
-            //버그있다
-            const newLength = _.max([
-                isStuckBefore ? before?.lectureSubjectIds.length : e.lectureSubjectIds.length,
-                isStuckAfter ? after?.lectureSubjectIds.length : e.lectureSubjectIds.length,
-                e.lectureSubjectIds.length,
-            ]);
             const getAlignByBeforeData = () => {
                 const $this = e.lectureSubjectIds;
                 const like = _.intersection($this, before?.lectureSubjectIds);
                 const xor = _.xor(like, $this);
-                // console.log('before', before?.lectureSubjectIds);
-                // console.log('this', $this);
-                // console.log('like', like);
-                // console.log('xor', xor);
-                // console.log('newLength', newLength);
-
-                const alignLectures = before?.lectureSubjectIds.reduce((r, ee, ii) => {
+                const alignLectures = before?.lectureSubjectIds.reduce((r, ee) => {
                     const targetIdx = $this.indexOf(ee);
                     targetIdx > -1 ? r.push($this[targetIdx]) : r.push(Number(_.join(xor.splice(0, 1))));
                     return r;
                 }, []);
-
                 if (before?.lectureSubjectIds.length < $this.length) {
                     return [...alignLectures, ..._.difference(xor, alignLectures)];
                 } else {
                     return alignLectures;
                 }
             };
-            console.log(getAlignByBeforeData());
+            const barLength = _.find(lengthForGroup, function (o) {
+                return _.inRange(e.startIdx, o.startIdx, o.endIdx + 1);
+            });
+
             const row = {
                 ...e,
-                newLength: newLength,
+                newLength: barLength.length,
                 lectureSubjectIds: isStuckBefore ? getAlignByBeforeData() : e.lectureSubjectIds,
             };
             result.push(row);
             return result;
         }, []);
-
         return alignObj;
     },
 };

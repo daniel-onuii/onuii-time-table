@@ -47,8 +47,6 @@ function LectureItem({ id, idx, areaHook, interfaceHook }) {
         const getGroupIdx = _.find(areaHook.areaGroupData, e => {
             return _.inRange(idx, e.startIdx, e.endIdx + 1);
         });
-        // console.log(getGroupIdx);
-        console.log(getGroupIdx?.newLength, getGroupIdx);
         setLength(getGroupIdx?.newLength);
         setSeq(_.indexOf(getGroupIdx?.lectureSubjectIds, id));
     }, [areaHook.areaGroupData]);
