@@ -21,10 +21,7 @@ AreaEvent.prototype.add = function (bindLecture, items) {
         const target = _.find(bindLecture, { timeBlockId: e.timeBlockId });
         const beforLecture = e.lectureSubjectIds ? e.lectureSubjectIds : [];
         const addData = _.uniq([...beforLecture, ...items]);
-        // if (addData.lengt > 4) {
-        //     console.log(beforLecture.sli);
-        // }
-        //addData가 4초과면 items에서 잘라야함
+        //과목은 4개까지
         target ? result.push({ ...target, lectureSubjectIds: addData.slice(0, 4) }) : result.push(e);
         return result;
     }, []);

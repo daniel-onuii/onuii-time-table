@@ -35,6 +35,11 @@ const Layout = styled.div.attrs(props => ({
         top: -5px;
     }
 `;
+const Temp = styled.div`
+    span {
+        color: red;
+    }
+`;
 function LectureItem({ id, idx, areaHook, interfaceHook }) {
     const [length, setLength] = useState(0);
     const [seq, setSeq] = useState(0);
@@ -42,7 +47,9 @@ function LectureItem({ id, idx, areaHook, interfaceHook }) {
         const getGroupIdx = _.find(areaHook.areaGroupData, e => {
             return _.inRange(idx, e.startIdx, e.endIdx + 1);
         });
-        setLength(getGroupIdx?.lectureSubjectIds?.length);
+        // console.log(getGroupIdx);
+        console.log(getGroupIdx?.newLength, getGroupIdx);
+        setLength(getGroupIdx?.newLength);
         setSeq(_.indexOf(getGroupIdx?.lectureSubjectIds, id));
     }, [areaHook.areaGroupData]);
     const $before = _.find(areaHook.areaData, { timeBlockId: idx - 1 });
@@ -65,6 +72,9 @@ function LectureItem({ id, idx, areaHook, interfaceHook }) {
         >
             <span className={`ignoreEnter`}>{isFirst ? `${lecture.getLectureName(id)}` : ''}</span>
         </Layout>
+        // <Temp>
+        //     <span className={`ignoreEnter`}>{`${lecture.getLectureName(id)}`}</span>
+        // </Temp>
     );
 }
 export default LectureItem;
