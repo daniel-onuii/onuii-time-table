@@ -3,6 +3,7 @@ export const area = {
     getAreaGroupData: function (data) {
         let seq = 0;
         const rowData = _.sortBy(data, 'timeBlockId').reduce((result, e) => {
+            //과목값의 배열. 과목의 종류가 달라지면 seq도 바뀜
             const isCheckEqual =
                 result.slice(-1)[0]?.timeBlockId === e.timeBlockId - 1 &&
                 _.isEqual(_.sortBy(result.slice(-1)[0]?.lectureSubjectIds), _.sortBy(e.lectureSubjectIds));
@@ -24,7 +25,7 @@ export const area = {
             .value();
 
         const lengthForRowData = _.sortBy(data, 'timeBlockId').reduce((result, e) => {
-            //과목의 길이값을 구하기 위한 배열
+            //과목의 길이값을 구하기 위한 배열. 연속되고 이전배열의 과목값이 다음행과 같으면 seq가 같음
             const isCheckEqual =
                 result.slice(-1)[0]?.timeBlockId === e.timeBlockId - 1 &&
                 _.intersection(e.lectureSubjectIds, result.slice(-1)[0]?.lectureSubjectIds).length > 0;
@@ -41,9 +42,10 @@ export const area = {
             .map(value => ({
                 startIdx: value.slice(0, 1)[0]?.timeBlockId,
                 endIdx: value.slice(-1)[0]?.timeBlockId,
-                length: _.maxBy(value, 'length').length,
+                length: _.maxBy(value, 'length').length, //과목길이 최대값으로 length 표시
             }))
             .value();
+
         const alignObj = areaGroupObj.reduce((result, e, i) => {
             const before = result.slice(-1)[0];
             const isStuckBefore =

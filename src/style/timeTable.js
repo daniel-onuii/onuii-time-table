@@ -50,6 +50,9 @@ table {
 .area._all {
     background: #5c55f7;
 }
+.item.equal ._all{
+    background: pink;
+}
 .area.disabled {
     opacity: 0.2;
 }

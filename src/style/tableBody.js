@@ -106,9 +106,9 @@ td {
     pointer-events: none;
 }
 
-.item.equal {
-    background: pink;
-}
+// .item.equal {
+//     background: pink;
+// }
 
 .timeText {
     position: absolute;

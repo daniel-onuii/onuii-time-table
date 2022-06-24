@@ -29,7 +29,7 @@ function TableBody(props) {
         fixed: props?.fixedItemData || [],
         matching: props?.matchingItemData || [],
     });
-    const link = new LinkAdmin(interfaceHook); //admin interface link class
+    const link = new LinkAdmin(interfaceHook, areaSelectHook, areaHook); //admin interface link class
     const areaEvent = new AreaEvent({ areaHook: areaHook, areaSelectHook: areaSelectHook, interfaceHook: interfaceHook, itemHook: itemHook });
 
     useEffect(() => {
@@ -40,10 +40,10 @@ function TableBody(props) {
     }, []);
 
     useEffect(() => {
-        //어드민에서 유저 변경시 필터 영역 초기화
-        if (interfaceHook.target === 'student') {
-            // areaSelectHook.setFilter([]);
-        }
+        // if (interfaceHook.auth === 'admin' && interfaceHook.target === 'teacher') {
+        // link.sendMessage({ name: 'responseBlockData', data: { blocks: areaHook.areaData } }); //가매칭 filter 영역 선택시 데이터 post
+    }, [areaHook.areaData]);
+    useEffect(() => {
         areaSelectHook.setMatchingTarget([]);
         areaHook.setAreaObj({});
     }, [areaHook.areaData]);
@@ -53,7 +53,9 @@ function TableBody(props) {
     }, [areaSelectHook.filter]);
 
     useEffect(() => {
-        link.sendMessage({ name: 'updateMatching', data: itemHook.matchingItemGroupData }); //추가한 가매칭 그룹 정보
+        if (interfaceHook.auth === 'admin' && interfaceHook.target === 'teacher') {
+            link.sendMessage({ name: 'responseMatchingItem', data: itemHook.matchingItemGroupData }); //추가한 가매칭 그룹 정보
+        }
     }, [itemHook.matchingItemGroupData]);
 
     // useEffect(() => {

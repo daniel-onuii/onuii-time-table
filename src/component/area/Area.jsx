@@ -80,9 +80,7 @@ function Area(props) {
                     ${areaSelectHook.filter.some(item => item.timeBlockId === idx) ? 'matching' : ''}
                     ${areaSelectHook.matchingTarget.some(item => item.timeBlockId === idx) ? 'tempMatching' : ''}
                     ${
-                        _.intersectionBy(interfaceHook.teacherData?.areaData, areaSelectHook.filter, 'timeBlockId').some(
-                            item => item.timeBlockId === idx,
-                        )
+                        _.intersectionBy(areaHook.areaData, interfaceHook.filterData, 'timeBlockId').some(item => item.timeBlockId === idx)
                             ? 'equal'
                             : ''
                     }

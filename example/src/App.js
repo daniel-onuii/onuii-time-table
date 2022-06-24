@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import Control from './component/Control';
 import { mock } from './mock/data';
 import { getTimetableS, getTimetableT } from './mock/apiData';
@@ -27,13 +27,15 @@ const App = () => {
             <Layout>
                 <a>유저 - 학생</a>
                 <OnuiiTimeTable auth={'user'} target={'student'} userData={mock.userData} blockData={getTimetableS[0]} />
-                {/* <a>유저 - 선생님</a>
+                <a>유저 - 선생님</a>
                 <OnuiiTimeTable auth={'user'} target={'teacher'} userData={mock.userData} blockData={getTimetableT[0]} />
-                <Control setDataStudent={setDataStudent} setDataTeacher={setDataTeacher} setUserInfo={setUserInfo} setTeacherInfo={setTeacherInfo} />
+            </Layout>
+            <Control setDataStudent={setDataStudent} setDataTeacher={setDataTeacher} setUserInfo={setUserInfo} setTeacherInfo={setTeacherInfo} />
+            <Layout>
                 <a>관리자 - 학생</a>
                 <OnuiiTimeTable auth={'admin'} target={'student'} userData={userInfo} blockData={dataStudent} />
                 <a>관리자 - 선생님</a>
-                <OnuiiTimeTable auth={'admin'} target={'teacher'} userData={teacherInfo} blockData={dataTeacher} /> */}
+                <OnuiiTimeTable auth={'admin'} target={'teacher'} userData={teacherInfo} blockData={dataTeacher} />
             </Layout>
         </>
     );
