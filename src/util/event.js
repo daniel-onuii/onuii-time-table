@@ -122,9 +122,9 @@ AreaEvent.prototype.clickUp = function (e, idx, openLectureModal, openMatchingMo
     } else {
         //admin
         if (_.isEmpty(this.areaSelectHook.lecture)) {
-            //셀 클릭시c
+            //셀 클릭시
             if (this.interfaceHook.target === 'teacher' && !_.isNull(this.interfaceHook.subject)) {
-                const tempMatching = _.range(idx, idx + 6).map(e => {
+                const tempMatching = _.range(idx, idx + this.interfaceHook.lessonTime.time).map(e => {
                     return { timeBlockId: e };
                 });
                 this.areaSelectHook.setMatchingTarget(tempMatching);
@@ -167,11 +167,15 @@ AreaEvent.prototype.itemDragEnd = function (e, idx) {
     e.preventDefault();
     const dropEvent = (data, setData, groupData) => {
         const endTime = idx + this.itemHook.itemObj.time - 1;
+        console.log(this.itemHook.itemObj, groupData, idx);
+        // if (idx > 34) {
+        // } else {
         const checkCrash = schedule.checkCrashItemTime(groupData, idx, endTime, this.itemHook.itemObj.lectureId);
         if (!_.isEmpty(checkCrash)) {
             // dispatch(setMessage(checkCrash)); 에러 메시지 전달해야함
             return false;
         }
+        // }
         if (idx != 0) {
             const removedLecture = _.reject(
                 [...data],

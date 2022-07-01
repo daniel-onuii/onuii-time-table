@@ -55,9 +55,10 @@ function MatchingMenu({ idx, position, close, itemHook, interfaceHook }) {
         }
     };
     useEffect(() => {
-        const lectureOption = _.find(interfaceHook.userData?.lectureData, { lectureId: subject });
-        setTime(lectureOption?.time);
-        setWeekCount(lectureOption?.weekCount);
+        // const lectureOption = _.find(interfaceHook.userData?.lectureData, { lectureId: subject });
+
+        setTime(interfaceHook.lessonTime.time);
+        setWeekCount(interfaceHook.lessonTime.weekCount);
         document.addEventListener('keydown', inputKey);
         return () => {
             document.removeEventListener('keydown', inputKey);

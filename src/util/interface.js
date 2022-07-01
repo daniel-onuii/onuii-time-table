@@ -1,5 +1,4 @@
 import _ from 'lodash';
-import { schedule } from './schedule';
 export function LinkAdmin(interfaceHook, areaSelectHook) {
     this.common = { id: 'onuii-time-table' };
     this.handler = e => {
@@ -7,9 +6,7 @@ export function LinkAdmin(interfaceHook, areaSelectHook) {
             //set interface만 처리하게
             switch (e.data.name) {
                 case 'setFilter': //학생 가매칭 필터 선택시
-                    if (interfaceHook.auth === 'admin' && interfaceHook.target === 'teacher') {
-                        interfaceHook.setFilterData(e.data.data); //선생영역 분홍필터를 위해
-                    }
+                    if (interfaceHook.auth === 'admin' && interfaceHook.target === 'teacher') interfaceHook.setFilterData(e.data.data); //선생영역 분홍필터를 위해
                     break;
                 case 'resetFilter': //학생 가매칭 필터 선택시
                     areaSelectHook.setFilter([]);
@@ -17,8 +14,8 @@ export function LinkAdmin(interfaceHook, areaSelectHook) {
                 case 'setSubject': //학생 선택시 과목
                     interfaceHook.setSubject(e.data.data);
                     break;
-                case 'save': //테이블 저장
-                    alert('saved');
+                case 'setLvt': //학생 선택시 LVT
+                    interfaceHook.setLvt(e.data.data);
                     break;
             }
         }

@@ -40,7 +40,6 @@ function TableBody(props) {
     }, []);
 
     useEffect(() => {
-        // if (interfaceHook.auth === 'admin' && interfaceHook.target === 'teacher') {
         // link.sendMessage({ name: 'responseBlockData', data: { blocks: areaHook.areaData } }); //가매칭 filter 영역 선택시 데이터 post
     }, [areaHook.areaData]);
     useEffect(() => {
@@ -53,8 +52,20 @@ function TableBody(props) {
     }, [areaSelectHook.filter]);
 
     useEffect(() => {
-        if (interfaceHook.auth === 'admin' && interfaceHook.target === 'teacher') {
-            link.sendMessage({ name: 'responseMatchingItem', data: itemHook.matchingItemGroupData }); //추가한 가매칭 그룹 정보
+        if (!_.isEmpty(itemHook.matchingItemGroupData) && interfaceHook.auth === 'admin' && interfaceHook.target === 'teacher') {
+            const handler = e => {
+                if (e.data.id === 'onuii-time-table') {
+                    switch (e.data.name) {
+                        case 'getMatchingData': //데이터 요청
+                            link.sendMessage({ name: 'responseMatchingData', data: itemHook.matchingItemGroupData }); //가매칭 filter 영역 선택시 데이터 post
+                            break;
+                    }
+                }
+            };
+            window.addEventListener('message', handler);
+            return () => {
+                window.removeEventListener('message', handler);
+            };
         }
     }, [itemHook.matchingItemGroupData]);
 

@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import App from './App';
 import { store } from './store/config';
 import { Provider } from 'react-redux';
-import _ from 'lodash';
 import { schedule } from './util/schedule';
+import _ from 'lodash';
 
 export const OnuiiTimeTable = props => {
     const [userData, setUserData] = useState();

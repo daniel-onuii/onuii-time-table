@@ -36,6 +36,11 @@ const Layout = styled.div`
     }
 `;
 function AreaMenu({ idx, position, close }) {
+    //////////////deprecated
+    //////////////deprecated
+    //////////////deprecated
+    //////////////deprecated
+    //////////////deprecated
     const userLectureInfo = [
         //유저의 가매칭 대기중인 mock data
         { lectureId: 9168, count: 1, time: 6, title: '국어' },
