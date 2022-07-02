@@ -1,10 +1,12 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 const Layout = styled.div`
+    table {
+        border-bottom: 1px solid #eee;
+    }
     th,
     td {
-        border-left: 1px solid #cdcdcd;
+        // border-left: 1px solid #eee;
         text-align: center;
         height: 21px;
         vertical-align: middle;
@@ -27,18 +29,13 @@ const Layout = styled.div`
     .head th {
         height: 30px;
         font-size: 15px;
-        color: #757575;
-    }
-    table {
-        border: 1px solid #cdcdcd;
+        color: #14033e;
     }
 `;
-function TableHead() {
-    const { message } = useSelector(state => state.trigger);
-
+function TableHead({ interfaceHook }) {
     return (
         <Layout>
-            <div style={{ height: '20px', color: 'red' }}>{message}</div>
+            <div style={{ height: '20px', color: 'red' }}>{interfaceHook.message}</div>
             <div className="head">
                 <table>
                     <thead>
@@ -50,7 +47,7 @@ function TableHead() {
                             <th>목</th>
                             <th>금</th>
                             <th>토</th>
-                            <th style={{ color: 'red' }}>일</th>
+                            <th style={{ color: '#E03522' }}>일</th>
                         </tr>
                     </thead>
                 </table>

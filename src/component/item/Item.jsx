@@ -20,40 +20,39 @@ const Layout = styled.div`
         position: absolute;
         top: 0px;
         border-radius: 5px;
-        color: black;
         box-shadow: 2px 2px 3px grey;
     }
     .lectureItem:hover {
         -webkit-filter: brightness(110%);
     }
-    .lectureItem.fixed {
-        border: 1px solid #6495ed;
-    }
-    .lectureItem.matching {
-        border: 1px solid #ec7063;
-    }
     .lectureBar {
         height: 100%;
         width: 7px;
-    }
-    .fixed .lectureBar {
-        background: #6495ed;
-    }
-    .matching .lectureBar {
-        background: #ec7063;
     }
     .lectureContents {
         width: 100%;
         border-radius: 0 5px 5px 0;
         padding: 8px 0 8px 0px;
     }
+    .lectureItem.fixed {
+        color: #122f50;
+        border: 1px solid #4f6fd2;
+    }
+    .fixed .lectureBar {
+        background: #4f6fd2;
+    }
     .fixed .lectureContents {
-        background: #6495ed;
-        -webkit-filter: brightness(215%);
+        background: #f4f4f4;
+    }
+    .lectureItem.matching {
+        color: #802b2c;
+        border: 1px solid #ff8a30;
+    }
+    .matching .lectureBar {
+        background: #ff8a30;
     }
     .matching .lectureContents {
-        background: #ec7063;
-        -webkit-filter: brightness(215%);
+        background: #fff9cf;
     }
 `;
 function Item({ itemHook, interfaceHook, idx, type, areaHook }) {
@@ -83,9 +82,9 @@ function Item({ itemHook, interfaceHook, idx, type, areaHook }) {
         <Layout>
             <div
                 className={`lectureItem ${type}`}
-                draggable={true}
-                onDragStart={handleDragStart}
-                onDragOver={table.removeOver}
+                // draggable={true}
+                // onDragStart={handleDragStart}
+                // onDragOver={table.removeOver}
                 onClick={handleClick}
                 onContextMenu={handleRightClick}
                 style={{
@@ -106,12 +105,17 @@ function Item({ itemHook, interfaceHook, idx, type, areaHook }) {
                     <br />
                     <span>
                         {itemGroupData.map(y => {
-                            return idx == y.startIdx && `${schedule.getTime(y.startTimeIdx)}~${schedule.getTime(y.endTimeIdx + 1)} `;
+                            return (
+                                idx == y.startIdx &&
+                                `${schedule.getTime(y.startTimeIdx)}
+                            ~
+                            ${schedule.getTime(y.endTimeIdx + 1)} `
+                            );
                         })}
                     </span>
                 </div>
             </div>
-            {interfaceHook.auth === 'admin' && showMenu && (
+            {interfaceHook.auth === 'admin' && showMenu && type === 'matching' && (
                 <ItemMenu itemHook={itemHook} idx={idx} position={menuPosition} close={() => setShowMenu(false)} />
             )}
         </Layout>

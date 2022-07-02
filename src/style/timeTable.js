@@ -1,6 +1,6 @@
 export const timeTable = `
 th:first-child {
-    width: 7%;
+    width: 5%;
 }
 @media (min-width: 376px) {
     width: 700px;
@@ -9,7 +9,7 @@ th:first-child {
     width: 375px;
     th:first-child {
         font-size: 10px;
-        width: 9%;
+        width: 6%;
     }
 }
 margin: auto;
@@ -26,29 +26,38 @@ table {
     -ms-user-select: none;
     user-select: none;
 }
-.area._18492 {
-    background: red;
+.area.color0 {
+    background: #F66D44;
 }
-.area._9170 {
-    background: green;
+.area.color1 {
+    background: #BE61CA;
 }
-.area._8906 {
-    background: coral;
+.area.color2 {
+    background: #FEAE65;
 }
-.area._9168 {
-    background: cornflowerblue;
+.area.color3 {
+    background: #64C2A6;
 }
-.area._9169 {
-    background: yellowgreen;
+.area.color4 {
+    background: #1F75FE;
 }
-.area._9171 {
-    background: plum;
+.area.color5 {
+    background: #FD6787;
 }
-.area._9813 {
-    background: steelblue;
+.area.color6 {
+    background: #EECA5D;
+}
+.area.color7 {
+    background: #7AC142;
+}
+.area.color8 {
+    background: #2D87BB;
+}
+.area.color9 {
+    background: #74BBFB;
 }
 .area._all {
-    background: #5c55f7;
+    background: #3AA8C2;
 }
 .item.equal ._all{
     background: pink;

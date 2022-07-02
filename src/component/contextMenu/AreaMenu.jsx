@@ -5,6 +5,11 @@ import { setMatchingItemData } from '../../store/reducer/schedule.reducer';
 import _ from 'lodash';
 import { setMessage } from '../../store/reducer/trigger.reducer';
 import { schedule } from '../../util/schedule';
+//////////////deprecated
+//////////////deprecated
+//////////////deprecated
+//////////////deprecated
+//////////////deprecated
 const Layout = styled.div`
     position: fixed;
     background: white;

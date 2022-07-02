@@ -4,17 +4,17 @@ import _ from 'lodash';
 import TableHead from './TableHead';
 import TableBody from './TableBody';
 import { timeTable } from '../style/timeTable';
+import useInterface from '../hooks/useInterface';
 const Layout = styled.div`
     ${timeTable}
 `;
 function TimeTable(props) {
+    const interfaceHook = useInterface(props);
     return (
-        <React.Fragment>
-            <Layout>
-                <TableHead />
-                <TableBody {...props} />
-            </Layout>
-        </React.Fragment>
+        <Layout>
+            <TableHead interfaceHook={interfaceHook} />
+            <TableBody {...props} interfaceHook={interfaceHook} />
+        </Layout>
     );
 }
 

@@ -5,6 +5,11 @@ import styled from 'styled-components';
 import { setAreaActiveType } from '../store/reducer/trigger.reducer';
 import { lecture } from '../util/lecture';
 import { schedule } from '../util/schedule';
+//////////////deprecated
+//////////////deprecated
+//////////////deprecated
+//////////////deprecated
+//////////////deprecated
 const Layout = styled.div`
     #cursor {
         z-index: 9999;

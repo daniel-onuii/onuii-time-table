@@ -26,32 +26,32 @@ export const schedule = {
         return idx - (this.getWeekIdx(idx) * 96 + 32);
     },
 
-    checkValidSchedule: function (endTime, startTime, fixedItemRowData, itemLectureId, dispatch) {
-        if (
-            (endTime > 101 && endTime < 128) ||
-            (endTime > 197 && endTime < 224) ||
-            (endTime > 293 && endTime < 320) ||
-            (endTime > 389 && endTime < 416) ||
-            (endTime > 485 && endTime < 512) ||
-            (endTime > 581 && endTime < 607) ||
-            endTime > 677
-        ) {
-            dispatch(setMessage('유효하지않은 범위입니다.'));
+    // checkValidSchedule: function (endTime, startTime, fixedItemRowData, itemLectureId, dispatch) {
+    //     if (
+    //         (endTime > 101 && endTime < 128) ||
+    //         (endTime > 197 && endTime < 224) ||
+    //         (endTime > 293 && endTime < 320) ||
+    //         (endTime > 389 && endTime < 416) ||
+    //         (endTime > 485 && endTime < 512) ||
+    //         (endTime > 581 && endTime < 607) ||
+    //         endTime > 677
+    //     ) {
+    //         dispatch(setMessage('유효하지않은 범위입니다.'));
 
-            return false;
-        } else {
-            const isInvalidEndtime = fixedItemRowData.some(
-                item => item.lectureId !== itemLectureId && (item.timeBlockId === endTime || item.timeBlockId === endTime + 2),
-            );
-            const isInvalidStart = fixedItemRowData.some(item => item.lectureId !== itemLectureId && item.timeBlockId === startTime - 2);
-            if (isInvalidEndtime || isInvalidStart) {
-                dispatch(setMessage('강의 사이에 최소 30분의 시간이 필요합니다.'));
-                return false;
-            } else {
-                return true;
-            }
-        }
-    },
+    //         return false;
+    //     } else {
+    //         const isInvalidEndtime = fixedItemRowData.some(
+    //             item => item.lectureId !== itemLectureId && (item.timeBlockId === endTime || item.timeBlockId === endTime + 2),
+    //         );
+    //         const isInvalidStart = fixedItemRowData.some(item => item.lectureId !== itemLectureId && item.timeBlockId === startTime - 2);
+    //         if (isInvalidEndtime || isInvalidStart) {
+    //             dispatch(setMessage('강의 사이에 최소 30분의 시간이 필요합니다.'));
+    //             return false;
+    //         } else {
+    //             return true;
+    //         }
+    //     }
+    // },
 
     checkCrashItemTime: (targetGroupData, startTime, endTime, id) => {
         // 과목 이동과 따로 써야할듯

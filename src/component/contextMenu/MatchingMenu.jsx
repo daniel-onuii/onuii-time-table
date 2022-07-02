@@ -1,9 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
-// import { setMatchingItemData } from '../../store/reducer/schedule.reducer';
 import _ from 'lodash';
-import { setMessage } from '../../store/reducer/trigger.reducer';
 import { schedule } from '../../util/schedule';
 const Layout = styled.div`
     position: fixed;
@@ -36,7 +33,6 @@ const Layout = styled.div`
     }
 `;
 function MatchingMenu({ idx, position, close, itemHook, interfaceHook }) {
-    const dispatch = useDispatch();
     const [time, setTime] = useState();
     const [weekCount, setWeekCount] = useState();
     const subject = interfaceHook.subject;
@@ -55,8 +51,6 @@ function MatchingMenu({ idx, position, close, itemHook, interfaceHook }) {
         }
     };
     useEffect(() => {
-        // const lectureOption = _.find(interfaceHook.userData?.lectureData, { lectureId: subject });
-
         setTime(interfaceHook.lessonTime.time);
         setWeekCount(interfaceHook.lessonTime.weekCount);
         document.addEventListener('keydown', inputKey);
@@ -69,13 +63,13 @@ function MatchingMenu({ idx, position, close, itemHook, interfaceHook }) {
         if (_.isEmpty(interfaceHook.userData)) return false;
         const lessonCount = _.filter(itemHook.matchingItemGroupData, { lectureId: subject }).length;
         if (lessonCount >= weekCount) {
-            dispatch(setMessage('횟수가 초과됨.'));
+            interfaceHook.setMessage('횟수가 초과됨.');
             return false;
         } else {
             const endTime = idx - 1 + time;
             const checkCrash = schedule.checkCrashItemTime(itemHook.matchingItemGroupData, idx, endTime, subject);
             if (!_.isEmpty(checkCrash)) {
-                dispatch(setMessage(checkCrash));
+                interfaceHook.setMessage(checkCrash);
                 return false;
             }
             const data = _.range(idx, idx + time).map((e, i) => {

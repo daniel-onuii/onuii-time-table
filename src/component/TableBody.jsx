@@ -8,7 +8,6 @@ import LectureItem from './area/LectureItem';
 import useAreaData from '../hooks/useAreaData';
 import useItemData from '../hooks/useItemData';
 import useAreaSelectData from '../hooks/useAreaSelectData';
-import useInterface from '../hooks/useInterface';
 import { schedule } from '../util/schedule';
 import { table } from '../util/table';
 import { distData } from '../mock/distData';
@@ -21,8 +20,8 @@ const Layout = styled.div`
 
 function TableBody(props) {
     const tableRef = useRef();
+    const interfaceHook = props.interfaceHook;
     const timeListData = schedule.getTimeList();
-    const interfaceHook = useInterface(props);
     const areaSelectHook = useAreaSelectData();
     const areaHook = useAreaData(props?.areaData || []);
     const itemHook = useItemData({
@@ -84,7 +83,11 @@ function TableBody(props) {
                             return (
                                 <React.Fragment key={i}>
                                     <tr className={isOntime ? 'onTime' : ''}>
-                                        {isOntime ? <th rowSpan="4">{e}</th> : null}
+                                        {isOntime ? (
+                                            <th rowSpan="4" className={i >= 40 ? 'night' : 'day'}>
+                                                {e.split(':')[0]}시
+                                            </th>
+                                        ) : null}
                                         {_.range(0, 7).map((e, ii) => {
                                             const idx = table.getBlockId(e, i);
                                             const level = _.find(distData, { timeBlockId: idx })?.level;
@@ -142,6 +145,7 @@ function TableBody(props) {
                     </tbody>
                 </table>
             </div>
+            {/* <div style={{ width: 'calc(100% - 4px)', borderBottom: '1px solid #cdcdcd' }}></div> */}
         </Layout>
     );
 }

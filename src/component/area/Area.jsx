@@ -69,15 +69,15 @@ function Area(props) {
                 onMouseDown={handleAreaDown}
                 onMouseOver={handleAreaOver}
                 onMouseUp={handleAreaUp}
-                onDrop={handleItemDrop}
-                onDragEnter={handleDragEnter}
                 onContextMenu={e => e.preventDefault()}
-                onDragOver={e => e.preventDefault()}
+                // onDrop={handleItemDrop}
+                // onDragEnter={handleDragEnter}
+                // onDragOver={e => e.preventDefault()}
                 className={
                     `item
-                    ${areaHook.areaData.some(item => item.timeBlockId === idx) ? 'active' : ''}
+                    ${/*areaHook.areaData.some(item => item.timeBlockId === idx) ? 'active' : ''*/ ''}
                     ${areaSelectHook.lecture.some(item => item.timeBlockId === idx) ? 'dragging' : ''}
-                    ${areaSelectHook.filter.some(item => item.timeBlockId === idx) ? 'matching' : ''}
+                    ${areaSelectHook.filter.some(item => item.timeBlockId === idx) ? 'filter' : ''}
                     ${areaSelectHook.matchingTarget.some(item => item.timeBlockId === idx) ? 'tempMatching' : ''}
                     ${
                         _.intersectionBy(areaHook.areaData, interfaceHook.filterData, 'timeBlockId').some(item => item.timeBlockId === idx)

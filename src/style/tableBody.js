@@ -1,6 +1,7 @@
 export const tableBody = `
 table {
-    border-right: 1px solid #cdcdcd;
+    // border-left: 1px solid #cdcdcd;
+    // border-right: 1px solid #cdcdcd;
 }
 @media (min-width: 376px) {
     td {
@@ -9,7 +10,7 @@ table {
 }
 @media (max-width: 375px) {
     td {
-        height: 16px;
+        height: 21px;
     }
 }
 .contents {
@@ -24,10 +25,12 @@ table {
     }
 }
 .onTime {
-    border-top: 1px solid #cdcdcd;
+    // border-top: 1px solid #eee;
+    box-shadow: 0px 1px 0px #eee inset;
 }
 tr:first-child,
 tr:last-child {
+    box-shadow:none;
     border-top: none;
     border-bottom: none;
 }
@@ -35,9 +38,14 @@ tr:last-child {
     font-size: 15px;
     color: #757575;
 }
+th:first-child{
+    border:none;
+}
 th,
 td {
-    border-left: 1px solid #cdcdcd;
+    // border-left: 1px solid #eee;
+
+    box-shadow: 1px 0px 0px #eee inset;
     text-align: center;
     vertical-align: middle;
     width: 10%;
@@ -46,13 +54,16 @@ td {
     border-spacing: 0;
     font-size: 12px;
 }
+th.day{color:#E96108;}
+th.night{color:#171868;}
 .item {
     height: 100%;
     width: 100%;
-    top: 0px;
+    // top: 0px;
     z-index: 0;
-    color: #b3b3b3;
-    display: flex;
+    color: #fff;
+    // font-weight:bold;
+    // display: flex;
 }
 .item:hover {
     cursor: cell;
@@ -81,17 +92,17 @@ td {
     z-index: 0;
 }
 .item.dragging {
-    background: #01a8fe !important;
+    background: #4F6FD2 !important;
     color: white;
 }
-.item.matching {
+.item.filter {
     // background-color: rgba(165, 210, 255, 0.4);
     // background-image: linear-gradient(90deg, rgba(165, 210, 255, 0.3) 50%, transparent 50%),
     //     linear-gradient(rgba(165, 210, 255, 0.3) 50%, transparent 50%);
     // background-size: 20px 20px;
-    background: green;
+    background: #FEC92F;
 }
-.item.matching .area,
+.item.filter .area,
 .item.dragging .area,
 .item.over .area,
 .item.tempMatching .area {
@@ -99,7 +110,7 @@ td {
 }
 
 .item.tempMatching {
-    box-shadow: 100vw 100vh 0px yellow inset;
+    box-shadow: 100vw 100vh 0px #FEC92F inset;
 }
 
 .ignoreEnter {

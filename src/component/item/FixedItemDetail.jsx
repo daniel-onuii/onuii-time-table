@@ -19,6 +19,10 @@ const Layout = styled.div`
         z-index: 5;
     }
 `;
+///////deprecated
+///////deprecated
+///////deprecated
+///////deprecated
 function FixedItemDetail({ idx }) {
     const { fixedItemData, fixedItemGroupData } = useSelector(state => state.schedule);
     const itemLectureName = lecture.getLectureNameByIdx(fixedItemData, idx);
