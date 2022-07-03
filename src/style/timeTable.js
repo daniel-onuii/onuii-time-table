@@ -57,7 +57,7 @@ table {
     background: #74BBFB;
 }
 .area._all {
-    background: #3AA8C2;
+    background: #AADEA7;
 }
 .item.equal ._all{
     background: pink;

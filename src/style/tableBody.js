@@ -44,7 +44,6 @@ th:first-child{
 th,
 td {
     // border-left: 1px solid #eee;
-
     box-shadow: 1px 0px 0px #eee inset;
     text-align: center;
     vertical-align: middle;
@@ -59,11 +58,11 @@ th.night{color:#171868;}
 .item {
     height: 100%;
     width: 100%;
-    // top: 0px;
+    top: 0px;
     z-index: 0;
     color: #fff;
-    // font-weight:bold;
-    // display: flex;
+    font-weight:bold;
+    display: flex;
 }
 .item:hover {
     cursor: cell;
@@ -81,9 +80,12 @@ th.night{color:#171868;}
     color: white;
     z-index: 1;
 }
-.weekend {
-    background: #fef0f7;
-}
+// .onTime .weekend .item {
+//     box-shadow: 0px -20px 0px #FFF5F0 inset;
+// }
+// .weekend .item {
+//     box-shadow: 100vw 0px 0px #FFF5F0 inset;
+// }
 .item.over {
     background: #fa8072 !important;
     position: absolute;
