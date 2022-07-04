@@ -18,16 +18,21 @@ const Layout = styled.div`
         padding-bottom: 15px;
     }
     .modalLectureBox {
-        position: absolute;
+        position: fixed;
+        // position: absolute;
+        // top: 20px;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+
         padding: 15px;
         z-index: 9999999;
         background: white;
         border: 1px solid #cdcdcd;
         border-radius: 4px;
-        top: 20px;
         background: white;
         color: black;
-        width: 400px;
+        width: 300px;
     }
     .modalLectureBox input {
         width: 15px !important;
@@ -35,8 +40,8 @@ const Layout = styled.div`
     }
     .modalLectureBox label {
         cursor: pointer;
-        padding-left: 10px;
-        padding-right: 15px;
+        padding-left: 5px;
+        // padding-right: 15px;
     }
     .buttons div {
         margin-right: 5px;
@@ -58,6 +63,12 @@ const Layout = styled.div`
     }
     .disabled {
         pointer-events: none;
+    }
+    span.lectureName {
+        font-weight: bold;
+        margin-right: 4px;
+        color: #fff;
+        padding: 1px 10px;
     }
 `;
 function SelectLecture({ position, handleConfirm, handleRemove, handleCancel, areaObj, interfaceHook }) {
@@ -135,14 +146,15 @@ function SelectLecture({ position, handleConfirm, handleRemove, handleCancel, ar
         };
     }, [lecture]);
 
-    useEffect(() => {
-        position.x + boxRef.current.clientWidth >= document.body.clientWidth
-            ? setDynamicX(document.body.clientWidth - boxRef.current.clientWidth - 2)
-            : setDynamicX(position.x);
-    }, []);
+    // useEffect(() => {
+    // position.x + boxRef.current.clientWidth >= document.body.clientWidth
+    //     ? setDynamicX(document.body.clientWidth - boxRef.current.clientWidth - 2)
+    //     : setDynamicX(position.x);
+    // }, []);
     return (
         <Layout>
-            <div ref={boxRef} className={'modalLectureBox'} style={{ left: dynamicX, top: position.y }}>
+            {/* <div ref={boxRef} className={'modalLectureBox'} style={{ left: dynamicX, top: position.y }}> */}
+            <div ref={boxRef} className={'modalLectureBox'}>
                 <div className={'timeInfo'}>
                     <span>{`${schedule.getWeekText(areaObj.startOverDayIdx)} ${schedule.getTime(areaObj.startOverIdx)}`}</span> {` ~ `}
                     <span>{`${schedule.getWeekText(areaObj.endOverDayIdx)} ${schedule.getTime(areaObj.endOverIdx)}`}</span>
@@ -152,15 +164,25 @@ function SelectLecture({ position, handleConfirm, handleRemove, handleCancel, ar
                     {visibleList.map((e, i) => {
                         return (
                             <React.Fragment key={i}>
-                                {i == 4 && <br />}
-                                <div style={{ display: 'inline-block' }}>
+                                <div>
                                     <Input
-                                        text={e.lecture_name}
+                                        // text={`${e.lecture_name} 주3회 50분`}
                                         id={e.lectureId}
                                         value={e.lectureId}
                                         checked={lecture.includes(e.lectureId)}
                                         handleChange={handleLecture}
-                                    />
+                                    >
+                                        <label htmlFor={e.lectureId} id={e.lectureId}>
+                                            <span className={`lectureName ${interfaceHook.target === 'student' ? `color${i}` : ''}`}>
+                                                {e.lecture_name}
+                                            </span>
+                                            {interfaceHook.target === 'student'
+                                                ? ` ${`주${Number(e.lesson_time?.split('_')[0]?.replace('W', ''))}회 ${Number(
+                                                      e.lesson_time?.split('_')[1]?.replace('H', ''),
+                                                  )}분`} `
+                                                : ''}
+                                        </label>
+                                    </Input>
                                 </div>
                             </React.Fragment>
                         );
@@ -173,7 +195,6 @@ function SelectLecture({ position, handleConfirm, handleRemove, handleCancel, ar
                     <Button color={'blue'} text={'추가'} handleClick={() => handleConfirmExtend('add')} />
                     <Button color={'red'} text={'삭제'} handleClick={() => handleConfirmExtend('pop')} />
                     <Button color={'red'} text={'초기화'} handleClick={handleRemove} />
-                    {/* <Button color={'blue'} text={'설정'} handleClick={() => handleConfirmExtend('set')} /> */}
                     <Button color={'grey'} text={'취소'} handleClick={handleCancel} />
                 </div>
             </div>

@@ -8,11 +8,12 @@ const Layout = styled.div`
         font-size: 0.875rem;
     }
 `;
-function Input({ text, id, value, checked, handleChange }) {
+function Input({ text, id, value, checked, handleChange, children }) {
     return (
         <Layout>
             <input type="checkbox" id={id} value={value} onChange={handleChange} checked={checked} />
-            <label htmlFor={id}>{text}</label>
+            {/* <label htmlFor={id}>{text}</label> */}
+            {children}
         </Layout>
     );
 }

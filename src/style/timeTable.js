@@ -26,34 +26,34 @@ table {
     -ms-user-select: none;
     user-select: none;
 }
-.area.color0 {
+.color0 {
     background: #F66D44;
 }
-.area.color1 {
+.color1 {
     background: #BE61CA;
 }
-.area.color2 {
+.color2 {
     background: #FEAE65;
 }
-.area.color3 {
+.color3 {
     background: #64C2A6;
 }
-.area.color4 {
+.color4 {
     background: #1F75FE;
 }
-.area.color5 {
+.color5 {
     background: #FD6787;
 }
-.area.color6 {
+.color6 {
     background: #EECA5D;
 }
-.area.color7 {
+.color7 {
     background: #7AC142;
 }
-.area.color8 {
+.color8 {
     background: #2D87BB;
 }
-.area.color9 {
+.color9 {
     background: #74BBFB;
 }
 .area._all {

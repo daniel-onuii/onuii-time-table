@@ -14,7 +14,7 @@ function useInterface(props) {
     }, [props.userData]);
 
     useEffect(() => {
-        const lectureData = _.find(userData?.lectureData, { lectureVtId: lvt });
+        const lectureData = _.find(userData?.lectureData, { lectureVtId: Number(lvt) });
         setLessonTime({
             weekCount: Number(lectureData?.lesson_time?.split('_')[0]?.replace('W', '')),
             time: Number(lectureData?.lesson_time?.split('_')[1]?.replace('H', '')) / 15,
