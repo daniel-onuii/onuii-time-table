@@ -23,8 +23,8 @@ const Layout = styled.div`
     line-height: 1.75;
     letter-spacing: 0.02857em;
     text-transform: uppercase;
-    min-width: 64px;
-    padding: 6px 16px;
+    min-width: 55px;
+    padding: 2px 7px;
     border-radius: 4px;
     color: white;
     &.blue {

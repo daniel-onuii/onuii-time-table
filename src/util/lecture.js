@@ -35,6 +35,9 @@ export const lecture = {
                 endIdx: value.slice(-1)[0]?.timeBlockId,
                 startTimeIdx: schedule.getTimeIdx(value.slice(0, 1)[0]?.timeBlockId),
                 endTimeIdx: schedule.getTimeIdx(value.slice(-1)[0]?.timeBlockId),
+                startTime: schedule.getTime(schedule.getTimeIdx(value.slice(0, 1)[0]?.timeBlockId)),
+                endTime: schedule.getTime(schedule.getTimeIdx(value.slice(-1)[0]?.timeBlockId) + 1),
+                weekText: `${schedule.getWeekText(value[0]?.week)}요일`,
             }))
             .value();
         return possibleObj;

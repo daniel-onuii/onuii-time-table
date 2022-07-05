@@ -68,7 +68,7 @@ const Layout = styled.div`
         font-weight: bold;
         margin-right: 4px;
         color: #fff;
-        padding: 1px 10px;
+        padding: 3px 10px;
     }
 `;
 function SelectLecture({ position, handleConfirm, handleRemove, handleCancel, areaObj, interfaceHook }) {
@@ -164,7 +164,7 @@ function SelectLecture({ position, handleConfirm, handleRemove, handleCancel, ar
                     {visibleList.map((e, i) => {
                         return (
                             <React.Fragment key={i}>
-                                <div>
+                                <div style={{ margin: '5px' }}>
                                     <Input
                                         // text={`${e.lecture_name} 주3회 50분`}
                                         id={e.lectureId}
