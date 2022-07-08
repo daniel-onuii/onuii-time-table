@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import App from './App';
 import { store } from './store/config';
 import { Provider } from 'react-redux';
 import { schedule } from './util/schedule';
 import _ from 'lodash';
 
-export const OnuiiTimeTable = props => {
+export const OnuiiTimeTable = memo(props => {
     const [userData, setUserData] = useState();
     const [areaData, setAreaData] = useState();
     const [fixedItemData, setFixedItemData] = useState();
@@ -21,4 +21,4 @@ export const OnuiiTimeTable = props => {
             <App {...props} userData={userData} areaData={areaData} fixedItemData={fixedItemData} matchingItemData={matchingItemData} />
         </Provider>
     );
-};
+});

@@ -42,7 +42,7 @@ table {
     background: #1F75FE;
 }
 .color5 {
-    background: #FD6787;
+    background: #74BBFB;
 }
 .color6 {
     background: #EECA5D;

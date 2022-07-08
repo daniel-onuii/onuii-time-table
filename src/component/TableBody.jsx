@@ -39,11 +39,33 @@ function TableBody(props) {
     }, []);
 
     useEffect(() => {
-        // link.sendMessage({ name: 'responseBlockData', data: { blocks: areaHook.areaData } }); //가매칭 filter 영역 선택시 데이터 post
+        if (interfaceHook.auth === 'user') {
+            const handler = e => {
+                if (e.data.id === 'onuii-time-table') {
+                    switch (e.data.name) {
+                        case 'getBlockData': //데이터 요청
+                            const reName = areaHook.areaData.reduce((result, e) => {
+                                result.push({
+                                    timeBlockId: e.timeBlockId,
+                                    lectureSubjectId: e.lectureSubjectIds,
+                                });
+                                return result;
+                            }, []);
+                            link.sendMessage({ name: 'responseBlockData', data: reName }); //가매칭 filter 영역 선택시 데이터 post
+                            break;
+                    }
+                }
+            };
+            window.addEventListener('message', handler);
+            return () => {
+                window.removeEventListener('message', handler);
+            };
+        }
     }, [areaHook.areaData]);
     useEffect(() => {
         areaSelectHook.setMatchingTarget([]);
         areaHook.setAreaObj({});
+        // console.log('check validation', interfaceHook.userData?.lectureData, areaHook.areaData);
     }, [areaHook.areaData]);
 
     useEffect(() => {
