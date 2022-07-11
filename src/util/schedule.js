@@ -161,12 +161,17 @@ export const schedule = {
             if (groupByWeek.length < weekCount) {
                 //요일 카운트 체크 (주n회 체크)
                 result.isSuccess = false;
+                result.failType = 'week';
+                result.weekCount = weekCount;
+                result.checkLength = groupByWeek.length;
                 result.message = `설정한 과외 요일이 조건값보다 적습니다.(주 ${weekCount}회 신청 / 주 ${groupByWeek.length}회 설정됨)`;
             } else if (
                 !_.isEmpty(_.find(groupByWeek, { isPass: false })) && //요일의 과외 기본시간 미만값 유무 체크
                 _.filter(groupByWeek, { isPass: true }).length < weekCount //요일 카운트까지 모자르면 에러
             ) {
                 result.isSuccess = false;
+                result.failType = 'time';
+                result.time = time * 15;
                 result.message = `설정한 과외 시간이 조건값보다 적습니다.(회당 ${time * 15}분 신청)`;
             } else {
                 result.isSuccess = true;

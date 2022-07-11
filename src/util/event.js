@@ -108,8 +108,18 @@ AreaEvent.prototype.clickUp = function (e, idx, openLectureModal, openMatchingMo
                 startOverDayIdx: schedule.getWeekIdx(idx),
                 endOverDayIdx: schedule.getWeekIdx(idx),
             });
+            const limitIdx = idx => {
+                if (idx > 101 && idx < 128) return 102;
+                else if (idx > 197 && idx < 224) return 198;
+                else if (idx > 293 && idx < 320) return 294;
+                else if (idx > 389 && idx < 416) return 390;
+                else if (idx > 485 && idx < 512) return 486;
+                else if (idx > 581 && idx < 607) return 582;
+                else if (idx > 677) return 678;
+                else return idx;
+            };
             this.areaSelectHook.setLecture(
-                _.range(idx, idx + 4).map(e => {
+                _.range(idx, limitIdx(idx + 4)).map(e => {
                     return { timeBlockId: e };
                 }),
             );

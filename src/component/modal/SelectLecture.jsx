@@ -89,7 +89,7 @@ function SelectLecture({ position, handleConfirm, handleRemove, handleCancel, ar
         }
     }, [subject, interfaceHook.target]);
     const handleConfirmExtend = type => {
-        lecture.length === 0 ? setMessage(`${type}과목 선택 안함`) : handleConfirm(type, lecture);
+        lecture.length === 0 ? setMessage(`${type === 'add' ? '추가 할 ' : '삭제 할 '}과목을 선택해주세요.`) : handleConfirm(type, lecture);
     };
     const handleLecture = e => {
         const value = Number(e.target.value);
@@ -102,6 +102,7 @@ function SelectLecture({ position, handleConfirm, handleRemove, handleCancel, ar
     useEffect(() => {
         const overItems = document.querySelectorAll('.lectureSelect input:not(:checked)');
         if (lecture.length >= 4) {
+            //최대 선택 과목 4개
             _.flatMap(overItems).map(e => {
                 e.classList.add('disabled');
                 e.nextSibling.classList.add('disabled');
@@ -173,7 +174,7 @@ function SelectLecture({ position, handleConfirm, handleRemove, handleCancel, ar
                                         handleChange={handleLecture}
                                     >
                                         <label htmlFor={e.lectureId} id={e.lectureId}>
-                                            <span className={`lectureName ${interfaceHook.target === 'student' ? `color${i}` : ''}`}>
+                                            <span className={`lectureName ${interfaceHook.target === 'student' ? `color${i}` : 'color_all'}`}>
                                                 {e.lecture_name}
                                             </span>
                                             {interfaceHook.target === 'student'

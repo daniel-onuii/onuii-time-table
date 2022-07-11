@@ -56,6 +56,10 @@ table {
 .color9 {
     background: #74BBFB;
 }
+.color_all{
+    background: #AADEA7;
+    color:#000 !important
+}
 .area._all {
     background: #AADEA7;
 }

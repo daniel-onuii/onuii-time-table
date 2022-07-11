@@ -10,7 +10,10 @@ function useAreaData(data) {
     const [isAreaAppend, setIsAreaAppend] = useState(false);
 
     useEffect(() => {
-        setAreaData(data);
+        const changeSundayDawnData = data.map(e => {
+            return e.timeBlockId <= 5 ? { ...e, timeBlockId: e.timeBlockId + 672 } : { ...e, timeBlockId: e.timeBlockId };
+        });
+        setAreaData(changeSundayDawnData);
     }, [data]);
 
     const updateAreaData = useCallback(value => {

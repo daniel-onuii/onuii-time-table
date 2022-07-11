@@ -46,8 +46,9 @@ function TableBody(props) {
                         case 'getBlockData': //데이터 요청
                             const reName = areaHook.areaData.reduce((result, e) => {
                                 result.push({
-                                    timeBlockId: e.timeBlockId,
-                                    lectureSubjectId: e.lectureSubjectIds,
+                                    // timeBlockId: e.timeBlockId,
+                                    timeBlockId: e.timeBlockId > 671 ? e.timeBlockId - 672 : e.timeBlockId,
+                                    lectureSubjectId: _.without(e.lectureSubjectIds, 'all'), //선생님차트 또는 학생 null 데이터때 표시하던 all 더미 값 제거
                                 });
                                 return result;
                             }, []);
