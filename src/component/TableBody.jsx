@@ -51,7 +51,9 @@ function TableBody(props) {
                                 });
                                 return result;
                             }, []);
-                            link.sendMessage({ name: 'responseBlockData', data: reName }); //가매칭 filter 영역 선택시 데이터 post
+                            const userLectureInfo = interfaceHook.userData.lectureData;
+                            const checkValidation = schedule.checkAreaValidation(userLectureInfo, areaHook.areaData);
+                            link.sendMessage({ name: 'responseBlockData', data: reName, validation: checkValidation }); //가매칭 filter 영역 선택시 데이터 post
                             break;
                     }
                 }
@@ -78,7 +80,10 @@ function TableBody(props) {
                 if (e.data.id === 'onuii-time-table') {
                     switch (e.data.name) {
                         case 'getMatchingData': //데이터 요청
-                            link.sendMessage({ name: 'responseMatchingData', data: itemHook.matchingItemGroupData }); //가매칭 filter 영역 선택시 데이터 post
+                            link.sendMessage({
+                                name: 'responseMatchingData',
+                                data: _.filter(itemHook.matchingItemGroupData, { lectureId: interfaceHook.subject }),
+                            }); //가매칭 filter 영역 선택시 데이터 post
                             break;
                     }
                 }

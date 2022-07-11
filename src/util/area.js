@@ -1,5 +1,30 @@
 import _ from 'lodash';
+import { schedule } from './schedule';
 export const area = {
+    getAreaGroupDataByLecture: function (data, lectureId) {
+        let seq = 0;
+        const rowData = _.sortBy(data, 'timeBlockId').reduce((result, e) => {
+            //과목값의 배열. 과목의 종류가 달라지면 seq도 바뀜
+            const isCheckEqual = result.slice(-1)[0]?.timeBlockId === e.timeBlockId - 1;
+            result.push({
+                seq: isCheckEqual ? seq : (seq += 1),
+                timeBlockId: e.timeBlockId,
+                lectureSubjectId: lectureId,
+            });
+            return result;
+        }, []);
+        const areaGroupObj = _(rowData)
+            .groupBy(x => x.seq)
+            .map((value, key) => ({
+                seq: key,
+                weekIdx: schedule.getWeekIdx(value.slice(0, 1)[0]?.timeBlockId),
+                lectureSubjectId: lectureId,
+                startIdx: value.slice(0, 1)[0]?.timeBlockId,
+                endIdx: value.slice(-1)[0]?.timeBlockId,
+            }))
+            .value();
+        return areaGroupObj;
+    },
     getAreaGroupData: function (data) {
         let seq = 0;
         const rowData = _.sortBy(data, 'timeBlockId').reduce((result, e) => {

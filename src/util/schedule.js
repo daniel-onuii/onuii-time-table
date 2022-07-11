@@ -1,5 +1,6 @@
 import moment from 'moment';
 import { setMessage } from '../store/reducer/trigger.reducer';
+import { area } from './area';
 import _ from 'lodash';
 export const schedule = {
     getWeekIdx: function (idx) {
@@ -134,5 +135,44 @@ export const schedule = {
             [],
         );
         return data;
+    },
+    checkAreaValidation: (userLectureInfo, areaData) => {
+        const checkValidation = userLectureInfo.map(e => {
+            //제약조건 체크
+            const weekCount = Number(e.lesson_time?.split('_')[0].replace('W', ''));
+            const time = Number(e.lesson_time?.split('_')[1].replace('H', '')) / 15;
+            const thisLecture = e.lectureId;
+            const includeLectureRowData = _.filter(areaData, function (o) {
+                return _.includes(o.lectureSubjectIds, thisLecture);
+            });
+            const groupData = area.getAreaGroupDataByLecture(includeLectureRowData, thisLecture); //과목별 그룹
+            const groupByWeek = _(groupData)
+                .groupBy(x => x.weekIdx)
+                .map((value, key) => ({
+                    seq: key,
+                    weekIdx: value,
+                    isPass: !_.isEmpty(_.find(value, o => o.endIdx + 1 - o.startIdx >= time)),
+                }))
+                .value();
+            const result = {
+                lectureId: e.lectureId,
+                lecture_name: e.lecture_name,
+            };
+            if (groupByWeek.length < weekCount) {
+                //요일 카운트 체크 (주n회 체크)
+                result.isSuccess = false;
+                result.message = `설정한 과외 요일이 조건값보다 적습니다.(주 ${weekCount}회 신청 / 주 ${groupByWeek.length}회 설정됨)`;
+            } else if (
+                !_.isEmpty(_.find(groupByWeek, { isPass: false })) && //요일의 과외 기본시간 미만값 유무 체크
+                _.filter(groupByWeek, { isPass: true }).length < weekCount //요일 카운트까지 모자르면 에러
+            ) {
+                result.isSuccess = false;
+                result.message = `설정한 과외 시간이 조건값보다 적습니다.(회당 ${time * 15}분 신청)`;
+            } else {
+                result.isSuccess = true;
+            }
+            return result;
+        });
+        return checkValidation;
     },
 };

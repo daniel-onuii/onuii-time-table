@@ -32,6 +32,7 @@ const App = () => {
                 <option>test1</option>
                 <option>test2</option>
             </select>
+            <Control setDataStudent={setDataStudent} setDataTeacher={setDataTeacher} setUserInfo={setUserInfo} />
             <Layout>
                 <OnuiiTimeTable auth={'user'} target={'student'} userData={mock.userData} blockData={getTimetableS[0]} />
                 <OnuiiTimeTable auth={'user'} target={'teacher'} userData={mock.userData} blockData={getTimetableT[0]} />
