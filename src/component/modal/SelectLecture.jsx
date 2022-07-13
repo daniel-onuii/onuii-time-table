@@ -15,7 +15,7 @@ const Layout = styled.div`
     .timeInfo {
         text-align: left;
         font-size: 18px;
-        padding-bottom: 15px;
+        padding-bottom: 10px;
     }
     .modalLectureBox {
         position: fixed;
@@ -48,6 +48,7 @@ const Layout = styled.div`
         margin-top: 5px;
     }
     .message {
+        height: 15px;
         text-align: left;
         color: red;
     }
@@ -65,13 +66,20 @@ const Layout = styled.div`
         pointer-events: none;
     }
     span.lectureName {
+        border-radius: 4px;
         font-weight: bold;
         margin-right: 4px;
         color: #fff;
         padding: 3px 10px;
     }
+    .validation,
+    .alert {
+        margin-left: 5px;
+        cursor: pointer;
+    }
 `;
-function SelectLecture({ position, handleConfirm, handleRemove, handleCancel, areaObj, interfaceHook }) {
+function SelectLecture({ position, handleConfirm, handleRemove, handleCancel, areaHook, interfaceHook }) {
+    const totalMin = (areaHook.areaObj.endOverIdx - areaHook.areaObj.startOverIdx) * 15;
     const subject = interfaceHook.subject;
     const boxRef = useRef();
     const [dynamicX, setDynamicX] = useState();
@@ -79,6 +87,14 @@ function SelectLecture({ position, handleConfirm, handleRemove, handleCancel, ar
     const [message, setMessage] = useState('');
     const lectureList = interfaceHook.target === 'student' ? interfaceHook?.userData.lectureData : [{ lectureId: 'all', lecture_name: '가능' }]; //mock data
     const [visibleList, setVisibleList] = useState(lectureList);
+    const [checkValidation, setcheckValidation] = useState([]);
+    useEffect(() => {
+        const userLectureInfo = interfaceHook.userData.lectureData;
+        setcheckValidation(schedule.checkAreaValidation(userLectureInfo, areaHook.areaData));
+    }, []);
+    // useEffect(() => {
+    //     console.log(checkValidation);
+    // }, [checkValidation]);
     useEffect(() => {
         if (interfaceHook.target === 'student') {
             //학생일때
@@ -152,20 +168,27 @@ function SelectLecture({ position, handleConfirm, handleRemove, handleCancel, ar
     //     ? setDynamicX(document.body.clientWidth - boxRef.current.clientWidth - 2)
     //     : setDynamicX(position.x);
     // }, []);
+    const handleAlert = lectureId => {
+        const msgObj = _.find(checkValidation, { lectureId: lectureId });
+        alert(`${msgObj.lecture_name}${msgObj.message}`);
+        // alert(lectureId)/;
+    };
     return (
         <Layout>
             {/* <div ref={boxRef} className={'modalLectureBox'} style={{ left: dynamicX, top: position.y }}> */}
             <div ref={boxRef} className={'modalLectureBox'}>
                 <div className={'timeInfo'}>
-                    <span>{`${schedule.getWeekText(areaObj.startOverDayIdx)} ${schedule.getTime(areaObj.startOverIdx)}`}</span> {` ~ `}
-                    <span>{`${schedule.getWeekText(areaObj.endOverDayIdx)} ${schedule.getTime(areaObj.endOverIdx)}`}</span>
-                    <span>({(areaObj.endOverIdx - areaObj.startOverIdx) * 15}분)</span>
+                    <span>{`${schedule.getWeekText(areaHook.areaObj.startOverDayIdx)} ${schedule.getTime(areaHook.areaObj.startOverIdx)}`}</span>{' '}
+                    {` ~ `}
+                    <span>{`${schedule.getWeekText(areaHook.areaObj.endOverDayIdx)} ${schedule.getTime(areaHook.areaObj.endOverIdx)}`}</span>
+                    <span>({`${parseInt(totalMin / 60)}시간 ${totalMin % 60}분`})</span>
                 </div>
                 <div className={'lectureSelect'} style={{ display: 'inline-block' }}>
                     {visibleList.map((e, i) => {
+                        const isSuccess = _.find(checkValidation, { lectureId: e.lectureId })?.isSuccess;
                         return (
                             <React.Fragment key={i}>
-                                <div style={{ margin: '5px' }}>
+                                <div style={{ margin: '10px 0px', display: 'flex' }}>
                                     <Input
                                         // text={`${e.lecture_name} 주3회 50분`}
                                         id={e.lectureId}
@@ -183,7 +206,13 @@ function SelectLecture({ position, handleConfirm, handleRemove, handleCancel, ar
                                                   )}분`} `
                                                 : ''}
                                         </label>
+                                        {interfaceHook.target === 'student' && <span className="validation">{isSuccess ? '✅' : '❌'}</span>}
                                     </Input>
+                                    {!isSuccess && interfaceHook.target === 'student' && (
+                                        <span className="alert" onClick={() => handleAlert(e.lectureId)}>
+                                            💬
+                                        </span>
+                                    )}
                                 </div>
                             </React.Fragment>
                         );

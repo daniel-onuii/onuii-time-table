@@ -23,6 +23,7 @@ table {
         border-radius: 2px;
         background: #ccc;
     }
+    border-bottom: 1px solid #efefef;
 }
 .onTime {
     // border-top: 1px solid #eee;
@@ -40,6 +41,7 @@ tr:last-child {
 }
 th:first-child{
     border:none;
+    box-shadow: 0px 1px 0px #eee inset;
 }
 th,
 td {

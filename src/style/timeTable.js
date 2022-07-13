@@ -3,10 +3,10 @@ th:first-child {
     width: 5%;
 }
 @media (min-width: 376px) {
-    width: 700px;
+    // max-width: 768px;
 }
 @media (max-width: 375px) {
-    width: 375px;
+    min-width: 425px;
     th:first-child {
         font-size: 10px;
         width: 6%;
@@ -59,6 +59,9 @@ table {
 .color_all{
     background: #AADEA7;
     color:#000 !important
+}
+.color-1{
+    background: #cdcdcd;
 }
 .area._all {
     background: #AADEA7;

@@ -96,6 +96,7 @@ function Area(props) {
                     handleRemove={remove}
                     handleCancel={cancel}
                     areaObj={areaHook.areaObj}
+                    areaHook={areaHook}
                     interfaceHook={interfaceHook}
                 />
             )}

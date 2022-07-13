@@ -28,8 +28,8 @@ const Layout = styled.div`
     border-radius: 4px;
     color: white;
     &.blue {
-        border: 1px solid #3f51b5;
-        background: #3f51b5;
+        border: 1px solid rgb(92, 85, 247);
+        background: rgb(92, 85, 247);
     }
     &.red {
         border: 1px solid #ec7063;
