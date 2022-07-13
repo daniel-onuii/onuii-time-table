@@ -4,7 +4,8 @@ import styled from 'styled-components';
 import _ from 'lodash';
 const Layout = styled.div.attrs(props => ({
     className: `area _${props.lecture_id} color${props.colorIndex} ${
-        props.target === 'student' && props.auth === 'admin' && props.subject && props.subject != props.lecture_id && 'disabled'
+        // props.target === 'student' && props.auth === 'admin' && props.subject && props.subject != props.lecture_id && 'disabled'
+        props.target === 'student' && props.subject && props.subject != props.lecture_id && 'disabled'
     }`,
 }))`
     display: inline-block;
