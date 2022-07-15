@@ -15,6 +15,9 @@ function Control({ setDataStudent, setDataTeacher, setUserInfo }) {
                     case 'selectMatchingArea': //학생차트에서 선택된 filter값을 선생님 차트에 전달
                         window.postMessage({ id: 'onuii-time-table', name: 'setFilter', data: e.data.data.blocks }, '*'); //선생님 핑크 표시
                         break;
+                    case 'responseRealTimeBlockData':
+                        console.log('!', e.data);
+                        break;
                 }
             }
         });

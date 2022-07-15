@@ -56,7 +56,7 @@ function LectureItem({ id, idx, areaHook, interfaceHook }) {
     const isEqualNext = _.indexOf($next?.lectureSubjectIds, id) > -1;
     const isFirst = isEmptyBefore || !isEqualBefore;
     const isLast = isEmptyNext || !isEqualNext;
-    const colorIndex = _.findIndex(interfaceHook?.userData?.lectureData, { lectureId: id });
+    const colorIndex = interfaceHook.target === 'student' ? _.findIndex(interfaceHook?.userData?.lectureData, { lectureId: id }) : '_all';
     return (
         <Layout
             lecture_id={id}

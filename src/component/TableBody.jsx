@@ -39,19 +39,23 @@ function TableBody(props) {
     }, []);
 
     useEffect(() => {
+        const reName = areaHook.areaData.reduce((result, e) => {
+            // api 에서 사용할 ids 이름 변경로직인데 graphql로 바로 저장하지않아서 당장은 필요없어짐
+            result.push({
+                timeBlockId: e.timeBlockId > 671 ? e.timeBlockId - 672 : e.timeBlockId,
+                lectureSubjectId: _.without(e.lectureSubjectIds, 'all'), //선생님차트 또는 학생 null 데이터때 표시하던 all 더미 값 제거
+            });
+            return result;
+        }, []);
+        link.sendMessage({ name: 'responseRealTimeBlockData', data: reName }); //areaData 변경될때마다 return interface
+        areaSelectHook.setMatchingTarget([]); //초기화
+        areaHook.setAreaObj({}); //초기화
+        //----//
         if (interfaceHook.auth === 'user') {
             const handler = e => {
                 if (e.data.id === 'onuii-time-table') {
                     switch (e.data.name) {
                         case 'getBlockData': //데이터 요청
-                            const reName = areaHook.areaData.reduce((result, e) => {
-                                result.push({
-                                    // timeBlockId: e.timeBlockId,
-                                    timeBlockId: e.timeBlockId > 671 ? e.timeBlockId - 672 : e.timeBlockId,
-                                    lectureSubjectId: _.without(e.lectureSubjectIds, 'all'), //선생님차트 또는 학생 null 데이터때 표시하던 all 더미 값 제거
-                                });
-                                return result;
-                            }, []);
                             const userLectureInfo = interfaceHook.userData.lectureData;
                             const checkValidation = schedule.checkAreaValidation(userLectureInfo, areaHook.areaData);
                             link.sendMessage({ name: 'responseBlockData', data: reName, validation: checkValidation }); //가매칭 filter 영역 선택시 데이터 post
@@ -64,11 +68,6 @@ function TableBody(props) {
                 window.removeEventListener('message', handler);
             };
         }
-    }, [areaHook.areaData]);
-    useEffect(() => {
-        areaSelectHook.setMatchingTarget([]);
-        areaHook.setAreaObj({});
-        // console.log('check validation', interfaceHook.userData?.lectureData, areaHook.areaData);
     }, [areaHook.areaData]);
 
     useEffect(() => {
