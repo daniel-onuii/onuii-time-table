@@ -54,7 +54,7 @@ AreaEvent.prototype.clickDown = function (e, idx) {
         startOverDayIdx: schedule.getWeekIdx(idx),
         endOverDayIdx: schedule.getWeekIdx(idx),
     });
-    if (e.buttons !== 1) return false; //좌클릭 이외는 전부 false
+    if (e.button !== 0) return false; //좌클릭 이외는 전부 false
     if (this.interfaceHook.auth === 'admin' && this.interfaceHook.target === 'teacher') return false; //드래그 금지
     this.areaHook.setIsAreaClickDown(true); //클릭 상태
     const isFill = table.isFillArea(this.areaSelectHook.filter, idx); //가매칭모드때 사용
