@@ -108,10 +108,11 @@ function SelectLecture({ position, handleConfirm, handleRemove, handleCancel, ar
         lecture.length === 0 ? setMessage(`${type === 'add' ? '추가 할 ' : '삭제 할 '}과목을 선택해주세요.`) : handleConfirm(type, lecture);
     };
     const handleLecture = e => {
-        const value = Number(e.target.value);
+        const value = e.target.value === 'all' ? e.target.value : Number(e.target.value);
         if (value === 'all') {
             lecture.includes(value) ? setLecture(_.without(lecture, value)) : setLecture(['all']);
         } else {
+            console.log('`  ');
             lecture.includes(value) ? setLecture(_.without(lecture, value)) : setLecture(_.without([...lecture, value], 'all'));
         }
     };
