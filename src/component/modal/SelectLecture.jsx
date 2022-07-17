@@ -112,7 +112,6 @@ function SelectLecture({ position, handleConfirm, handleRemove, handleCancel, ar
         if (value === 'all') {
             lecture.includes(value) ? setLecture(_.without(lecture, value)) : setLecture(['all']);
         } else {
-            console.log('`  ');
             lecture.includes(value) ? setLecture(_.without(lecture, value)) : setLecture(_.without([...lecture, value], 'all'));
         }
     };

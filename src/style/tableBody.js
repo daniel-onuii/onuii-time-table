@@ -130,4 +130,8 @@ th.night{color:#171868;}
     right: 5px;
     z-index: 2;
 }
+.freeze{
+    touch-action: none;
+    overflow: hidden;
+}
 `;

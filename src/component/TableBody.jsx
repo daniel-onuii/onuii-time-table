@@ -135,9 +135,9 @@ function TableBody(props) {
                                                             <LectureItem key={i} id={e} idx={idx} areaHook={areaHook} interfaceHook={interfaceHook} />
                                                         ))}
                                                         {maxBlock?.timeBlockId === idx ? (
-                                                            <div className={'timeText'}>
-                                                                <span>{`${schedule.getTime(areaHook.areaObj.startOverIdx)}`}</span> {` - `}
-                                                                <span>{`${schedule.getTime(areaHook.areaObj.endOverIdx)}`}</span>
+                                                            <div id={idx} className={'timeText'}>
+                                                                <span id={idx}>{`${schedule.getTime(areaHook.areaObj.startOverIdx)}`}</span> {` - `}
+                                                                <span id={idx}>{`${schedule.getTime(areaHook.areaObj.endOverIdx)}`}</span>
                                                             </div>
                                                         ) : (
                                                             ''

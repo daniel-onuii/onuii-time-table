@@ -58,7 +58,7 @@ table {
 }
 .color_all{
     background: #AADEA7 !important;
-    color:#000 !important
+    // color:#000 !important
 }
 .color-1{
     background: #cdcdcd !important;

@@ -54,7 +54,8 @@ AreaEvent.prototype.clickDown = function (e, idx) {
         startOverDayIdx: schedule.getWeekIdx(idx),
         endOverDayIdx: schedule.getWeekIdx(idx),
     });
-    if (e.button !== 0) return false; //좌클릭 이외는 전부 false
+    console.log(idx, idx + 1, this.areaSelectHook.lecture);
+    if (!(e.button == 0 || e.touches)) return false; //좌클릭, 터치 이외는 전부 false
     if (this.interfaceHook.auth === 'admin' && this.interfaceHook.target === 'teacher') return false; //드래그 금지
     this.areaHook.setIsAreaClickDown(true); //클릭 상태
     const isFill = table.isFillArea(this.areaSelectHook.filter, idx); //가매칭모드때 사용
@@ -64,7 +65,7 @@ AreaEvent.prototype.clickDown = function (e, idx) {
 AreaEvent.prototype.clickOver = function (idx) {
     if (this.areaHook.isAreaClickDown) {
         const startOverIdx = this.areaHook.areaObj.idx;
-        const endOverIdx = idx;
+        const endOverIdx = Number(idx);
         const startOverDayIdx = schedule.getWeekIdx(startOverIdx);
         const endOverDayIdx = schedule.getWeekIdx(endOverIdx);
         const startRange = schedule.getTimeIdx(startOverIdx);
@@ -92,7 +93,8 @@ AreaEvent.prototype.clickOver = function (idx) {
     }
 };
 AreaEvent.prototype.clickUp = function (e, idx, openLectureModal, openMatchingModal) {
-    if (e.button !== 0) return false; //좌클릭일때만
+    // if (e.button !== 0) return false; //좌클릭일때만
+    if (!(e.button == 0 || e.touches)) return false; //좌클릭, 터치 이외는 전부 false
     this.areaHook.setIsAreaClickDown(false); //클릭 상태
     // if (_.isEmpty(interfaceHook?.selectMode) && interfaceHook.auth === 'user') {
     if (this.interfaceHook.auth === 'user') {
