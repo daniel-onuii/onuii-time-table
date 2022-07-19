@@ -42,11 +42,13 @@ function LectureItem({ id, idx, areaHook, interfaceHook }) {
     const [length, setLength] = useState(0);
     const [seq, setSeq] = useState(0);
     useEffect(() => {
-        const getGroupIdx = _.find(areaHook.areaGroupData, e => {
-            return _.inRange(idx, e.startIdx, e.endIdx + 1);
-        });
-        setLength(getGroupIdx?.newLength);
-        setSeq(_.indexOf(getGroupIdx?.lectureSubjectIds, id));
+        if (!_.isEmpty(areaHook.areaGroupData)) {
+            const getGroupIdx = _.find(areaHook.areaGroupData, e => {
+                return _.inRange(idx, e.startIdx, e.endIdx + 1);
+            });
+            setLength(getGroupIdx?.newLength);
+            setSeq(_.indexOf(getGroupIdx?.lectureSubjectIds, id));
+        }
     }, [areaHook.areaGroupData]);
     const $before = _.find(areaHook.areaData, { timeBlockId: idx - 1 });
     const $next = _.find(areaHook.areaData, { timeBlockId: idx + 1 });

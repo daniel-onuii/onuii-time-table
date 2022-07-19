@@ -98,7 +98,7 @@ function SelectLecture({ position, handleConfirm, handleRemove, handleCancel, ar
     useEffect(() => {
         if (interfaceHook.target === 'student') {
             //학생일때
-            !_.isNull(subject) && setVisibleList([_.find(lectureList, { lectureId: subject })]);
+            // !_.isNull(subject) && setVisibleList([_.find(lectureList, { lectureId: subject })]);
             !_.isNull(subject) && setLecture([subject]); //subject값 자동체크
         } else {
             setLecture(['all']);
@@ -188,7 +188,7 @@ function SelectLecture({ position, handleConfirm, handleRemove, handleCancel, ar
                         const isSuccess = _.find(checkValidation, { lectureId: e.lectureId })?.isSuccess;
                         return (
                             <React.Fragment key={i}>
-                                <div style={{ margin: '10px 0px', display: 'flex' }}>
+                                <div style={{ margin: '10px 0px', display: `${subject === e.lectureId ? 'flex' : 'none'}` }}>
                                     <Input
                                         // text={`${e.lecture_name} 주3회 50분`}
                                         id={e.lectureId}

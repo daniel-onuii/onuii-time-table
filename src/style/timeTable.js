@@ -1,4 +1,5 @@
 export const timeTable = `
+
 th:first-child {
     width: 5%;
 }
@@ -26,34 +27,34 @@ table {
     -ms-user-select: none;
     user-select: none;
 }
-.color0 {
+.color0,.color10 {
     background: #F66D44 !important;
 }
-.color1 {
+.color1,.color11 {
     background: #BE61CA !important;
 }
-.color2 {
+.color2,.color12 {
     background: #FEAE65 !important;
 }
-.color3 {
+.color3,.color13 {
     background: #64C2A6 !important;
 }
-.color4 {
+.color4,.color14 {
     background: #1F75FE !important;
 }
-.color5 {
+.color5,.color15 {
     background: #74BBFB !important;
 }
-.color6 {
+.color6,.color16 {
     background: #EECA5D !important;
 }
-.color7 {
+.color7,.color17 {
     background: #7AC142 !important;
 }
-.color8 {
+.color8,.color18 {
     background: #2D87BB !important;
 }
-.color9 {
+.color9,.color19 {
     background: #74BBFB !important;
 }
 .color_all{

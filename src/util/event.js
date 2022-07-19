@@ -54,7 +54,6 @@ AreaEvent.prototype.clickDown = function (e, idx) {
         startOverDayIdx: schedule.getWeekIdx(idx),
         endOverDayIdx: schedule.getWeekIdx(idx),
     });
-    console.log(idx, idx + 1, this.areaSelectHook.lecture);
     if (!(e.button == 0 || e.touches)) return false; //좌클릭, 터치 이외는 전부 false
     if (this.interfaceHook.auth === 'admin' && this.interfaceHook.target === 'teacher') return false; //드래그 금지
     this.areaHook.setIsAreaClickDown(true); //클릭 상태

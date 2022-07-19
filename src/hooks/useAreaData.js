@@ -8,6 +8,13 @@ function useAreaData(data) {
     const [areaObj, setAreaObj] = useState({});
     const [isAreaClickDown, setIsAreaClickDown] = useState(false);
     const [isAreaAppend, setIsAreaAppend] = useState(false);
+    const [idxOnOver, setIdxOnOver] = useState(null);
+
+    const [isLongTouch, setIsLongTouch] = useState(false); //길게누름 여부
+    const [touchIdx, setTouchIdx] = useState(null); //mobile이벤트의 발생여부를 관여
+    const [holdInterval, setHoldInterval] = useState();
+    const [holdCount, setHoldCount] = useState();
+    const [isHoldOver, setIsHoldOver] = useState(false);
 
     useEffect(() => {
         const changeSundayDawnData = data.map(e => {
@@ -28,10 +35,22 @@ function useAreaData(data) {
         areaObj: areaObj,
         isAreaClickDown: isAreaClickDown,
         isAreaAppend: isAreaAppend,
+        isLongTouch: isLongTouch,
+        holdInterval: holdInterval,
+        holdCount: holdCount,
+        isHoldOver: isHoldOver,
+        touchIdx: touchIdx,
+        idxOnOver: idxOnOver,
+        setIdxOnOver: setIdxOnOver,
         setAreaData: updateAreaData,
         setAreaObj: setAreaObj,
         setIsAreaClickDown: setIsAreaClickDown,
         setIsAreaAppend: setIsAreaAppend,
+        setIsLongTouch: setIsLongTouch,
+        setHoldInterval: setHoldInterval,
+        setHoldCount: setHoldCount,
+        setIsHoldOver: setIsHoldOver,
+        setTouchIdx: setTouchIdx,
     };
 }
 

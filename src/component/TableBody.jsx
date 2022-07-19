@@ -47,7 +47,9 @@ function TableBody(props) {
             });
             return result;
         }, []);
-        link.sendMessage({ name: 'responseRealTimeBlockData', data: reName }); //areaData 변경될때마다 return interface
+        const userLectureInfo = interfaceHook?.userData?.lectureData;
+        const checkValidation = !_.isEmpty(userLectureInfo) ? schedule.checkAreaValidation(userLectureInfo, areaHook.areaData) : null;
+        link.sendMessage({ name: 'responseRealTimeBlockData', data: reName, validation: checkValidation }); //areaData 변경될때마다 return interface
         areaSelectHook.setMatchingTarget([]); //초기화
         areaHook.setAreaObj({}); //초기화
         //----//
@@ -56,8 +58,6 @@ function TableBody(props) {
                 if (e.data.id === 'onuii-time-table') {
                     switch (e.data.name) {
                         case 'getBlockData': //데이터 요청
-                            const userLectureInfo = interfaceHook.userData.lectureData;
-                            const checkValidation = schedule.checkAreaValidation(userLectureInfo, areaHook.areaData);
                             link.sendMessage({ name: 'responseBlockData', data: reName, validation: checkValidation }); //가매칭 filter 영역 선택시 데이터 post
                             break;
                     }
@@ -100,6 +100,7 @@ function TableBody(props) {
     //         tableRef.current.scrollTo(0, 681);
     //     }, 0);
     // }, []);
+
     return (
         <Layout>
             <div className="contents" ref={tableRef}>
@@ -132,6 +133,7 @@ function TableBody(props) {
                                                     >
                                                         {level && <Distribution level={level} />}
                                                         {lectureData?.map((e, i) => (
+                                                            // <span style={{ color: 'red' }}>{i}</span>
                                                             <LectureItem key={i} id={e} idx={idx} areaHook={areaHook} interfaceHook={interfaceHook} />
                                                         ))}
                                                         {maxBlock?.timeBlockId === idx ? (

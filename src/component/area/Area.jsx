@@ -17,8 +17,6 @@ function Area(props) {
     const [modalPosition, setModalPosition] = useState(null);
     const [menuPosition, setMenuPosition] = useState(null);
     const [showMatchingMenu, setShowMatchingMenu] = useState(false);
-    const [isLongTouch, setIsLongTouch] = useState(false);
-    const [isTouch, setIsTouch] = useState(false);
 
     const init = () => {
         areaSelectHook.setLecture([]); //좌클릭 드래그 영역
@@ -56,7 +54,8 @@ function Area(props) {
 
     const handleAreaOver = e => {
         //터치 이벤트와 클릭이벤트가 동시에 돌면서 idx 충돌하는 부분이있어서 동작 제어
-        !isTouch && areaEvent.clickOver(idx);
+        areaHook.isAreaClickDown && areaHook.setIdxOnOver(idx);
+        if (_.isNull(areaHook.touchIdx) && idx != areaHook.idxOnOver) areaEvent.clickOver(idx);
     };
 
     const handleAreaUp = e => {
@@ -78,40 +77,41 @@ function Area(props) {
         areaEvent.itemDragEnd(e, idx);
     };
 
-    const [holdInterval, setHoldInterval] = useState();
-    const [holdCount, setHoldCount] = useState();
-    const [isHoldOver, setIsHoldOver] = useState(false);
     const handleTouchStart = e => {
+        areaHook.setTouchIdx(idx);
         //touch 이벤트와 클릭이벤트의 중복으로 인하여, long check 키로 클릭이벤트를 발생시킬지 제어확인
-        setIsTouch(true);
+        // areaHook.setIsTouch(true);
         init();
         // touch-action: none;
         let count = 0;
         const checkHold = setInterval(() => {
-            setHoldCount(count);
-            if (count++ === 100) {
+            count += 5;
+            areaHook.setHoldCount(count);
+            if (count === 100) {
                 document.querySelector('.contents').classList.add('freeze');
+                document.querySelector('body').classList.add('freeze');
                 clearInterval(checkHold);
-                setIsLongTouch(true);
+                areaHook.setIsLongTouch(true);
                 areaEvent.clickDown(e, idx);
             }
-        }, 7);
-        setHoldInterval(checkHold);
+        }, 10);
+        areaHook.setHoldInterval(checkHold);
     };
     const handleTouchOver = e => {
-        if (isLongTouch) {
-            setIsHoldOver(true);
+        if (areaHook.isLongTouch) {
+            areaHook.setIsHoldOver(true);
             var evt = typeof e.originalEvent === 'undefined' ? e : e.originalEvent;
             var touch = evt.touches[0] || evt.changedTouches[0];
             var targetBox = document.elementFromPoint(touch.clientX, touch.clientY);
             const elementIdx = !_.isNull(targetBox) ? targetBox.getAttribute('id') : null;
-            if (!_.isNull(elementIdx)) areaEvent.clickOver(elementIdx);
+            areaHook.setIdxOnOver(elementIdx);
+            if (!_.isNull(elementIdx) && elementIdx != areaHook.idxOnOver) areaEvent.clickOver(elementIdx); //throttle을 걸면 동작이 부자연스러워서, 중복 이벤트만 피하게
         }
     };
     const handleTouchEnd = e => {
-        if (isLongTouch && isHoldOver) {
+        if (areaHook.isLongTouch && areaHook.isHoldOver) {
             //긴 터치이고 이후 터치오버액션시
-            // if (isLongTouch) {
+            // if (areaHook.isLongTouch) {
             var evt = typeof e.originalEvent === 'undefined' ? e : e.originalEvent;
             var touch = evt.touches[0] || evt.changedTouches[0];
             var targetBox = document.elementFromPoint(touch.clientX, touch.clientY);
@@ -125,12 +125,13 @@ function Area(props) {
             };
             if (!_.isNull(elementIdx)) areaEvent.clickUp(e, elementIdx, openLectureModal, openMatchingModal);
         }
-        setIsTouch(false);
-        setIsLongTouch(false);
-        setIsHoldOver(false);
-        setHoldCount(null);
-        clearInterval(holdInterval);
+        areaHook.setTouchIdx(null);
+        areaHook.setIsLongTouch(false);
+        areaHook.setIsHoldOver(false);
+        areaHook.setHoldCount(null);
+        clearInterval(areaHook.holdInterval);
         document.querySelector('.contents').classList.remove('freeze');
+        document.querySelector('body').classList.add('freeze');
     };
     return (
         <React.Fragment>
@@ -139,16 +140,15 @@ function Area(props) {
                 onMouseOver={handleAreaOver}
                 onMouseUp={handleAreaUp}
                 onContextMenu={e => e.preventDefault()}
-                onTouchStart={handleTouchStart}
-                onTouchMoveCapture={handleTouchOver}
-                onTouchEnd={handleTouchEnd}
+                // onTouchStart={handleTouchStart}
+                // onTouchMoveCapture={handleTouchOver}
+                // onTouchEnd={handleTouchEnd}
                 // onDrop={handleItemDrop}
                 // onDragEnter={handleDragEnter}
                 // onDragOver={e => e.preventDefault()}
                 id={idx}
                 className={
                     `item
-                    ${/*areaHook.areaData.some(item => item.timeBlockId === idx) ? 'active' : ''*/ ''}
                     ${areaSelectHook.lecture.some(item => item.timeBlockId === idx) ? 'dragging' : ''}
                     ${areaSelectHook.filter.some(item => item.timeBlockId === idx) ? 'filter' : ''}
                     ${areaSelectHook.matchingTarget.some(item => item.timeBlockId === idx) ? 'tempMatching' : ''}
@@ -160,7 +160,8 @@ function Area(props) {
                 ` //클래스명 바꾸고싶다
                 }
             >
-                {holdCount && <HoldLoading value={holdCount} />}
+                {areaHook.holdCount && areaHook.touchIdx === idx && <HoldLoading value={areaHook.holdCount} />}
+                {/* {areaHook.holdCount && areaHook.touchIdx === idx && <span style={{ color: 'red' }}>{areaHook.holdCount}</span>} */}
                 {children}
             </div>
             {showLectureModal && (
@@ -181,4 +182,4 @@ function Area(props) {
     );
 }
 
-export default React.memo(Area);
+export default Area;
