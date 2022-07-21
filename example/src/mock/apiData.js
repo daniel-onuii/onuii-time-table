@@ -5,13 +5,13 @@ export const getTimetableS = [
             {
                 timeBlockId: 36,
                 lectureVtId: null,
-                lectureSubjectIds: [9168, 9169, 8906, 9810, 9811, 9788, 9813],
+                lectureSubjectIds: [],
                 tempLectureVtId: null,
             },
             {
                 timeBlockId: 37,
                 lectureVtId: null,
-                lectureSubjectIds: [9168, 9169, 8906, 9810, 9811, 9788, 9813],
+                lectureSubjectIds: [],
                 tempLectureVtId: null,
             },
             {

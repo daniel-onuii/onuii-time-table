@@ -103,7 +103,7 @@ function TableBody(props) {
 
     return (
         <Layout>
-            <div className="contents" ref={tableRef}>
+            <div className={`contents ${interfaceHook.target}`} ref={tableRef}>
                 <table>
                     <tbody>
                         {timeListData.map((e, i) => {
@@ -136,14 +136,14 @@ function TableBody(props) {
                                                             // <span style={{ color: 'red' }}>{i}</span>
                                                             <LectureItem key={i} id={e} idx={idx} areaHook={areaHook} interfaceHook={interfaceHook} />
                                                         ))}
-                                                        {maxBlock?.timeBlockId === idx ? (
+                                                        {/* {maxBlock?.timeBlockId === idx ? (
                                                             <div id={idx} className={'timeText'}>
                                                                 <span id={idx}>{`${schedule.getTime(areaHook.areaObj.startOverIdx)}`}</span> {` - `}
                                                                 <span id={idx}>{`${schedule.getTime(areaHook.areaObj.endOverIdx)}`}</span>
                                                             </div>
                                                         ) : (
                                                             ''
-                                                        )}
+                                                        )} */}
                                                     </Area>
                                                     {itemHook.fixedItemGroupData.some(y => y.startIdx === idx) && (
                                                         <Item

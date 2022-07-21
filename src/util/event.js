@@ -8,6 +8,13 @@ export function AreaEvent({ areaHook, areaSelectHook, interfaceHook, itemHook })
     this.itemHook = itemHook;
 }
 
+AreaEvent.prototype.clearCell = function (bindLecture) {
+    const cellList = document.querySelectorAll(`.contents.${this.interfaceHook.target} td .item`); //셀 색깔 초기화
+    for (var i = 0; i < cellList.length; i++) {
+        cellList[i].classList.remove('dragging');
+    }
+};
+
 AreaEvent.prototype.overlap = function (bindLecture) {
     const newAreaData = this.areaHook.areaData.reduce((result, e) => {
         !bindLecture.some(item => item.timeBlockId === e.timeBlockId) && result.push(e);
@@ -48,6 +55,7 @@ AreaEvent.prototype.removeAll = function () {
 
 AreaEvent.prototype.clickDown = function (e, idx) {
     this.areaHook.setAreaObj({
+        //clickOver에서 사용
         idx: idx,
         startOverIdx: schedule.getTimeIdx(idx),
         endOverIdx: schedule.getTimeIdx(idx + 1),
@@ -63,6 +71,7 @@ AreaEvent.prototype.clickDown = function (e, idx) {
 
 AreaEvent.prototype.clickOver = function (idx) {
     if (this.areaHook.isAreaClickDown) {
+        this.areaHook.setIsLongTouch(true);
         const startOverIdx = this.areaHook.areaObj.idx;
         const endOverIdx = Number(idx);
         const startOverDayIdx = schedule.getWeekIdx(startOverIdx);
@@ -73,33 +82,61 @@ AreaEvent.prototype.clickOver = function (idx) {
             startOverDayIdx < endOverDayIdx ? startOverDayIdx : endOverDayIdx,
             startOverDayIdx > endOverDayIdx ? startOverDayIdx + 1 : endOverDayIdx + 1,
         );
-        const selectedInfo = intervalDay.reduce((result, e) => {
+        const selectedInfo = _.flatten(
+            intervalDay.reduce((result, e) => {
+                //선택한 셀 값
+                result.push(
+                    _.range(e * 96 + 32 + startRange, e * 96 + 32 + endRange + (startRange < endRange ? 1 : -1)).map(ee => {
+                        return { timeBlockId: ee };
+                    }),
+                );
+                return result;
+            }, []),
+        );
+        this.clearCell();
+        selectedInfo.map(o => {
+            document.querySelector(`.contents.${this.interfaceHook.target} .seq_${o.timeBlockId}`)?.classList.add('dragging');
+        });
+    }
+};
+AreaEvent.prototype.clickUp = function (e, idx, openLectureModal, openMatchingModal) {
+    const startOverIdx = this.areaHook.areaObj.idx;
+    const endOverIdx = Number(idx);
+    const startOverDayIdx = schedule.getWeekIdx(startOverIdx);
+    const endOverDayIdx = schedule.getWeekIdx(endOverIdx);
+    const startRange = schedule.getTimeIdx(startOverIdx);
+    const endRange = schedule.getTimeIdx(endOverIdx);
+    const intervalDay = _.range(
+        startOverDayIdx < endOverDayIdx ? startOverDayIdx : endOverDayIdx,
+        startOverDayIdx > endOverDayIdx ? startOverDayIdx + 1 : endOverDayIdx + 1,
+    );
+    const selectedInfo = _.flatten(
+        intervalDay.reduce((result, e) => {
+            //선택한 셀 값
             result.push(
                 _.range(e * 96 + 32 + startRange, e * 96 + 32 + endRange + (startRange < endRange ? 1 : -1)).map(ee => {
                     return { timeBlockId: ee };
                 }),
             );
             return result;
-        }, []);
-        this.areaSelectHook.setLecture(_.flatten(selectedInfo));
-        this.areaHook.setAreaObj({
-            ...this.areaHook.areaObj,
-            startOverIdx: startRange < endRange ? startRange : endRange,
-            endOverIdx: startRange > endRange ? startRange + 1 : endRange + 1,
-            startOverDayIdx: startOverDayIdx < endOverDayIdx ? startOverDayIdx : endOverDayIdx,
-            endOverDayIdx: startOverDayIdx > endOverDayIdx ? startOverDayIdx : endOverDayIdx,
-        });
-    }
-};
-AreaEvent.prototype.clickUp = function (e, idx, openLectureModal, openMatchingModal) {
-    // if (e.button !== 0) return false; //좌클릭일때만
+        }, []),
+    );
+    this.areaSelectHook.setLecture(selectedInfo);
+    this.areaHook.setAreaObj({
+        ...this.areaHook.areaObj,
+        startOverIdx: startRange < endRange ? startRange : endRange,
+        endOverIdx: startRange > endRange ? startRange + 1 : endRange + 1,
+        startOverDayIdx: startOverDayIdx < endOverDayIdx ? startOverDayIdx : endOverDayIdx,
+        endOverDayIdx: startOverDayIdx > endOverDayIdx ? startOverDayIdx : endOverDayIdx,
+    });
+
     if (!(e.button == 0 || e.touches)) return false; //좌클릭, 터치 이외는 전부 false
     this.areaHook.setIsAreaClickDown(false); //클릭 상태
-    // if (_.isEmpty(interfaceHook?.selectMode) && interfaceHook.auth === 'user') {
     if (this.interfaceHook.auth === 'user') {
         //과목 추가는 유저 모드에서만 가능(어드민도 과목 추가 화면은 유저기능으로)
         //일반 과목 선택 모드
-        if (_.isEmpty(this.areaSelectHook.lecture)) {
+        // if (_.isEmpty(selectedInfo)) {
+        if (!this.areaHook.isLongTouch) {
             //셀 클릭시
             openLectureModal();
             this.areaHook.setAreaObj({
@@ -119,6 +156,10 @@ AreaEvent.prototype.clickUp = function (e, idx, openLectureModal, openMatchingMo
                 else if (idx > 677) return 678;
                 else return idx;
             };
+
+            _.range(idx, limitIdx(idx + 4)).map(o => {
+                document.querySelector(`.contents.${this.interfaceHook.target} .seq_${o}`).classList.add('dragging');
+            });
             this.areaSelectHook.setLecture(
                 _.range(idx, limitIdx(idx + 4)).map(e => {
                     return { timeBlockId: e };
@@ -126,13 +167,14 @@ AreaEvent.prototype.clickUp = function (e, idx, openLectureModal, openMatchingMo
             );
         } else {
             //셀 드래그 앤 드롭
-            if (this.areaSelectHook.lecture.length > 0) {
+            if (selectedInfo.length > 0) {
                 openLectureModal();
             }
         }
     } else {
         //admin
-        if (_.isEmpty(this.areaSelectHook.lecture)) {
+        // if (_.isEmpty(selectedInfo)) {
+        if (this.interfaceHook.target === 'teacher') {
             //셀 클릭시
             if (this.interfaceHook.target === 'teacher' && !_.isNull(this.interfaceHook.subject) && this.areaHook.areaObj.idx === idx) {
                 const tempMatching = _.range(idx, idx + this.interfaceHook.lessonTime.time).map(e => {
@@ -146,17 +188,19 @@ AreaEvent.prototype.clickUp = function (e, idx, openLectureModal, openMatchingMo
             //셀 드래그 앤 드롭
             if (this.interfaceHook.target === 'student') {
                 this.areaSelectHook.setLecture([]);
+                this.clearCell();
                 if (!this.areaHook.isAreaAppend) {
-                    this.areaSelectHook.setFilter([...this.areaSelectHook.filter, ...this.areaSelectHook.lecture]);
+                    this.areaSelectHook.setFilter([...this.areaSelectHook.filter, ...selectedInfo]);
                 } else {
                     const removeResult = _.reject(this.areaSelectHook.filter, o => {
-                        return this.areaSelectHook.lecture.some(item => item.timeBlockId === o.timeBlockId);
+                        return selectedInfo.some(item => item.timeBlockId === o.timeBlockId);
                     });
                     this.areaSelectHook.setFilter(removeResult);
                 }
             }
         }
     }
+    this.areaHook.setIsLongTouch(false);
 };
 
 AreaEvent.prototype.itemDragStart = function (e, idx) {

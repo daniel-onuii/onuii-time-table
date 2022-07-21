@@ -65,10 +65,10 @@ table {
     background: #cdcdcd !important;
 }
 .area._all {
-    background: #AADEA7;
+    background: #AADEA7 !important;
 }
 .item.equal ._all{
-    background: pink;
+    background: pink !important;
 }
 .area.disabled {
     opacity: 0.2;
