@@ -6,17 +6,23 @@ function Control({ setDataStudent, setDataTeacher, setUserInfo }) {
         window.addEventListener('message', function (e) {
             if (e.data.id === 'onuii-time-table') {
                 switch (e.data.name) {
+                    case 'loadComplete':
+                        // console.log(e.data);
+                        break;
                     case 'responseBlockData':
-                        console.log(e.data);
+                        // console.log(e.data);
                         break;
                     case 'responseMatchingData':
-                        console.log(e.data.data);
+                        // console.log(e.data.data);
                         break;
                     case 'selectMatchingArea': //학생차트에서 선택된 filter값을 선생님 차트에 전달
                         window.postMessage({ id: 'onuii-time-table', name: 'setFilter', data: e.data.data.blocks }, '*'); //선생님 핑크 표시
                         break;
                     case 'responseRealTimeBlockData':
-                        console.log('!', e.data);
+                        // console.log('!', e.data);
+                        break;
+                    case 'responseAlertMessage':
+                        // console.log(e.data);
                         break;
                 }
             }

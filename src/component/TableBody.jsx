@@ -30,7 +30,14 @@ function TableBody(props) {
     });
     const link = new LinkAdmin(interfaceHook, areaSelectHook, areaHook); //admin interface link class
     const areaEvent = new AreaEvent({ areaHook: areaHook, areaSelectHook: areaSelectHook, interfaceHook: interfaceHook, itemHook: itemHook });
-
+    // useEffect(() => {
+    // console.log(interfaceHook);
+    // }, [interfaceHook]);
+    useEffect(() => {
+        if (!_.isNull(interfaceHook.subject)) {
+            link.sendMessage({ name: 'loadComplete', type: interfaceHook.target }); //areaData 변경될때마다 return i
+        }
+    }, [areaHook.areaData, interfaceHook.subject]);
     useEffect(() => {
         link.readyToListen(); //addEventMessage
         return () => {
@@ -54,6 +61,7 @@ function TableBody(props) {
         areaHook.setAreaObj({}); //초기화
         //----//
         if (interfaceHook.auth === 'user') {
+            // areaHook.setHistoryAreaData([...areaHook.historyAreaData, areaHook.areaData]);
             const handler = e => {
                 if (e.data.id === 'onuii-time-table') {
                     switch (e.data.name) {
@@ -69,7 +77,9 @@ function TableBody(props) {
             };
         }
     }, [areaHook.areaData]);
-
+    // useEffect(() => {
+    //     console.log(areaHook.historyAreaData);
+    // }, [areaHook.historyAreaData]);
     useEffect(() => {
         link.sendMessage({ name: 'selectMatchingArea', data: { blocks: areaSelectHook.filter } }); //가매칭 filter 영역 선택시 데이터 post
     }, [areaSelectHook.filter]);
@@ -83,6 +93,7 @@ function TableBody(props) {
                             link.sendMessage({
                                 name: 'responseMatchingData',
                                 data: _.filter(itemHook.matchingItemGroupData, { lectureId: interfaceHook.subject }),
+                                option: _.find(interfaceHook?.userData?.lectureData, { lectureId: interfaceHook.subject })?.lesson_time,
                             }); //가매칭 filter 영역 선택시 데이터 post
                             break;
                     }
@@ -101,9 +112,26 @@ function TableBody(props) {
     //     }, 0);
     // }, []);
 
+    useEffect(() => {
+        const inputKey = e => {
+            if (interfaceHook.auth === 'user') {
+                switch (e.key) {
+                    case 'Escape':
+                        areaEvent.clickCancel();
+                        break;
+                    default:
+                    // console.log(e.key);
+                }
+            }
+        };
+        document.addEventListener('keydown', inputKey);
+        return () => {
+            document.removeEventListener('keydown', inputKey);
+        };
+    }, []);
     return (
         <Layout>
-            <div className="contents" ref={tableRef}>
+            <div className={`contents ${interfaceHook.target} ${_.isNull(interfaceHook.subject) ? 'ignoreEnter' : ''}`} ref={tableRef}>
                 <table>
                     <tbody>
                         {timeListData.map((e, i) => {
@@ -136,14 +164,14 @@ function TableBody(props) {
                                                             // <span style={{ color: 'red' }}>{i}</span>
                                                             <LectureItem key={i} id={e} idx={idx} areaHook={areaHook} interfaceHook={interfaceHook} />
                                                         ))}
-                                                        {maxBlock?.timeBlockId === idx ? (
+                                                        {/* {maxBlock?.timeBlockId === idx ? (
                                                             <div id={idx} className={'timeText'}>
                                                                 <span id={idx}>{`${schedule.getTime(areaHook.areaObj.startOverIdx)}`}</span> {` - `}
                                                                 <span id={idx}>{`${schedule.getTime(areaHook.areaObj.endOverIdx)}`}</span>
                                                             </div>
                                                         ) : (
                                                             ''
-                                                        )}
+                                                        )} */}
                                                     </Area>
                                                     {itemHook.fixedItemGroupData.some(y => y.startIdx === idx) && (
                                                         <Item
@@ -174,7 +202,6 @@ function TableBody(props) {
                     </tbody>
                 </table>
             </div>
-            {/* <div style={{ width: 'calc(100% - 4px)', borderBottom: '1px solid #cdcdcd' }}></div> */}
         </Layout>
     );
 }

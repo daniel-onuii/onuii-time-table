@@ -3,6 +3,7 @@ import App from './App';
 import { store } from './store/config';
 import { Provider } from 'react-redux';
 import { schedule } from './util/schedule';
+import { lecture } from './util/lecture';
 import _ from 'lodash';
 
 export const OnuiiTimeTable = memo(props => {
@@ -11,6 +12,9 @@ export const OnuiiTimeTable = memo(props => {
     const [fixedItemData, setFixedItemData] = useState();
     const [matchingItemData, setMatchingItemData] = useState();
     useEffect(() => {
+        !_.isEmpty(props.subjectData) && lecture.setLectureList(props.subjectData); //과목의 정보 셋팅
+        !_.isEmpty(props.processingData) && schedule.setProcessingData(props.processingData); //과목의 정보 셋팅
+
         setUserData(props?.userData);
         setAreaData(schedule.getParseAreaData(props?.blockData?.timeBlocks) || []);
         setFixedItemData(schedule.getParseFixedData(props?.blockData?.timeBlocks, props.userData?.lectureData) || []);

@@ -19,6 +19,7 @@ function Area(props) {
     const [showMatchingMenu, setShowMatchingMenu] = useState(false);
 
     const init = () => {
+        areaEvent.clearCell();
         areaSelectHook.setLecture([]); //좌클릭 드래그 영역
         areaSelectHook.setMatchingTarget([]); //가매칭 영역
         setShowLectureModal(false);
@@ -54,18 +55,22 @@ function Area(props) {
 
     const handleAreaOver = e => {
         //터치 이벤트와 클릭이벤트가 동시에 돌면서 idx 충돌하는 부분이있어서 동작 제어
-        areaHook.isAreaClickDown && areaHook.setIdxOnOver(idx);
-        if (_.isNull(areaHook.touchIdx) && idx != areaHook.idxOnOver) areaEvent.clickOver(idx);
+        // areaHook.isAreaClickDown && areaHook.setIdxOnOver(idx);
+        // if (_.isNull(areaHook.touchIdx) && idx != areaHook.idxOnOver) areaEvent.clickOver(idx);
+        areaEvent.clickOver(idx);
     };
 
     const handleAreaUp = e => {
         const openLectureModal = () => {
+            setModalPosition({ x: e.clientX, y: e.clientY });
             setShowLectureModal(true);
         };
         const openMatchingModal = () => {
+            setMenuPosition({ x: e.clientX, y: e.clientY });
             setShowMatchingMenu(true);
         };
-        areaEvent.clickUp(e, idx, openLectureModal, openMatchingModal);
+        // areaEvent.clickUp(e, idx, openLectureModal, openMatchingModal, update);
+        areaEvent.clickUp(e, idx, openMatchingModal);
     };
 
     const handleDragEnter = e => {
@@ -116,7 +121,7 @@ function Area(props) {
             var touch = evt.touches[0] || evt.changedTouches[0];
             var targetBox = document.elementFromPoint(touch.clientX, touch.clientY);
             const elementIdx = !_.isNull(targetBox) ? targetBox.getAttribute('id') : null;
-            console.log(elementIdx);
+            // console.log(elementIdx);
             const openLectureModal = () => {
                 setShowLectureModal(true);
             };
@@ -149,7 +154,8 @@ function Area(props) {
                 id={idx}
                 className={
                     `item
-                    ${areaSelectHook.lecture.some(item => item.timeBlockId === idx) ? 'dragging' : ''}
+                    seq_${idx}
+                    ${/*areaSelectHook.lecture.some(item => item.timeBlockId === idx) ? 'dragging' : ''*/ ''}
                     ${areaSelectHook.filter.some(item => item.timeBlockId === idx) ? 'filter' : ''}
                     ${areaSelectHook.matchingTarget.some(item => item.timeBlockId === idx) ? 'tempMatching' : ''}
                     ${

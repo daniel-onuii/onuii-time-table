@@ -3,6 +3,10 @@ import { setMessage } from '../store/reducer/trigger.reducer';
 import { area } from './area';
 import _ from 'lodash';
 export const schedule = {
+    processingData: [],
+    setProcessingData: function (data) {
+        this.processingData = data;
+    },
     getWeekIdx: function (idx) {
         return Math.floor((idx - 32) / 96);
     },

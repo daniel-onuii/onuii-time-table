@@ -3,16 +3,16 @@ export const timeTable = `
 th:first-child {
     width: 5%;
 }
-@media (min-width: 376px) {
-    // max-width: 768px;
-}
-@media (max-width: 375px) {
-    min-width: 425px;
-    th:first-child {
-        font-size: 10px;
-        width: 6%;
-    }
-}
+// @media (min-width: 376px) {
+//     // max-width: 768px;
+// }
+// @media (max-width: 375px) {
+//     min-width: 425px;
+//     th:first-child {
+//         font-size: 10px;
+//         width: 6%;
+//     }
+// }
 margin: auto;
 body::-webkit-scrollbar {
     display: none;
@@ -65,12 +65,12 @@ table {
     background: #cdcdcd !important;
 }
 .area._all {
-    background: #AADEA7;
+    background: #AADEA7 !important;
 }
 .item.equal ._all{
-    background: pink;
+    background: pink !important;
 }
 .area.disabled {
-    opacity: 0.2;
+    opacity: 0.4;
 }
 `;

@@ -35,7 +35,7 @@ const Layout = styled.div`
 function TableHead({ interfaceHook }) {
     return (
         <Layout>
-            <div style={{ height: '20px', color: 'red' }}>{interfaceHook.message}</div>
+            {/* <div style={{ height: '20px', color: 'red' }}>{interfaceHook.message}</div> */}
             <div className="head">
                 <table>
                     <thead>

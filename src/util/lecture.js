@@ -1,6 +1,10 @@
 import { schedule } from './schedule';
 import _ from 'lodash';
 export const lecture = {
+    lectureList: [],
+    setLectureList: function (data) {
+        this.lectureList = [{ subjectId: 'all', subjectName: '' }, ...data];
+    },
     getLectureId: function (data, idx) {
         return _.find(data, { timeBlockId: idx })?.lectureId;
     },
@@ -44,87 +48,207 @@ export const lecture = {
     },
 
     getLectureName: function (id) {
-        const subjectList = [
-            '',
-            '수학',
-            '국어',
-            '영어',
-            '중학과학',
-            '고1 통합과학',
-            '물리1',
-            '물리2',
-            '화학1',
-            '화학2',
-            '생명과학1',
-            '생명과학2',
-            '지구과학1',
-            '지구과학2',
-            '과학',
-            '중학사회',
-            '고1 통합사회',
-            '한국사',
-            '동아시아',
-            '세계사',
-            '생활과 윤리',
-            '윤리와 사상',
-            '한국지리',
-            '세계지리',
-            '사회문화',
-            '경제',
-            '법과 정치',
-            '사회',
-            '한문',
-            '아랍어',
-            '일본어',
-            '중국어',
-            '독일어',
-            '프랑스어',
-            '스페인어',
-            '베트남어',
-            '러시아어',
-            '입시상담',
+        const dummyLectureList = [
+            { subjectId: 'all', subjectName: '' },
+            {
+                subjectId: 8906,
+                subjectName: '수학',
+            },
+            {
+                subjectId: 8907,
+                subjectName: 'Special',
+            },
+            {
+                subjectId: 8948,
+                subjectName: '수학(상)',
+            },
+            {
+                subjectId: 9163,
+                subjectName: '수학(하)',
+            },
+            {
+                subjectId: 9165,
+                subjectName: '수2',
+            },
+            {
+                subjectId: 9166,
+                subjectName: '미적분',
+            },
+            {
+                subjectId: 9167,
+                subjectName: '확통',
+            },
+            {
+                subjectId: 9168,
+                subjectName: '국어',
+            },
+            {
+                subjectId: 9169,
+                subjectName: '영어',
+            },
+            {
+                subjectId: 9170,
+                subjectName: '사회',
+            },
+            {
+                subjectId: 9171,
+                subjectName: '과학',
+            },
+            {
+                subjectId: 9788,
+                subjectName: '한국사',
+            },
+            {
+                subjectId: 9789,
+                subjectName: '동아시아사',
+            },
+            {
+                subjectId: 9790,
+                subjectName: '세계사',
+            },
+            {
+                subjectId: 9791,
+                subjectName: '생활과 윤리',
+            },
+            {
+                subjectId: 9792,
+                subjectName: '윤리와 사상',
+            },
+            {
+                subjectId: 9793,
+                subjectName: '한국지리',
+            },
+            {
+                subjectId: 9794,
+                subjectName: '세계지리',
+            },
+            {
+                subjectId: 9795,
+                subjectName: '사회문화',
+            },
+            {
+                subjectId: 9796,
+                subjectName: '경제',
+            },
+            {
+                subjectId: 9797,
+                subjectName: '법과 정치',
+            },
+            {
+                subjectId: 9798,
+                subjectName: '물리1',
+            },
+            {
+                subjectId: 9799,
+                subjectName: '물리2',
+            },
+            {
+                subjectId: 9800,
+                subjectName: '화학1',
+            },
+            {
+                subjectId: 9801,
+                subjectName: '화학2',
+            },
+            {
+                subjectId: 9802,
+                subjectName: '생명과학1',
+            },
+            {
+                subjectId: 9803,
+                subjectName: '생명과학2',
+            },
+            {
+                subjectId: 9804,
+                subjectName: '지구과학1',
+            },
+            {
+                subjectId: 9805,
+                subjectName: '지구과학2',
+            },
+            {
+                subjectId: 9810,
+                subjectName: '중학사회',
+            },
+            {
+                subjectId: 9811,
+                subjectName: '고1통합사회',
+            },
+            {
+                subjectId: 9812,
+                subjectName: '중학과학',
+            },
+            {
+                subjectId: 9813,
+                subjectName: '고1통합과학',
+            },
+            {
+                subjectId: 9825,
+                subjectName: '외국어',
+            },
+            {
+                subjectId: 9826,
+                subjectName: '한문',
+            },
+            {
+                subjectId: 9827,
+                subjectName: '아랍어',
+            },
+            {
+                subjectId: 9828,
+                subjectName: '일본어',
+            },
+            {
+                subjectId: 9829,
+                subjectName: '중국어',
+            },
+            {
+                subjectId: 9830,
+                subjectName: '독일어',
+            },
+            {
+                subjectId: 9831,
+                subjectName: '프랑스어',
+            },
+            {
+                subjectId: 9832,
+                subjectName: '스페인어',
+            },
+            {
+                subjectId: 9833,
+                subjectName: '베트남어',
+            },
+            {
+                subjectId: 9834,
+                subjectName: '러시아어',
+            },
+            {
+                subjectId: 10117,
+                subjectName: '수1',
+            },
+            {
+                subjectId: 14449,
+                subjectName: '중3-2',
+            },
+            {
+                subjectId: 14450,
+                subjectName: '중3-1',
+            },
+            {
+                subjectId: 14451,
+                subjectName: '중2-2',
+            },
+            {
+                subjectId: 18391,
+                subjectName: '중2-1',
+            },
+            {
+                subjectId: 18492,
+                subjectName: '입시코칭',
+            },
         ];
-        const subjectIdList = [
-            'all',
-            8906,
-            9168,
-            9169,
-            9812,
-            9813,
-            9798,
-            9799,
-            9800,
-            9801,
-            9802,
-            9803,
-            9804,
-            9805,
-            9171,
-            9810,
-            9811,
-            9788,
-            9789,
-            9790,
-            9791,
-            9792,
-            9793,
-            9794,
-            9795,
-            9796,
-            9797,
-            9170,
-            9826,
-            9827,
-            9828,
-            9829,
-            9830,
-            9831,
-            9832,
-            9833,
-            9834,
-            18492,
-        ];
-        const index = subjectIdList.indexOf(id);
-        return subjectList[index];
+        return _.isEmpty(this.lectureList)
+            ? _.find(dummyLectureList, { subjectId: id })?.subjectName
+            : _.find(this.lectureList, { subjectId: id })?.subjectName;
     },
 };

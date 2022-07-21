@@ -4,6 +4,7 @@ import { area } from '../util/area';
 function useAreaData(data) {
     //과외 희망 시간대 관련
     const [areaData, setAreaData] = useState(data); //희망 시간 데이터
+    const [historyAreaData, setHistoryAreaData] = useState([]);
     const [areaGroupData, setAreaGroupData] = useState([]); //희망 시간 그룹 데이터
     const [areaObj, setAreaObj] = useState({});
     const [isAreaClickDown, setIsAreaClickDown] = useState(false);
@@ -41,6 +42,8 @@ function useAreaData(data) {
         isHoldOver: isHoldOver,
         touchIdx: touchIdx,
         idxOnOver: idxOnOver,
+        historyAreaData: historyAreaData,
+        setHistoryAreaData: setHistoryAreaData,
         setIdxOnOver: setIdxOnOver,
         setAreaData: updateAreaData,
         setAreaObj: setAreaObj,
