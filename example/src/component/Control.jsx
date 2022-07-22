@@ -6,6 +6,9 @@ function Control({ setDataStudent, setDataTeacher, setUserInfo }) {
         window.addEventListener('message', function (e) {
             if (e.data.id === 'onuii-time-table') {
                 switch (e.data.name) {
+                    case 'loadComplete':
+                        // console.log(e.data);
+                        break;
                     case 'responseBlockData':
                         // console.log(e.data);
                         break;

@@ -30,7 +30,14 @@ function TableBody(props) {
     });
     const link = new LinkAdmin(interfaceHook, areaSelectHook, areaHook); //admin interface link class
     const areaEvent = new AreaEvent({ areaHook: areaHook, areaSelectHook: areaSelectHook, interfaceHook: interfaceHook, itemHook: itemHook });
-
+    useEffect(() => {
+        // console.log(interfaceHook);
+    }, [interfaceHook]);
+    useEffect(() => {
+        if (!_.isNull(interfaceHook.subject)) {
+            link.sendMessage({ name: 'loadComplete', type: interfaceHook.target }); //areaData 변경될때마다 return i
+        }
+    }, [areaHook.areaData, interfaceHook.subject]);
     useEffect(() => {
         link.readyToListen(); //addEventMessage
         return () => {

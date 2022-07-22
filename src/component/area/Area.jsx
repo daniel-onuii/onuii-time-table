@@ -69,8 +69,8 @@ function Area(props) {
             setMenuPosition({ x: e.clientX, y: e.clientY });
             setShowMatchingMenu(true);
         };
-        areaEvent.clickUp(e, idx, openLectureModal, openMatchingModal);
-        areaEvent.clickUp(e, idx, openLectureModal, openMatchingModal);
+        // areaEvent.clickUp(e, idx, openLectureModal, openMatchingModal, update);
+        areaEvent.clickUp(e, idx, openMatchingModal);
     };
 
     const handleDragEnter = e => {
