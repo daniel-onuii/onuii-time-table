@@ -14,6 +14,14 @@ function useInterface(props) {
     }, [props.userData]);
 
     useEffect(() => {
+        // switch (target) {
+        //     case 'teacher':
+        setSubject('all');
+        //         break;
+        // }
+    }, []);
+
+    useEffect(() => {
         const lectureData = _.find(userData?.lectureData, { lectureVtId: Number(lvt) });
         setLessonTime({
             weekCount: Number(lectureData?.lesson_time?.split('_')[0]?.replace('W', '')),

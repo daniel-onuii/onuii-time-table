@@ -166,12 +166,19 @@ AreaEvent.prototype.clickUp = function (e, idx, openMatchingModal) {
             const result = defaultRange.map(e => {
                 return { timeBlockId: e, lectureSubjectIds: [this.interfaceHook.subject] };
             });
-            if (!this.areaHook.isAreaAppend) {
-                this.add(result, [this.interfaceHook.subject]);
-            } else {
+
+            if (this.areaHook.isAreaAppend) {
                 const pickBlockData = _.intersectionBy(this.areaHook.areaData, result, 'timeBlockId');
                 const pickByLectureData = _.filter(pickBlockData, { lectureSubjectIds: [this.interfaceHook.subject] });
-                this.removeAll(pickByLectureData);
+                // const pickByAllLectureData = _.filter(pickBlockData, { lectureSubjectIds: ['all'] });
+                const isTargetOnLecture = _.find(this.areaHook.areaData, { timeBlockId: idx })?.lectureSubjectIds.includes(
+                    this.interfaceHook.subject,
+                ); //선택한 과목과 터치한 영역값의 lecture 일치 여부
+                if (isTargetOnLecture) {
+                    this.removeAll(pickByLectureData);
+                }
+            } else {
+                this.add(result, [this.interfaceHook.subject]);
             }
         } else {
             //셀 드래그 앤 드롭
