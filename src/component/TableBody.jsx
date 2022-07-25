@@ -61,6 +61,7 @@ function TableBody(props) {
         areaHook.setAreaObj({}); //초기화
         //----//
         if (interfaceHook.auth === 'user') {
+            // areaHook.setHistoryAreaData([...areaHook.historyAreaData, areaHook.areaData]);
             const handler = e => {
                 if (e.data.id === 'onuii-time-table') {
                     switch (e.data.name) {
@@ -76,7 +77,9 @@ function TableBody(props) {
             };
         }
     }, [areaHook.areaData]);
-
+    // useEffect(() => {
+    //     console.log(areaHook.historyAreaData);
+    // }, [areaHook.historyAreaData]);
     useEffect(() => {
         link.sendMessage({ name: 'selectMatchingArea', data: { blocks: areaSelectHook.filter } }); //가매칭 filter 영역 선택시 데이터 post
     }, [areaSelectHook.filter]);
@@ -108,6 +111,23 @@ function TableBody(props) {
     //     }, 0);
     // }, []);
 
+    useEffect(() => {
+        const inputKey = e => {
+            if (interfaceHook.auth === 'user') {
+                switch (e.key) {
+                    case 'Escape':
+                        close();
+                        break;
+                    default:
+                        console.log(e.key);
+                }
+            }
+        };
+        document.addEventListener('keydown', inputKey);
+        return () => {
+            document.removeEventListener('keydown', inputKey);
+        };
+    }, []);
     return (
         <Layout>
             <div className={`contents ${interfaceHook.target}`} ref={tableRef}>

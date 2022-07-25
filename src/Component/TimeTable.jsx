@@ -13,7 +13,7 @@ function TimeTable(props) {
     const interfaceHook = useInterface(props);
     return (
         <Layout>
-            <TableLecture interfaceHook={interfaceHook} />
+            {interfaceHook.auth === 'user' && interfaceHook.target === 'student' && <TableLecture interfaceHook={interfaceHook} />}
             <TableHead interfaceHook={interfaceHook} />
             <TableBody {...props} interfaceHook={interfaceHook} />
         </Layout>

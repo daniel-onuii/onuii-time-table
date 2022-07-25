@@ -27,7 +27,7 @@ const App = () => {
     };
     return (
         <>
-            <h1 style={{ marginLeft: '20px' }}>타임테이블</h1>
+            <h1 style={{ marginLeft: '20px' }}>take 1</h1>
             <select onChange={handleChangeTest}>
                 <option>test1</option>
                 <option>test2</option>
@@ -35,13 +35,13 @@ const App = () => {
             <Control setDataStudent={setDataStudent} setDataTeacher={setDataTeacher} setUserInfo={setUserInfo} />
             <Layout>
                 <OnuiiTimeTable auth={'user'} target={'student'} userData={mock.userData} blockData={getTimetableS[0]} />
-                <OnuiiTimeTable auth={'user'} target={'teacher'} userData={mock.userData} blockData={getTimetableT[0]} />
+                {/* <OnuiiTimeTable auth={'user'} target={'teacher'} userData={mock.userData} blockData={getTimetableT[0]} /> */}
             </Layout>
-            <Control setDataStudent={setDataStudent} setDataTeacher={setDataTeacher} setUserInfo={setUserInfo} />
+            {/* <Control setDataStudent={setDataStudent} setDataTeacher={setDataTeacher} setUserInfo={setUserInfo} />
             <Layout>
                 <OnuiiTimeTable auth={'admin'} target={'student'} userData={userInfo} blockData={dataStudent} />
                 <OnuiiTimeTable auth={'admin'} target={'teacher'} userData={userInfo} blockData={dataTeacher} />
-            </Layout>
+            </Layout> */}
         </>
     );
 };
