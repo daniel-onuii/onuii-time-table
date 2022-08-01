@@ -40,7 +40,7 @@ export const mock = {
                 lectureVtId: 6,
                 lesson_time: 'W2_H60',
                 lectureId: 18492,
-                lecture_name: '입시',
+                lecture_name: '입시코칭',
                 status: 'MATCHED',
             },
             {

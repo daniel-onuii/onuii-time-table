@@ -16,7 +16,7 @@ function useInterface(props) {
     useEffect(() => {
         // switch (target) {
         //     case 'teacher':
-        setSubject('all');
+        target == 'teacher' && setSubject('all');
         //         break;
         // }
     }, []);

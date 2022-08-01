@@ -121,7 +121,7 @@ function Area(props) {
             var touch = evt.touches[0] || evt.changedTouches[0];
             var targetBox = document.elementFromPoint(touch.clientX, touch.clientY);
             const elementIdx = !_.isNull(targetBox) ? targetBox.getAttribute('id') : null;
-            console.log(elementIdx);
+            // console.log(elementIdx);
             const openLectureModal = () => {
                 setShowLectureModal(true);
             };

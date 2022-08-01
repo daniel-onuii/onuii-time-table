@@ -30,9 +30,9 @@ function TableBody(props) {
     });
     const link = new LinkAdmin(interfaceHook, areaSelectHook, areaHook); //admin interface link class
     const areaEvent = new AreaEvent({ areaHook: areaHook, areaSelectHook: areaSelectHook, interfaceHook: interfaceHook, itemHook: itemHook });
-    useEffect(() => {
-        // console.log(interfaceHook);
-    }, [interfaceHook]);
+    // useEffect(() => {
+    // console.log(interfaceHook);
+    // }, [interfaceHook]);
     useEffect(() => {
         if (!_.isNull(interfaceHook.subject)) {
             link.sendMessage({ name: 'loadComplete', type: interfaceHook.target }); //areaData 변경될때마다 return i
@@ -93,6 +93,7 @@ function TableBody(props) {
                             link.sendMessage({
                                 name: 'responseMatchingData',
                                 data: _.filter(itemHook.matchingItemGroupData, { lectureId: interfaceHook.subject }),
+                                option: _.find(interfaceHook?.userData?.lectureData, { lectureId: interfaceHook.subject })?.lesson_time,
                             }); //가매칭 filter 영역 선택시 데이터 post
                             break;
                     }
@@ -116,10 +117,10 @@ function TableBody(props) {
             if (interfaceHook.auth === 'user') {
                 switch (e.key) {
                     case 'Escape':
-                        close();
+                        areaEvent.clickCancel();
                         break;
                     default:
-                        console.log(e.key);
+                    // console.log(e.key);
                 }
             }
         };
@@ -130,7 +131,7 @@ function TableBody(props) {
     }, []);
     return (
         <Layout>
-            <div className={`contents ${interfaceHook.target}`} ref={tableRef}>
+            <div className={`contents ${interfaceHook.target} ${_.isNull(interfaceHook.subject) ? 'ignoreEnter' : ''}`} ref={tableRef}>
                 <table>
                     <tbody>
                         {timeListData.map((e, i) => {
@@ -201,7 +202,6 @@ function TableBody(props) {
                     </tbody>
                 </table>
             </div>
-            {/* <div style={{ width: 'calc(100% - 4px)', borderBottom: '1px solid #cdcdcd' }}></div> */}
         </Layout>
     );
 }

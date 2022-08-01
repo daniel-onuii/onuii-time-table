@@ -21,6 +21,9 @@ function Control({ setDataStudent, setDataTeacher, setUserInfo }) {
                     case 'responseRealTimeBlockData':
                         // console.log('!', e.data);
                         break;
+                    case 'responseAlertMessage':
+                        // console.log(e.data);
+                        break;
                 }
             }
         });

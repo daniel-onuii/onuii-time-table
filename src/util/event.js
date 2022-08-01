@@ -103,12 +103,15 @@ AreaEvent.prototype.clickOver = function (idx) {
         );
         this.clearCell();
         selectedInfo.map(o => {
-            document.querySelector(`.contents.${this.interfaceHook.target} .seq_${o.timeBlockId}`).classList.add('dragging');
+            document.querySelector(`.contents.${this.interfaceHook.target} .seq_${o.timeBlockId}`)?.classList.add('dragging');
         });
     }
 };
 
 AreaEvent.prototype.clickUp = function (e, idx, openMatchingModal) {
+    if (!this.areaHook.isAreaClickDown) {
+        return false;
+    }
     const startOverIdx = this.areaHook.areaObj.idx;
     const endOverIdx = Number(idx);
     const startOverDayIdx = schedule.getWeekIdx(startOverIdx);
@@ -174,6 +177,7 @@ AreaEvent.prototype.clickUp = function (e, idx, openMatchingModal) {
                 const isTargetOnLecture = _.find(this.areaHook.areaData, { timeBlockId: idx })?.lectureSubjectIds.includes(
                     this.interfaceHook.subject,
                 ); //선택한 과목과 터치한 영역값의 lecture 일치 여부
+
                 if (isTargetOnLecture) {
                     this.removeAll(pickByLectureData);
                 }
@@ -187,9 +191,47 @@ AreaEvent.prototype.clickUp = function (e, idx, openMatchingModal) {
                     return { timeBlockId: e.timeBlockId, lectureSubjectIds: [this.interfaceHook.subject] };
                 });
                 if (!this.areaHook.isAreaAppend) {
+                    //추가할때
                     this.add(result, [this.interfaceHook.subject]);
                 } else {
-                    this.removeAll(result);
+                    //삭제할때
+                    //>매칭중 상태값의 과목은 삭제 안되게하고 알림 띄워줌
+                    //>데이터 미적재 이슈와 매칭됨 상태값이 충돌나면 관리자가 아닌 유저화면에서는 등록/제출을 하지못하는 에러가 예상됨. 매칭중 상태값은 validation check를 하지않게 처리
+                    const pickBlockData = _.intersectionBy(this.areaHook.areaData, selectedInfo, 'timeBlockId'); //선택한 블록의 전체값
+                    const processingDetailList = [];
+                    const processingList = schedule.processingData?.reduce((result, e) => {
+                        result.push(e.subject.subjectId);
+                        processingDetailList.push({ subjectId: e.subject.subjectId, subjectName: e.subject.subjectName });
+                        return result;
+                    }, []); //매칭 프로세스 상태의 과목값
+                    const processingAlertList = [];
+                    const withoutProcessingData = pickBlockData.reduce((result, e) => {
+                        _.isEmpty(_.intersection(e.lectureSubjectIds, processingList))
+                            ? result.push(e)
+                            : processingAlertList.push(_.intersection(e.lectureSubjectIds, processingList));
+                        return result;
+                    }, []); //매칭 프로세스의 과목을 제외한 선택한 배열값
+                    this.removeAll(withoutProcessingData);
+
+                    const flatList = _.uniqBy(_.flatten(processingAlertList));
+                    const crashList = _.filter(processingDetailList, function (o) {
+                        return flatList.includes(o.subjectId);
+                    });
+                    !_.isEmpty(crashList) && //매칭중인 과목이 삭제영역에 포함됨을 알림
+                        window.postMessage(
+                            {
+                                id: 'onuii-time-table',
+                                name: 'responseAlertMessage',
+                                data:
+                                    '매칭중인 과목은 희망 시간대 변경이 불가능합니다. 대상:' +
+                                    _.join(
+                                        crashList.map(o => {
+                                            return o.subjectName;
+                                        }),
+                                    ),
+                            },
+                            '*',
+                        );
                 }
                 this.clearCell();
             }
@@ -223,6 +265,14 @@ AreaEvent.prototype.clickUp = function (e, idx, openMatchingModal) {
         }
     }
     this.areaHook.setIsLongTouch(false);
+};
+
+AreaEvent.prototype.clickCancel = function () {
+    this.areaHook.setIsAreaClickDown(false);
+    this.areaHook.setIsLongTouch(false);
+    this.areaSelectHook.setLecture([]);
+    this.areaHook.setAreaObj({});
+    this.clearCell();
 };
 // AreaEvent.prototype.clickUp = function (e, idx, openLectureModal, openMatchingModal) {
 //     const startOverIdx = this.areaHook.areaObj.idx;

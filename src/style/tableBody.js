@@ -2,17 +2,19 @@ export const tableBody = `
 table {
     // border-left: 1px solid #cdcdcd;
     // border-right: 1px solid #cdcdcd;
+}td {
+    height: 21px;
 }
-@media (min-width: 376px) {
-    td {
-        height: 21px;
-    }
-}
-@media (max-width: 375px) {
-    td {
-        height: 21px;
-    }
-}
+// @media (min-width: 376px) {
+//     td {
+//         height: 21px;
+//     }
+// }
+// @media (max-width: 375px) {
+//     td {
+//         height: 21px;
+//     }
+// }
 .contents {
     height: 504px;
     overflow-y: scroll;
