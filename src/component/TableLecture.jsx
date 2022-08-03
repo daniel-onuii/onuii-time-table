@@ -80,9 +80,9 @@ function TableLecture(props) {
                             </button> */}
                             {lectureData.map((e, i) => {
                                 const isProcessing = processingList?.includes(e.lectureId);
-                                const lessonTime = ` 주${e.lesson_time.split('_')[0].replace('W', '')}회 ${e.lesson_time
-                                    .split('_')[1]
-                                    .replace('H', '')}분`;
+                                const lessonTime = ` 주${e.lesson_time?.split('_')[0].replace('W', '')}회 ${e.lesson_time
+                                    ?.split('_')[1]
+                                    ?.replace('H', '')}분`;
                                 return (
                                     <button
                                         key={i}
