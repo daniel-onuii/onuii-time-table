@@ -119,7 +119,7 @@ th.night{color:#171868;}
     box-shadow: 100vw 100vh 0px #FEC92F inset;
 }
 
-.ignoreEnter {
+.contents table {
     pointer-events: none;
 }
 
