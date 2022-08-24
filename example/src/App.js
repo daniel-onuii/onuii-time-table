@@ -51,7 +51,7 @@ const App = () => {
                 <option>test1</option>
                 <option>test2</option>
             </select>
-            <Control setDataStudent={setDataStudent} setDataTeacher={setDataTeacher} setUserInfo={setUserInfo} />
+            {/* <Control setDataStudent={setDataStudent} setDataTeacher={setDataTeacher} setUserInfo={setUserInfo} />
             <Layout>
                 <OnuiiTimeTable
                     auth={'user'}
@@ -61,12 +61,12 @@ const App = () => {
                     processingData={processingData}
                 />
                 <OnuiiTimeTable auth={'user'} target={'teacher'} userData={mock.userData} blockData={getTimetableT[0]} />
-            </Layout>
-            {/* <Control setDataStudent={setDataStudent} setDataTeacher={setDataTeacher} setUserInfo={setUserInfo} />
+            </Layout> */}
+            <Control setDataStudent={setDataStudent} setDataTeacher={setDataTeacher} setUserInfo={setUserInfo} />
             <Layout>
                 <OnuiiTimeTable auth={'admin'} target={'student'} userData={userInfo} blockData={dataStudent} />
                 <OnuiiTimeTable auth={'admin'} target={'teacher'} userData={userInfo} blockData={dataTeacher} />
-            </Layout> */}
+            </Layout>
         </>
     );
 };

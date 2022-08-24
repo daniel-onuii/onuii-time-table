@@ -246,6 +246,10 @@ export const lecture = {
                 subjectId: 18492,
                 subjectName: '입시코칭',
             },
+            {
+                subjectId: 22393,
+                subjectName: '입시코칭',
+            },
         ];
         return _.isEmpty(this.lectureList)
             ? _.find(dummyLectureList, { subjectId: id })?.subjectName

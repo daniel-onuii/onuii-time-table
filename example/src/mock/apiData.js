@@ -5,13 +5,13 @@ export const getTimetableS = [
             {
                 timeBlockId: 36,
                 lectureVtId: null,
-                lectureSubjectIds: [],
+                lectureSubjectIds: [22393],
                 tempLectureVtId: null,
             },
             {
                 timeBlockId: 37,
                 lectureVtId: null,
-                lectureSubjectIds: [],
+                lectureSubjectIds: [22393],
                 tempLectureVtId: null,
             },
             {
@@ -23,7 +23,7 @@ export const getTimetableS = [
             {
                 timeBlockId: 39,
                 lectureVtId: null,
-                lectureSubjectIds: [9168],
+                lectureSubjectIds: [18492],
                 tempLectureVtId: null,
             },
             {

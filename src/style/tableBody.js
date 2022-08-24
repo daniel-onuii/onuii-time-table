@@ -120,7 +120,7 @@ th.night{color:#171868;}
 }
 
 .contents table {
-    pointer-events: none;
+    // pointer-events: none;
 }
 
 // .item.equal {
