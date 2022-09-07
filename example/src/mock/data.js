@@ -50,27 +50,6 @@ export const mock = {
                 lecture_name: '고1 통합과학',
                 status: 'MATCHED',
             },
-            {
-                lectureVtId: 8,
-                lesson_time: 'W2_H60',
-                lectureId: 9814,
-                lecture_name: '고1 통합과학',
-                status: 'MATCHED',
-            },
-            {
-                lectureVtId: 9,
-                lesson_time: 'W2_H60',
-                lectureId: 9815,
-                lecture_name: '고1 통합과학',
-                status: 'MATCHED',
-            },
-            {
-                lectureVtId: 10,
-                lesson_time: 'W2_H60',
-                lectureId: 9816,
-                lecture_name: '고1 통합과학',
-                status: 'MATCHED',
-            },
         ],
     },
 };

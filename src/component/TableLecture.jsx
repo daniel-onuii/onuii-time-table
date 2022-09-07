@@ -70,14 +70,6 @@ function TableLecture(props) {
                 <ScrollContainer className="scroll-container" vertical={false}>
                     <Layout width={dynamicWidth}>
                         <div>
-                            {/* <button
-                                ref={btnRef}
-                                onClick={handleChangeLecture}
-                                className={`color_all ${props.interfaceHook.subject === 'all' ? 'active' : ''}`}
-                                value="all"
-                            >
-                                상관없음
-                            </button> */}
                             {lectureData.map((e, i) => {
                                 const isProcessing = processingList?.includes(e.lectureId);
                                 const lessonTime = ` 주${e.lesson_time?.split('_')[0].replace('W', '')}회 ${e.lesson_time

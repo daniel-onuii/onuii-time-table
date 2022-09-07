@@ -86,13 +86,18 @@ function TableBody(props) {
 
     useEffect(() => {
         if (!_.isEmpty(itemHook.matchingItemGroupData) && interfaceHook.auth === 'admin' && interfaceHook.target === 'teacher') {
+            const rename = itemHook.matchingItemGroupData.reduce((result, e) => {
+                result.push({ ...e, startIdx: e.startIdx > 671 ? e.startIdx - 672 : e.startIdx, endIdx: e.endIdx > 671 ? e.endIdx - 672 : e.endIdx });
+                return result;
+            }, []);
             const handler = e => {
                 if (e.data.id === 'onuii-time-table') {
                     switch (e.data.name) {
                         case 'getMatchingData': //데이터 요청
                             link.sendMessage({
                                 name: 'responseMatchingData',
-                                data: _.filter(itemHook.matchingItemGroupData, { lectureId: interfaceHook.subject }),
+                                // data: _.filter(itemHook.matchingItemGroupData, { lectureId: interfaceHook.subject }),
+                                data: _.filter(rename, { lectureId: interfaceHook.subject }),
                                 option: _.find(interfaceHook?.userData?.lectureData, { lectureId: interfaceHook.subject })?.lesson_time,
                             }); //가매칭 filter 영역 선택시 데이터 post
                             break;

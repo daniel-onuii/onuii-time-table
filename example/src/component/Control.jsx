@@ -13,13 +13,13 @@ function Control({ setDataStudent, setDataTeacher, setUserInfo }) {
                         // console.log(e.data);
                         break;
                     case 'responseMatchingData':
-                        // console.log(e.data.data);
+                        console.log(':??', e.data.data);
                         break;
                     case 'selectMatchingArea': //학생차트에서 선택된 filter값을 선생님 차트에 전달
                         window.postMessage({ id: 'onuii-time-table', name: 'setFilter', data: e.data.data.blocks }, '*'); //선생님 핑크 표시
                         break;
                     case 'responseRealTimeBlockData':
-                        // console.log('!', e.data);
+                        // console.log('time', e.data);
                         break;
                     case 'responseAlertMessage':
                         // console.log(e.data);
@@ -97,6 +97,11 @@ function Control({ setDataStudent, setDataTeacher, setUserInfo }) {
         window.postMessage({ id: 'onuii-time-table', name: 'getMatchingData' }, '*'); //가매칭 데이터
     };
 
+    const handleHopeTimeData = () => {
+        window.postMessage({ id: 'onuii-time-table', name: 'getBlockData' }, '*'); //블록 데이터
+        // window.postMessage({ id: 'onuii-time-table', name: 'getMatchingData' }, '*'); //가매칭 데이터
+    };
+
     return (
         <div style={{ padding: '10px 20px', height: '30px' }}>
             <>
@@ -109,6 +114,7 @@ function Control({ setDataStudent, setDataTeacher, setUserInfo }) {
                     <option onClick={() => handleChooseTeacher(1)}>후보 선생님 B</option>
                 </select>
                 <button onClick={handleRequestData}>가매칭 데이터 요청</button>
+                <button onClick={handleHopeTimeData}>희망 시간 데이터 요청</button>
             </>
         </div>
     );

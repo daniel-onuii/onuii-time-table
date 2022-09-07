@@ -20,12 +20,25 @@ const App = () => {
     const [dataStudent, setDataStudent] = useState();
     const [dataTeacher, setDataTeacher] = useState();
     const [userInfo, setUserInfo] = useState();
-
+    const [textArea, setTextArea] = useState();
     const [test, setTest] = useState();
     const handleChangeTest = () => {
         setTest(1);
     };
 
+    const handleChange = e => {
+        const getJson = JSON.parse(e.target.value);
+        const test = getJson?.reduce((result, e) => {
+            result.push({
+                timeBlockId: e.block_group_No,
+                lectureVtId: null,
+                lectureSubjectIds: [...e.subject],
+                tempLectureVtId: null,
+            });
+            return result;
+        }, []);
+        setDataStudent({ timeBlocks: test });
+    };
     const processingData = [
         {
             id: 6,
@@ -35,15 +48,8 @@ const App = () => {
             },
             status: 'PROCESSING',
         },
-        {
-            id: 7,
-            subject: {
-                subjectId: 8906,
-                subjectName: '수학',
-            },
-            status: 'PROCESSING',
-        },
     ];
+
     return (
         <>
             <h1 style={{ marginLeft: '20px' }}>take 1</h1>
@@ -52,20 +58,15 @@ const App = () => {
                 <option>test2</option>
             </select>
             {/* <Control setDataStudent={setDataStudent} setDataTeacher={setDataTeacher} setUserInfo={setUserInfo} />
+            <textarea onChange={handleChange} value={textArea} />
             <Layout>
-                <OnuiiTimeTable
-                    auth={'user'}
-                    target={'student'}
-                    userData={mock.userData}
-                    blockData={getTimetableS[0]}
-                    processingData={processingData}
-                />
+                <OnuiiTimeTable auth={'user'} target={'student'} userData={mock.userData} blockData={dataStudent} processingData={processingData} />
                 <OnuiiTimeTable auth={'user'} target={'teacher'} userData={mock.userData} blockData={getTimetableT[0]} />
             </Layout> */}
             <Control setDataStudent={setDataStudent} setDataTeacher={setDataTeacher} setUserInfo={setUserInfo} />
             <Layout>
-                <OnuiiTimeTable auth={'admin'} target={'student'} userData={userInfo} blockData={dataStudent} />
-                <OnuiiTimeTable auth={'admin'} target={'teacher'} userData={userInfo} blockData={dataTeacher} />
+                <OnuiiTimeTable auth={'admin'} target={'student'} userData={mock.userData} blockData={dataStudent} />
+                <OnuiiTimeTable auth={'admin'} target={'teacher'} userData={mock.userData} blockData={dataTeacher} />
             </Layout>
         </>
     );
