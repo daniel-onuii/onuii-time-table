@@ -15,8 +15,14 @@ function useItemData({ fixed, matching }) {
     }, [fixed, matching]);
 
     useEffect(() => {
-        setFixedItemGroupData(lecture.getGroupByLectureTime(fixedItemData));
-        setMatchingItemGroupData(lecture.getGroupByLectureTime(matchingItemData));
+        const changeSundayDawnData = data => {
+            return data.map(e => {
+                return e.timeBlockId <= 5 ? { ...e, timeBlockId: e.timeBlockId + 672 } : { ...e, timeBlockId: e.timeBlockId };
+            });
+        };
+        // setFixedItemGroupData(lecture.getGroupByLectureTime(fixedItemData));
+        setFixedItemGroupData(lecture.getGroupByLectureTime(changeSundayDawnData(fixedItemData)));
+        setMatchingItemGroupData(lecture.getGroupByLectureTime(changeSundayDawnData(matchingItemData)));
     }, [fixedItemData, matchingItemData]);
 
     const updateFixedItemData = useCallback(value => {

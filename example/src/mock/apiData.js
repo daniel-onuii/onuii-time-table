@@ -1550,6 +1550,24 @@ export const getTimetableT = [
                 lectureSubjectIds: [],
                 tempLectureVtId: null,
             },
+            {
+                timeBlockId: 670,
+                lectureVtId: 2,
+                lectureSubjectIds: [],
+                tempLectureVtId: null,
+            },
+            {
+                timeBlockId: 671,
+                lectureVtId: 2,
+                lectureSubjectIds: [],
+                tempLectureVtId: null,
+            },
+            {
+                timeBlockId: 0,
+                lectureVtId: 2,
+                lectureSubjectIds: [],
+                tempLectureVtId: null,
+            },
         ],
     },
 ];
