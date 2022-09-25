@@ -18,6 +18,12 @@ body::-webkit-scrollbar {
     display: none;
 }
 table {
+    // @media (min-width: 376px) {
+    //     width:100%;
+    // }
+    // @media (max-width: 375px) {
+    //     width:375px;
+    // }
     width: 100%;
     border-collapse: collapse;
     -webkit-touch-callout: none;
@@ -27,42 +33,64 @@ table {
     -ms-user-select: none;
     user-select: none;
 }
-.color0,.color10 {
-    background: #F66D44 !important;
+.color0,.color7 {
+    background: #FFF9E2;
 }
-.color1,.color11 {
-    background: #BE61CA !important;
+.hcolor0,.hcolor7 {
+    background: #FFD222;
 }
-.color2,.color12 {
-    background: #FEAE65 !important;
+.color1,.color8 {
+    background: #FFEFFD;
 }
-.color3,.color13 {
-    background: #64C2A6 !important;
+.hcolor1,.hcolor8 {
+    background: #FF8EC9;
 }
-.color4,.color14 {
-    background: #1F75FE !important;
+.color2,.color9 {
+    background: #F5EFFF;
 }
-.color5,.color15 {
-    background: #74BBFB !important;
+.hcolor2,.hcolor9 {
+    background: #BC8CFF;
 }
-.color6,.color16 {
-    background: #EECA5D !important;
+.color3,.color10 {
+    background: #FFF3EA;
 }
-.color7,.color17 {
-    background: #7AC142 !important;
+.hcolor3,.hcolor10 {
+    background: #F9BA8B;
 }
-.color8,.color18 {
-    background: #2D87BB !important;
+.color4,.color11 {
+    background: #EBF5FF;
 }
-.color9,.color19 {
-    background: #74BBFB !important;
+.hcolor4,.hcolor11 {
+    background: #94C7FF;
 }
+.color5,.color12 {
+    background: #EFFFED;
+}
+.hcolor5,.hcolor12 {
+    background: #89E887;
+}
+.color6,.color13 {
+    background: #F3F3F3;
+}
+.hcolor6,.hcolor13 {
+    background: #CDCDCD;
+}
+
+// .color7,.color17 {
+//     background: #7AC142;
+// }
+// .color8,.color18 {
+//     background: #2D87BB;
+// }
+// .color9,.color19 {
+//     background: #74BBFB;
+// }
 .color_all{
-    background: #AADEA7 !important;
-    // color:#000 !important
+    background: #AADEA7;
+    // color:#000
 }
 .color-1{
-    background: #cdcdcd !important;
+    background: #cdcdcd;
 }
 .area._all {
     background: #AADEA7 !important;
@@ -70,7 +98,12 @@ table {
 .item.equal ._all{
     background: pink !important;
 }
+
+.area.disabled>div {
+    background: #EDEDED;
+}
 .area.disabled {
-    opacity: 0.4;
+    background: #fff !important;
+    color: #888888
 }
 `;

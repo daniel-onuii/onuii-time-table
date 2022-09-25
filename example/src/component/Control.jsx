@@ -103,7 +103,7 @@ function Control({ setDataStudent, setDataTeacher, setUserInfo }) {
     };
 
     return (
-        <div style={{ padding: '10px 20px', height: '30px' }}>
+        <div style={{ padding: '10px 20px', height: '30px', display: 'flex' }}>
             <>
                 <select size="2">
                     <option onClick={() => handleChooseStudent(0)}>학생 A</option>

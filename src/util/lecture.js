@@ -255,4 +255,15 @@ export const lecture = {
             ? _.find(dummyLectureList, { subjectId: id })?.subjectName
             : _.find(this.lectureList, { subjectId: id })?.subjectName;
     },
+    getMainSubject: function (subject) {
+        if (_.inRange(subject, 9788, 9797 + 1) || _.inRange(subject, 9810, 9811 + 1)) {
+            return '사회';
+        } else if (_.inRange(subject, 9798, 9805 + 1) || _.inRange(subject, 9812, 9813 + 1)) {
+            return '과학';
+        } else if (_.inRange(subject, 9826, 9834 + 1)) {
+            return '제2외국어';
+        } else {
+            return null;
+        }
+    },
 };

@@ -3,6 +3,22 @@ import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import ScrollContainer from 'react-indiana-drag-scroll';
 import { schedule } from '../util/schedule';
+import { styled as sstyled } from '../style/stitches.config';
+
+const Container = sstyled('div', {
+    // background: 'red',
+    variants: {
+        justify: {
+            bp1: { maxWidth: '320px' },
+            bp2: { maxWidth: '375px' },
+            bp3: { maxWidth: '425px' },
+            bp4: { maxWidth: '768px' },
+            bp5: { maxWidth: '1024px' },
+            bp6: { maxWidth: '100%' },
+        },
+    },
+});
+
 const Layout = styled.div`
     cursor: grab;
     max-width: 768px;
@@ -17,7 +33,7 @@ const Layout = styled.div`
     }
     button {
         cursor: grab;
-        color: #fff;
+        color: #333333;
         border: none;
         border-radius: 5px;
         padding: 3px 10px;
@@ -65,7 +81,17 @@ function TableLecture(props) {
         }
     }, [lectureData]);
     return (
-        <div id={'lectureBtnArea'}>
+        <Container
+            justify={{
+                '@bp1': 'bp1',
+                '@bp2': 'bp2',
+                '@bp3': 'bp3',
+                '@bp4': 'bp4',
+                '@bp5': 'bp5',
+                '@bp6': 'bp6',
+            }}
+            id={'lectureBtnArea'}
+        >
             {lectureData && (
                 <ScrollContainer className="scroll-container" vertical={false}>
                     <Layout width={dynamicWidth}>
@@ -93,7 +119,7 @@ function TableLecture(props) {
                     </Layout>
                 </ScrollContainer>
             )}
-        </div>
+        </Container>
     );
 }
 

@@ -143,17 +143,17 @@ function TableBody(props) {
                             const isOntime = i % 4 === 0; //정시조건
                             return (
                                 <React.Fragment key={i}>
-                                    <tr className={isOntime ? 'onTime' : ''}>
+                                    <tr className={`${isOntime ? 'onTime' : ''} ${i % 2 ? '' : 'grey'}`}>
                                         {isOntime ? (
                                             <th rowSpan="4" className={i >= 40 ? 'night' : 'day'}>
-                                                {e.split(':')[0]}시
+                                                {e.split(':')[0]}
                                             </th>
                                         ) : null}
                                         {_.range(0, 7).map((e, ii) => {
                                             const idx = table.getBlockId(e, i);
-                                            const level = _.find(distData, { timeBlockId: idx })?.level;
+                                            // const level = _.find(distData, { timeBlockId: idx })?.level;
                                             const lectureData = _.find(areaHook.areaData, { timeBlockId: idx })?.lectureSubjectIds;
-                                            const maxBlock = _.maxBy(areaSelectHook.lecture, 'timeBlockId');
+                                            // const maxBlock = _.maxBy(areaSelectHook.lecture, 'timeBlockId');
                                             return (
                                                 <td key={ii} className={`${e >= 6 ? 'weekend' : ''}`}>
                                                     <Area
@@ -164,7 +164,7 @@ function TableBody(props) {
                                                         interfaceHook={interfaceHook}
                                                         areaEvent={areaEvent}
                                                     >
-                                                        {level && <Distribution level={level} />}
+                                                        {/* {level && <Distribution level={level} />} */}
                                                         {lectureData?.map((e, i) => (
                                                             // <span style={{ color: 'red' }}>{i}</span>
                                                             <LectureItem key={i} id={e} idx={idx} areaHook={areaHook} interfaceHook={interfaceHook} />

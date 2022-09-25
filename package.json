@@ -1,6 +1,6 @@
 {
     "name": "onuii-time-table",
-    "version": "1.0.87",
+    "version": "1.0.88",
     "description": "Made with create-react-library",
     "author": "onuii",
     "license": "MIT",
@@ -56,6 +56,7 @@
     ],
     "dependencies": {
         "@reduxjs/toolkit": "^1.8.1",
+        "@stitches/react": "^1.2.8",
         "lodash": "^4.17.21",
         "moment": "^2.29.3",
         "npm-watch": "^0.11.0",

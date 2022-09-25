@@ -1,22 +1,25 @@
 import React from 'react';
 import styled from 'styled-components';
+import { styled as sstyled } from '../style/stitches.config';
 const Layout = styled.div`
     table {
-        border-bottom: 1px solid #eee;
+        // border-bottom: 1px solid #DDD;
     }
     th,
     td {
-        // border-left: 1px solid #eee;
+        // border-left: 1px solid #DDD;
         text-align: center;
-        height: 21px;
+        height: 28px;
         vertical-align: middle;
         width: 10%;
         position: relative;
         padding: 0;
         border-spacing: 0;
-        font-size: 12px;
+        // font-size: 12px;
     }
     .head {
+        width: calc(100% - 40px);
+        margin: auto;
         overflow-y: scroll;
         &::-webkit-scrollbar {
             width: 4px;
@@ -26,28 +29,49 @@ const Layout = styled.div`
             background: #ccc;
         }
     }
-    .head th {
-        height: 30px;
-        font-size: 15px;
-        color: #14033e;
-    }
 `;
-function TableHead({ interfaceHook }) {
+const Th = sstyled('th', {
+    height: '30px',
+    fontSize: '18px',
+    fontWeight: '500',
+    lineHeight: '21px',
+    color: '#14033e',
+    variants: {
+        justify: {
+            bp1: { fontSize: '13px' },
+            bp2: { fontSize: '13px' },
+            bp3: { fontSize: '13px' },
+            bp4: { fontSize: '13px' },
+            bp5: { fontSize: '13px' },
+            bp6: { fontSize: '18px' },
+        },
+    },
+});
+function TableHead() {
+    const bp = {
+        '@bp1': 'bp1',
+        '@bp2': 'bp2',
+        '@bp3': 'bp3',
+        '@bp4': 'bp4',
+        '@bp5': 'bp5',
+        '@bp6': 'bp6',
+    };
     return (
         <Layout>
-            {/* <div style={{ height: '20px', color: 'red' }}>{interfaceHook.message}</div> */}
             <div className="head">
                 <table>
                     <thead>
                         <tr>
-                            <th></th>
-                            <th>월</th>
-                            <th>화</th>
-                            <th>수</th>
-                            <th>목</th>
-                            <th>금</th>
-                            <th>토</th>
-                            <th style={{ color: '#E03522' }}>일</th>
+                            <Th justify={{ ...bp }}></Th>
+                            <Th justify={{ ...bp }}>월</Th>
+                            <Th justify={{ ...bp }}>화</Th>
+                            <Th justify={{ ...bp }}>수</Th>
+                            <Th justify={{ ...bp }}>목</Th>
+                            <Th justify={{ ...bp }}>금</Th>
+                            <Th justify={{ ...bp }}>토</Th>
+                            <Th justify={{ ...bp }} style={{ color: '#E03522' }}>
+                                일
+                            </Th>
                         </tr>
                     </thead>
                 </table>

@@ -2,6 +2,42 @@ import React, { useEffect, useState } from 'react';
 import { lecture } from '../../util/lecture';
 import styled from 'styled-components';
 import _ from 'lodash';
+import { styled as sstyled } from '../../style/stitches.config';
+
+const Header = sstyled('div', {
+    height: '8px',
+});
+const MainTitle = sstyled('div', {
+    paddingLeft: '10px',
+    paddingTop: '10px',
+    fontSize: '18px',
+    fontWeight: '700',
+});
+const SubTitle = sstyled('div', {
+    paddingLeft: '10px',
+    paddingTop: '3px',
+    fontSize: '16px',
+    fontWeight: '500',
+    lineHeight: '19px',
+});
+const FoldPageFront = sstyled('div', {
+    transform: 'rotate(-90deg)',
+    width: '18px',
+    height: '18px',
+    right: '-8px',
+    position: 'absolute',
+    bottom: '-9px',
+});
+const FoldPageBack = sstyled('div', {
+    background: '#FFFFFF !important',
+    transform: 'matrix(0.5, -0.5, -0.5, -0.5, 0, 0)',
+    width: '18px',
+    height: '18px',
+    right: '-8px',
+    position: 'absolute',
+    bottom: '-9px',
+});
+
 const Layout = styled.div.attrs(props => ({
     className: `area _${props.lecture_id} color${props.colorIndex} ${
         // props.target === 'student' && props.auth === 'admin' && props.subject && props.subject != props.lecture_id && 'disabled'
@@ -9,26 +45,30 @@ const Layout = styled.div.attrs(props => ({
     }`,
 }))`
     display: inline-block;
-    height: 100%;
-    width: ${props => (100 - 15) / props.length}%;
+    // height: 100%;
+    height: 29px;
+    // width: ${props => (100 - 15) / props.length}%;
+    width: 100%;
     position: absolute;
-    left: ${props => props.seq * ((100 - 15) / props.length)}%;
+    // left: ${props => props.seq * ((100 - 15) / props.length)}%;
+    left: 1px;
     &.head {
         opacity: 1;
-        border-radius: 5px 5px 0px 0px;
-        font-size: 12px;
+        text-align: left;
+        // border-radius: 5px 5px 0px 0px;
     }
     &.last {
-        border-radius: 0 0 5px 5px;
+        // border-radius: 0 0 5px 5px;
+        overflow: hidden;
     }
     &.head.last {
         opacity: 1;
-        border-radius: 5px 5px 5px 5px;
+        // border-radius: 5px 5px 5px 5px;
         font-size: 12px;
     }
     span {
         position: relative;
-        top: 2px;
+        // top: 2px;
         z-index: 1;
     }
     .corner {
@@ -59,6 +99,17 @@ function LectureItem({ id, idx, areaHook, interfaceHook }) {
     const isFirst = isEmptyBefore || !isEqualBefore;
     const isLast = isEmptyNext || !isEqualNext;
     const colorIndex = interfaceHook.target === 'student' ? _.findIndex(interfaceHook?.userData?.lectureData, { lectureId: id }) : '_all';
+    // const getMainSubject = subject => {
+    //     if (_.inRange(subject, 9788, 9797 + 1) || _.inRange(subject, 9810, 9811 + 1)) {
+    //         return '사회';
+    //     } else if (_.inRange(subject, 9798, 9805 + 1) || _.inRange(subject, 9812, 9813 + 1)) {
+    //         return '과학';
+    //     } else if (_.inRange(subject, 9826, 9834 + 1)) {
+    //         return '제2외국어';
+    //     } else {
+    //         return null;
+    //     }
+    // };
     return (
         <Layout
             lecture_id={id}
@@ -70,7 +121,25 @@ function LectureItem({ id, idx, areaHook, interfaceHook }) {
             target={interfaceHook.target}
             auth={interfaceHook.auth}
         >
-            <span className={`ignoreEnter`}>{isFirst ? `${lecture.getLectureName(id)}` : ''}</span>
+            {isFirst && <Header className={`hcolor${colorIndex}`}>{}</Header>}
+            {isFirst && (
+                <span className={`ignoreEnter`}>
+                    {_.isNull(lecture.getMainSubject(id)) ? (
+                        <MainTitle>{lecture.getLectureName(id)}</MainTitle>
+                    ) : (
+                        <React.Fragment>
+                            <MainTitle>{lecture.getMainSubject(id)}</MainTitle>
+                            <SubTitle>{lecture.getLectureName(id)}</SubTitle>
+                        </React.Fragment>
+                    )}
+                </span>
+            )}
+            {isLast && (
+                <React.Fragment>
+                    <FoldPageFront className={`hcolor${colorIndex}`} />
+                    <FoldPageBack />
+                </React.Fragment>
+            )}
         </Layout>
     );
 }
