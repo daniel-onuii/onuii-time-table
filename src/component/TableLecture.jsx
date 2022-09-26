@@ -6,22 +6,10 @@ import { schedule } from '../util/schedule';
 import { lecture } from '../util/lecture';
 import { styled as sstyled } from '../style/stitches.config';
 
-const Container = sstyled('div', {
-    // background: 'red',
-    variants: {
-        // justify: {
-        //     bp1: { maxWidth: '100%' },
-        //     bp2: { maxWidth: '100%' },
-        //     bp3: { maxWidth: '100%' },
-        //     bp4: { maxWidth: '100%' },
-        //     bp5: { maxWidth: '100%' },
-        //     bp6: { maxWidth: '100%' },
-        // },
-    },
-});
+const Container = sstyled('div', {});
 
 const Card = sstyled('button', {
-    '& .titleWrap div': {},
+    // '& .titleWrap div': {},
     border: 'none',
     textAlign: 'left',
     padding: '0px',
@@ -60,6 +48,11 @@ const MainTitle = sstyled('div', {
                 paddingTop: '12px',
             },
         },
+        active: {
+            active: {
+                paddingTop: '4px !important',
+            },
+        },
     },
 });
 const SubTitle = sstyled('div', {
@@ -68,6 +61,11 @@ const SubTitle = sstyled('div', {
         justify: {
             bp1: { paddingLeft: '4px', paddingTop: '11px', paddingRight: '10px', fontSize: '15px', fontWeight: 500, lineHeight: '17.9px' },
             bp5: { paddingLeft: '5px', paddingTop: '14px', paddingRight: '10px', fontSize: '15px', fontWeight: 500, lineHeight: '17.9px' },
+        },
+        active: {
+            active: {
+                paddingTop: '4px !important',
+            },
         },
     },
 });
@@ -170,16 +168,20 @@ function TableLecture(props) {
                                         onClick={isProcessing ? postMessage : handleChangeLecture}
                                         value={e.lectureId}
                                     >
+                                        {props.interfaceHook.subject === e.lectureId && <ActiveBar className={`hcolor${i}`} justify={{ ...bp }} />}
                                         <div className="titleWrap">
-                                            {props.interfaceHook.subject === e.lectureId && (
-                                                <ActiveBar className={`hcolor${i}`} justify={{ ...bp }} />
-                                            )}
                                             {_.isNull(lecture.getMainSubject(e.lectureId)) ? (
-                                                <MainTitle justify={{ ...bp }}>{lecture.getLectureName(e.lectureId)}</MainTitle>
+                                                <MainTitle justify={{ ...bp }} active={props.interfaceHook.subject === e.lectureId && 'active'}>
+                                                    {lecture.getLectureName(e.lectureId)}
+                                                </MainTitle>
                                             ) : (
                                                 <React.Fragment>
-                                                    <MainTitle justify={{ ...bp }}>{lecture.getMainSubject(e.lectureId)}</MainTitle>
-                                                    <SubTitle justify={{ ...bp }}>{lecture.getLectureName(e.lectureId)}</SubTitle>
+                                                    <MainTitle justify={{ ...bp }} active={props.interfaceHook.subject === e.lectureId && 'active'}>
+                                                        {lecture.getMainSubject(e.lectureId)}
+                                                    </MainTitle>
+                                                    <SubTitle justify={{ ...bp }} active={props.interfaceHook.subject === e.lectureId && 'active'}>
+                                                        {lecture.getLectureName(e.lectureId)}
+                                                    </SubTitle>
                                                 </React.Fragment>
                                             )}
                                         </div>
