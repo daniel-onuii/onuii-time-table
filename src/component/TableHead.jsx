@@ -18,7 +18,7 @@ const Layout = styled.div`
         // font-size: 12px;
     }
     .head {
-        width: calc(100% - 40px);
+        width: calc(100% - 10px);
         margin: auto;
         overflow-y: scroll;
         &::-webkit-scrollbar {
@@ -39,22 +39,14 @@ const Th = sstyled('th', {
     variants: {
         justify: {
             bp1: { fontSize: '13px' },
-            bp2: { fontSize: '13px' },
-            bp3: { fontSize: '13px' },
-            bp4: { fontSize: '13px' },
-            bp5: { fontSize: '13px' },
-            bp6: { fontSize: '18px' },
+            bp5: { fontSize: '18px' },
         },
     },
 });
 function TableHead() {
     const bp = {
         '@bp1': 'bp1',
-        '@bp2': 'bp2',
-        '@bp3': 'bp3',
-        '@bp4': 'bp4',
         '@bp5': 'bp5',
-        '@bp6': 'bp6',
     };
     return (
         <Layout>

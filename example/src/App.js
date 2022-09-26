@@ -6,6 +6,7 @@ import { OnuiiTimeTable } from 'onuii-time-table';
 import styled from 'styled-components';
 import _ from 'lodash';
 const Layout = styled.div`
+    width: 100%;
     display: inline-block;
     > div {
         display: inline-block;
@@ -15,7 +16,7 @@ const Layout = styled.div`
         color: red;
     }
 `;
-// const Main = styled.div``;
+const Main = styled.div``;
 const App = () => {
     const [dataStudent, setDataStudent] = useState();
     const [dataTeacher, setDataTeacher] = useState();
@@ -51,7 +52,7 @@ const App = () => {
     ];
 
     return (
-        <div>
+        <Main>
             {/* <h1 style={{ marginLeft: '20px' }}>take 1</h1> */}
             {/* <select onChange={handleChangeTest}>
                 <option>test1</option>
@@ -68,7 +69,7 @@ const App = () => {
                 <OnuiiTimeTable auth={'admin'} target={'student'} userData={mock.userData} blockData={dataStudent} />
                 <OnuiiTimeTable auth={'admin'} target={'teacher'} userData={mock.userData} blockData={dataTeacher} />
             </Layout> */}
-        </div>
+        </Main>
     );
 };
 

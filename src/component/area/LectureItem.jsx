@@ -8,17 +8,33 @@ const Header = sstyled('div', {
     height: '8px',
 });
 const MainTitle = sstyled('div', {
-    paddingLeft: '10px',
-    paddingTop: '10px',
-    fontSize: '18px',
-    fontWeight: '700',
+    variants: {
+        justify: {
+            bp1: { paddingLeft: '4px', paddingTop: '6px', fontSize: '13px', fontWeight: '700', lineHeight: '15.51px' },
+            bp5: {
+                paddingLeft: '10px',
+                paddingTop: '10px',
+                fontSize: '18px',
+                fontWeight: '700',
+                lineHeight: '21.48px',
+            },
+        },
+    },
 });
 const SubTitle = sstyled('div', {
-    paddingLeft: '10px',
-    paddingTop: '3px',
-    fontSize: '16px',
-    fontWeight: '500',
-    lineHeight: '19px',
+    variants: {
+        justify: {
+            bp1: { paddingLeft: '4px', paddingTop: '2px', fontSize: '12px', fontWeight: '500', lineHeight: '16px' },
+            bp5: {
+                paddingLeft: '10px',
+                paddingTop: '3px',
+                fontSize: '16px',
+                fontWeight: '500',
+                lineHeight: '19px',
+                lineHeight: '17.9px',
+            },
+        },
+    },
 });
 const FoldPageFront = sstyled('div', {
     transform: 'rotate(-90deg)',
@@ -110,6 +126,10 @@ function LectureItem({ id, idx, areaHook, interfaceHook }) {
     //         return null;
     //     }
     // };
+    const bp = {
+        '@bp1': 'bp1',
+        '@bp5': 'bp5',
+    };
     return (
         <Layout
             lecture_id={id}
@@ -125,11 +145,11 @@ function LectureItem({ id, idx, areaHook, interfaceHook }) {
             {isFirst && (
                 <span className={`ignoreEnter`}>
                     {_.isNull(lecture.getMainSubject(id)) ? (
-                        <MainTitle>{lecture.getLectureName(id)}</MainTitle>
+                        <MainTitle justify={{ ...bp }}>{lecture.getLectureName(id)}</MainTitle>
                     ) : (
                         <React.Fragment>
-                            <MainTitle>{lecture.getMainSubject(id)}</MainTitle>
-                            <SubTitle>{lecture.getLectureName(id)}</SubTitle>
+                            <MainTitle justify={{ ...bp }}>{lecture.getMainSubject(id)}</MainTitle>
+                            <SubTitle justify={{ ...bp }}>{lecture.getLectureName(id)}</SubTitle>
                         </React.Fragment>
                     )}
                 </span>

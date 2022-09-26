@@ -3,18 +3,98 @@ import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import ScrollContainer from 'react-indiana-drag-scroll';
 import { schedule } from '../util/schedule';
+import { lecture } from '../util/lecture';
 import { styled as sstyled } from '../style/stitches.config';
 
 const Container = sstyled('div', {
     // background: 'red',
     variants: {
+        // justify: {
+        //     bp1: { maxWidth: '100%' },
+        //     bp2: { maxWidth: '100%' },
+        //     bp3: { maxWidth: '100%' },
+        //     bp4: { maxWidth: '100%' },
+        //     bp5: { maxWidth: '100%' },
+        //     bp6: { maxWidth: '100%' },
+        // },
+    },
+});
+
+const Card = sstyled('button', {
+    '& .titleWrap div': {},
+    border: 'none',
+    textAlign: 'left',
+    padding: '0px',
+    marginRight: '10px',
+    variants: {
         justify: {
-            bp1: { maxWidth: '320px' },
-            bp2: { maxWidth: '375px' },
-            bp3: { maxWidth: '425px' },
-            bp4: { maxWidth: '768px' },
-            bp5: { maxWidth: '1024px' },
-            bp6: { maxWidth: '100%' },
+            bp1: {
+                fontSize: '17px',
+                fontWeight: 700,
+                lineHeight: '20.29px',
+            },
+            bp5: {
+                fontSize: '18px',
+                fontWeight: 700,
+                lineHeight: '21.48px',
+            },
+        },
+    },
+});
+const MainTitle = sstyled('div', {
+    display: 'inline-block',
+    variants: {
+        justify: {
+            bp1: {
+                fontSize: '17px',
+                fontWeight: 700,
+                lineHeight: '20.29px',
+                paddingLeft: '10px',
+                paddingTop: '10px',
+            },
+            bp5: {
+                fontSize: '18px',
+                fontWeight: 700,
+                lineHeight: '21.48px',
+                paddingLeft: '14px',
+                paddingTop: '12px',
+            },
+        },
+    },
+});
+const SubTitle = sstyled('div', {
+    display: 'inline-block',
+    variants: {
+        justify: {
+            bp1: { paddingLeft: '4px', paddingTop: '11px', paddingRight: '10px', fontSize: '15px', fontWeight: 500, lineHeight: '17.9px' },
+            bp5: { paddingLeft: '5px', paddingTop: '14px', paddingRight: '10px', fontSize: '15px', fontWeight: 500, lineHeight: '17.9px' },
+        },
+    },
+});
+const Time = sstyled('div', {
+    color: '#777777',
+    variants: {
+        justify: {
+            bp1: {
+                fontSize: '13px',
+                fontWeight: 400,
+                lineHeight: '21px',
+                padding: '2px 10px 10px 10px',
+            },
+            bp5: {
+                fontSize: '14px',
+                fontWeight: 400,
+                lineHeight: '21px',
+                padding: '2px 14px 12px 14px',
+            },
+        },
+    },
+});
+const ActiveBar = sstyled('div', {
+    variants: {
+        justify: {
+            bp1: { height: '6px', width: '100%' },
+            bp5: {},
         },
     },
 });
@@ -24,24 +104,9 @@ const Layout = styled.div`
     max-width: 768px;
     min-width: 375px;
     margin-top: 10px;
-    div {
+    .rail {
         min-width: 375px;
-        width: ${props => props.width}px;
-    }
-    button.active {
-        border: 2px solid rgb(92, 85, 247);
-    }
-    button {
-        cursor: grab;
-        color: #333333;
-        border: none;
-        border-radius: 5px;
-        padding: 3px 10px;
-        font-weight: bold;
-        margin-left: 10px;
-    }
-    button:hover {
-        -webkit-filter: brightness(110%);
+        width: ${props => props.width}px !important;
     }
     .disabled {
         text-decoration: line-through;
@@ -57,7 +122,7 @@ function TableLecture(props) {
         return result;
     }, []); //매칭 프로세스 상태의 과목값
     const handleChangeLecture = e => {
-        const val = e.target.value;
+        const val = e.currentTarget.value;
         props.interfaceHook.setSubject(val === 'all' ? 'all' : Number(val));
     };
     const postMessage = () => {
@@ -80,29 +145,24 @@ function TableLecture(props) {
             setDynamicWidth(maxWidth + 10);
         }
     }, [lectureData]);
+    const bp = {
+        '@bp1': 'bp1',
+        '@bp5': 'bp5',
+    };
     return (
-        <Container
-            justify={{
-                '@bp1': 'bp1',
-                '@bp2': 'bp2',
-                '@bp3': 'bp3',
-                '@bp4': 'bp4',
-                '@bp5': 'bp5',
-                '@bp6': 'bp6',
-            }}
-            id={'lectureBtnArea'}
-        >
+        <Container id={'lectureBtnArea'}>
             {lectureData && (
                 <ScrollContainer className="scroll-container" vertical={false}>
                     <Layout width={dynamicWidth}>
-                        <div>
+                        <div className="rail">
                             {lectureData.map((e, i) => {
                                 const isProcessing = processingList?.includes(e.lectureId);
-                                const lessonTime = ` 주${e.lesson_time?.split('_')[0].replace('W', '')}회 ${e.lesson_time
+                                const lessonTime = ` 주 ${e.lesson_time?.split('_')[0].replace('W', '')}회 ${e.lesson_time
                                     ?.split('_')[1]
                                     ?.replace('H', '')}분`;
                                 return (
-                                    <button
+                                    <Card
+                                        justify={{ ...bp }}
                                         key={i}
                                         className={`lectureBtn color${i} ${props.interfaceHook.subject === e.lectureId ? 'active' : ''} ${
                                             isProcessing ? 'disabled' : ''
@@ -110,9 +170,21 @@ function TableLecture(props) {
                                         onClick={isProcessing ? postMessage : handleChangeLecture}
                                         value={e.lectureId}
                                     >
-                                        {e.lecture_name}
-                                        {lessonTime}
-                                    </button>
+                                        <div className="titleWrap">
+                                            {props.interfaceHook.subject === e.lectureId && (
+                                                <ActiveBar className={`hcolor${i}`} justify={{ ...bp }} />
+                                            )}
+                                            {_.isNull(lecture.getMainSubject(e.lectureId)) ? (
+                                                <MainTitle justify={{ ...bp }}>{lecture.getLectureName(e.lectureId)}</MainTitle>
+                                            ) : (
+                                                <React.Fragment>
+                                                    <MainTitle justify={{ ...bp }}>{lecture.getMainSubject(e.lectureId)}</MainTitle>
+                                                    <SubTitle justify={{ ...bp }}>{lecture.getLectureName(e.lectureId)}</SubTitle>
+                                                </React.Fragment>
+                                            )}
+                                        </div>
+                                        <Time justify={{ ...bp }}>{lessonTime}</Time>
+                                    </Card>
                                 );
                             })}
                         </div>

@@ -16,7 +16,7 @@ table {
 //     }
 // }
 .contents {
-    width: calc(100% - 40px);
+    width: calc(100% - 10px);
     margin: auto;
     height: 504px;
     overflow-y: scroll;

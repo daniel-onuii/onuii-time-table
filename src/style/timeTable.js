@@ -1,5 +1,5 @@
 export const timeTable = `
-
+width:100%;
 th:first-child {
     width: 5%;
 }

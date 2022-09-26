@@ -8,36 +8,108 @@ import ItemMenu from '../contextMenu/ItemMenu';
 import { styled as sstyled } from '../../style/stitches.config';
 
 const Header = sstyled('div', {
-    height: '30px',
     color: '#fff',
-    fontSize: '14px',
-    fontWeight: 600,
-    paddingLeft: '10px',
-    '& span': {
-        position: 'relative',
-        top: '5px',
+    variants: {
+        justify: {
+            bp1: {
+                paddingLeft: '4px',
+                height: '20px',
+                fontSize: '10px',
+                fontWeight: 600,
+                lineHeight: '11.93px',
+                '& span': {
+                    position: 'relative',
+                    top: '5px',
+                },
+            },
+            bp5: {
+                height: '30px',
+                fontSize: '14px',
+                fontWeight: 600,
+                paddingLeft: '10px',
+                lineHeight: '17px',
+                '& span': {
+                    position: 'relative',
+                    top: '5px',
+                },
+            },
+        },
     },
 });
-const Contents = sstyled('div', { margin: '0px 5px 5px 5px', background: '#fff', height: 'calc(100% - 35px)' });
+const Contents = sstyled('div', {
+    variants: {
+        justify: {
+            bp1: {
+                margin: '0px 2px ',
+                background: '#fff',
+                height: 'calc(100% - 22px)',
+            },
+            bp5: {
+                margin: '0px 5px',
+                background: '#fff',
+                height: 'calc(100% - 35px)',
+            },
+        },
+    },
+});
 const MainTitle = sstyled('div', {
-    fontSize: '18px',
-    fontWeight: 700,
-    paddingLeft: '6px',
-    paddingTop: '8px',
-    color: '#333',
+    variants: {
+        justify: {
+            bp1: { paddingLeft: '2px', paddingTop: '6px', fontSize: '13px', fontWeight: '700', lineHeight: '15.51px' },
+            bp5: {
+                fontSize: '18px',
+                fontWeight: 700,
+                paddingLeft: '6px',
+                paddingTop: '8px',
+                color: '#333',
+                lineHeight: '21.48px',
+            },
+        },
+    },
 });
 const SubTitle = sstyled('div', {
-    fontSize: '15px',
-    fontWeight: 500,
-    paddingLeft: '6px',
-    paddingTop: '3px',
+    variants: {
+        justify: {
+            bp1: { paddingLeft: '2px', paddingTop: '2px', fontSize: '12px', fontWeight: '500', lineHeight: '16px' },
+            bp5: {
+                fontSize: '15px',
+                fontWeight: 500,
+                paddingLeft: '6px',
+                paddingTop: '3px',
+                lineHeight: '17.9px',
+            },
+        },
+    },
 });
 const Time = sstyled('div', {
     color: '#999999',
-    fontSize: '12px',
-    fontWeight: 400,
-    paddingLeft: '6px',
-    paddingTop: '8px',
+    variants: {
+        justify: {
+            bp1: {
+                paddingLeft: '2px',
+                paddingTop: '6px',
+                fontSize: '10px',
+                fontWeight: '400',
+                lineHeight: '13px',
+                '& span:first-child': {
+                    textOverflow: 'ellipsis',
+                    display: '-webkit-box',
+                    WebkitLineClamp: '2',
+                    WebkitBoxOrient: 'vertical',
+                },
+            },
+            bp5: {
+                fontSize: '10px',
+                fontWeight: 400,
+                paddingLeft: '2px',
+                paddingTop: '6px',
+                lineHeight: '13px',
+                '& span:first-child': {
+                    display: 'initial',
+                },
+            },
+        },
+    },
 });
 
 const Layout = styled.div`
@@ -104,6 +176,10 @@ function Item({ itemHook, interfaceHook, idx, type, areaHook }) {
         setShowMenu(true);
         setMenuPosition({ x: e.clientX, y: e.clientY });
     };
+    const bp = {
+        '@bp1': 'bp1',
+        '@bp5': 'bp5',
+    };
     return (
         <Layout>
             <div
@@ -116,36 +192,37 @@ function Item({ itemHook, interfaceHook, idx, type, areaHook }) {
                 style={{
                     zIndex: 2,
                     height: `${itemGroupData.reduce((result, y) => {
-                        idx == y.startIdx && result.push((y.endTimeIdx + 1 - y.startTimeIdx) * 28 + 'px');
+                        idx == y.startIdx && result.push((y.endTimeIdx + 1 - y.startTimeIdx) * 28 + 4 + 'px');
                         return result;
                     }, [])}`,
                 }}
             >
-                <Header>
+                <Header justify={{ ...bp }}>
                     <span>{type === 'fixed' ? '수강중' : '가매칭중'}</span>
                 </Header>
-                <Contents>
+                <Contents justify={{ ...bp }}>
                     <span>
                         {/* <b>{itemLectureName}</b> */}
 
                         {_.isNull(lecture.getMainSubject(id)) ? (
-                            <MainTitle>{lecture.getLectureName(id)}</MainTitle>
+                            <MainTitle justify={{ ...bp }}>{lecture.getLectureName(id)}</MainTitle>
                         ) : (
                             <React.Fragment>
-                                <MainTitle>{lecture.getMainSubject(id)}</MainTitle>
-                                <SubTitle>{lecture.getLectureName(id)}</SubTitle>
+                                <MainTitle justify={{ ...bp }}>{lecture.getMainSubject(id)}</MainTitle>
+                                <SubTitle justify={{ ...bp }}>{lecture.getLectureName(id)}</SubTitle>
                             </React.Fragment>
                         )}
                     </span>
-                    <Time>
+                    <Time justify={{ ...bp }}>
                         <span>
                             {itemGroupData.map(y => {
-                                return (
-                                    idx == y.startIdx &&
-                                    `${schedule.getTime(y.startTimeIdx)}
-                            ~
-                            ${schedule.getTime(y.endTimeIdx + 1)} `
-                                );
+                                return idx == y.startIdx && `${schedule.getTime(y.startTimeIdx)}`;
+                            })}
+                        </span>
+                        ~
+                        <span>
+                            {itemGroupData.map(y => {
+                                return idx == y.startIdx && `${schedule.getTime(y.endTimeIdx + 1)}`;
                             })}
                         </span>
                     </Time>
