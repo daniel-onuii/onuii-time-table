@@ -76,6 +76,7 @@ const Layout = styled.div.attrs(props => ({
     &.last {
         // border-radius: 0 0 5px 5px;
         overflow: hidden;
+        bottom: 0px;
     }
     &.head.last {
         opacity: 1;

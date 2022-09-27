@@ -28,6 +28,13 @@ const Card = sstyled('button', {
             },
         },
     },
+    '&.active': {
+        position: 'relative',
+        top: '-10px',
+        marginRight: '14px',
+        marginLeft: '-4px',
+        boxShadow: 'rgb(0 0 0 / 20%) 5px 5px 5px 1px',
+    },
 });
 const MainTitle = sstyled('div', {
     display: 'inline-block',
@@ -39,6 +46,7 @@ const MainTitle = sstyled('div', {
                 lineHeight: '20.29px',
                 paddingLeft: '10px',
                 paddingTop: '10px',
+                '&.active': { paddingTop: '4px !important' },
             },
             bp5: {
                 fontSize: '18px',
@@ -46,11 +54,7 @@ const MainTitle = sstyled('div', {
                 lineHeight: '21.48px',
                 paddingLeft: '14px',
                 paddingTop: '12px',
-            },
-        },
-        active: {
-            active: {
-                paddingTop: '4px !important',
+                '&.active': { paddingTop: '6px !important' },
             },
         },
     },
@@ -59,12 +63,23 @@ const SubTitle = sstyled('div', {
     display: 'inline-block',
     variants: {
         justify: {
-            bp1: { paddingLeft: '4px', paddingTop: '11px', paddingRight: '10px', fontSize: '15px', fontWeight: 500, lineHeight: '17.9px' },
-            bp5: { paddingLeft: '5px', paddingTop: '14px', paddingRight: '10px', fontSize: '15px', fontWeight: 500, lineHeight: '17.9px' },
-        },
-        active: {
-            active: {
-                paddingTop: '4px !important',
+            bp1: {
+                paddingLeft: '4px',
+                paddingTop: '11px',
+                paddingRight: '10px',
+                fontSize: '15px',
+                fontWeight: 500,
+                lineHeight: '17.9px',
+                '&.active': { paddingTop: '4px !important' },
+            },
+            bp5: {
+                paddingLeft: '5px',
+                paddingTop: '14px',
+                paddingRight: '14px',
+                fontSize: '15px',
+                fontWeight: 500,
+                lineHeight: '17.9px',
+                '&.active': { paddingTop: '6px !important' },
             },
         },
     },
@@ -88,14 +103,7 @@ const Time = sstyled('div', {
         },
     },
 });
-const ActiveBar = sstyled('div', {
-    variants: {
-        justify: {
-            bp1: { height: '6px', width: '100%' },
-            bp5: {},
-        },
-    },
-});
+const ActiveBar = sstyled('div', { height: '6px', width: '100%' });
 
 const Layout = styled.div`
     cursor: grab;
@@ -158,28 +166,27 @@ function TableLecture(props) {
                                 const lessonTime = ` 주 ${e.lesson_time?.split('_')[0].replace('W', '')}회 ${e.lesson_time
                                     ?.split('_')[1]
                                     ?.replace('H', '')}분`;
+                                const isActive = props.interfaceHook.subject === e.lectureId;
                                 return (
                                     <Card
                                         justify={{ ...bp }}
                                         key={i}
-                                        className={`lectureBtn color${i} ${props.interfaceHook.subject === e.lectureId ? 'active' : ''} ${
-                                            isProcessing ? 'disabled' : ''
-                                        }`}
+                                        className={`lectureBtn color${i} ${isActive ? 'active' : ''} ${isProcessing ? 'disabled' : ''}`}
                                         onClick={isProcessing ? postMessage : handleChangeLecture}
                                         value={e.lectureId}
                                     >
-                                        {props.interfaceHook.subject === e.lectureId && <ActiveBar className={`hcolor${i}`} justify={{ ...bp }} />}
+                                        {isActive && <ActiveBar className={`hcolor${i}`} />}
                                         <div className="titleWrap">
                                             {_.isNull(lecture.getMainSubject(e.lectureId)) ? (
-                                                <MainTitle justify={{ ...bp }} active={props.interfaceHook.subject === e.lectureId && 'active'}>
+                                                <MainTitle justify={{ ...bp }} className={isActive && 'active'}>
                                                     {lecture.getLectureName(e.lectureId)}
                                                 </MainTitle>
                                             ) : (
                                                 <React.Fragment>
-                                                    <MainTitle justify={{ ...bp }} active={props.interfaceHook.subject === e.lectureId && 'active'}>
+                                                    <MainTitle justify={{ ...bp }} className={isActive && 'active'}>
                                                         {lecture.getMainSubject(e.lectureId)}
                                                     </MainTitle>
-                                                    <SubTitle justify={{ ...bp }} active={props.interfaceHook.subject === e.lectureId && 'active'}>
+                                                    <SubTitle justify={{ ...bp }} className={isActive && 'active'}>
                                                         {lecture.getLectureName(e.lectureId)}
                                                     </SubTitle>
                                                 </React.Fragment>
