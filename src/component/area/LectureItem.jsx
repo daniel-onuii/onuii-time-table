@@ -155,7 +155,7 @@ function LectureItem({ id, idx, areaHook, interfaceHook }) {
                     )}
                 </span>
             )}
-            {isLast && (
+            {isLast && interfaceHook.target === 'student' && (
                 <React.Fragment>
                     <FoldPageFront className={`hcolor${colorIndex}`} />
                     <FoldPageBack />

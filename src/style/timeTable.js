@@ -93,10 +93,16 @@ table {
     background: #cdcdcd;
 }
 .area._all {
-    background: #AADEA7 !important;
+    background: rgba(148, 143, 255, 0.3);
 }
 .item.equal ._all{
     background: pink !important;
+}
+.matching.hcolor_all{
+    background:#FF8EC9;
+}
+.fixed.hcolor_all{
+    background:green;
 }
 
 .area.disabled>div {

@@ -98,12 +98,12 @@ tr:last-child td{
 .item:hover {
     cursor: cell;
     background: #efefef;
-    :not(.dragging)::after {
-        content: '📌';
-        color: #fff;
-        font-size: 13px;
-        z-index: 4;
-    }
+    // :not(.dragging)::after {
+    //     content: '📌';
+    //     color: #fff;
+    //     font-size: 13px;
+    //     z-index: 4;
+    // }
 }
 .active {
     width: 100%;

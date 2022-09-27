@@ -6,6 +6,7 @@ import { table } from '../../util/table';
 import _ from 'lodash';
 import ItemMenu from '../contextMenu/ItemMenu';
 import { styled as sstyled } from '../../style/stitches.config';
+import { AreaEvent } from '../../util/event';
 
 const Header = sstyled('div', {
     color: '#fff',
@@ -99,11 +100,11 @@ const Time = sstyled('div', {
                 },
             },
             bp5: {
-                fontSize: '10px',
+                fontSize: '12px',
                 fontWeight: 400,
-                paddingLeft: '2px',
-                paddingTop: '6px',
-                lineHeight: '13px',
+                paddingLeft: '6px',
+                paddingTop: '8px',
+                lineHeight: '14.32px',
                 '& span:first-child': {
                     display: 'initial',
                 },
@@ -150,7 +151,8 @@ const Layout = styled.div`
     //     background: #fff9cf;
     // }
 `;
-function Item({ itemHook, interfaceHook, idx, type, areaHook }) {
+function Item({ itemHook, interfaceHook, idx, type, areaHook, areaSelectHook }) {
+    const areaEvent = new AreaEvent({ areaHook: areaHook, areaSelectHook: areaSelectHook, interfaceHook: interfaceHook, itemHook: itemHook });
     const itemData = type === 'fixed' ? itemHook.fixedItemData : itemHook.matchingItemData;
     const itemGroupData = type === 'fixed' ? itemHook.fixedItemGroupData : itemHook.matchingItemGroupData;
     const itemLectureName = lecture.getLectureNameByIdx(itemData, idx);
@@ -180,6 +182,10 @@ function Item({ itemHook, interfaceHook, idx, type, areaHook }) {
         '@bp1': 'bp1',
         '@bp5': 'bp5',
     };
+    const handleMouseUp = e => {
+        // console.log(e);
+        areaEvent.clickCancel();
+    };
     return (
         <Layout>
             <div
@@ -189,6 +195,7 @@ function Item({ itemHook, interfaceHook, idx, type, areaHook }) {
                 // onDragOver={table.removeOver}
                 onClick={handleClick}
                 onContextMenu={handleRightClick}
+                onMouseUp={handleMouseUp}
                 style={{
                     zIndex: 2,
                     height: `${itemGroupData.reduce((result, y) => {

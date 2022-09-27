@@ -59,10 +59,10 @@ const App = () => {
                 <option>test2</option>
             </select> */}
             <Control setDataStudent={setDataStudent} setDataTeacher={setDataTeacher} setUserInfo={setUserInfo} />
-            {/* <textarea onChange={handleChange} value={textArea} /> */}
+            <textarea onChange={handleChange} value={textArea} />
             <Layout>
                 <OnuiiTimeTable auth={'user'} target={'student'} userData={mock.userData} blockData={dataStudent} processingData={processingData} />
-                {/* <OnuiiTimeTable auth={'user'} target={'teacher'} userData={mock.userData} blockData={getTimetableT[0]} /> */}
+                <OnuiiTimeTable auth={'user'} target={'teacher'} userData={mock.userData} blockData={getTimetableT[0]} />
             </Layout>
             {/* <Control setDataStudent={setDataStudent} setDataTeacher={setDataTeacher} setUserInfo={setUserInfo} />
             <Layout>

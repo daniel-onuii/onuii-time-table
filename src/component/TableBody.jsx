@@ -184,6 +184,7 @@ function TableBody(props) {
                                                             idx={idx}
                                                             itemHook={itemHook}
                                                             areaHook={areaHook}
+                                                            areaSelectHook={areaSelectHook}
                                                             interfaceHook={interfaceHook}
                                                         />
                                                     )}
@@ -194,6 +195,7 @@ function TableBody(props) {
                                                                 type={'matching'}
                                                                 itemHook={itemHook}
                                                                 areaHook={areaHook}
+                                                                areaSelectHook={areaSelectHook}
                                                                 interfaceHook={interfaceHook}
                                                             />
                                                         )}
