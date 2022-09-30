@@ -116,7 +116,7 @@ const Time = sstyled('div', {
 const Layout = styled.div`
     .lectureItem {
         cursor: pointer;
-        width: calc(100%);
+        width: calc(80%);
         position: absolute;
         top: 0px;
         // box-shadow: 2px 2px 3px grey;

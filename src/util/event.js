@@ -198,6 +198,16 @@ AreaEvent.prototype.clickUp = function (e, idx, openMatchingModal) {
                     //>매칭중 상태값의 과목은 삭제 안되게하고 알림 띄워줌
                     //>데이터 미적재 이슈와 매칭됨 상태값이 충돌나면 관리자가 아닌 유저화면에서는 등록/제출을 하지못하는 에러가 예상됨. 매칭중 상태값은 validation check를 하지않게 처리
                     const pickBlockData = _.intersectionBy(this.areaHook.areaData, selectedInfo, 'timeBlockId'); //선택한 블록의 전체값
+                    const fixedItem = this.itemHook.fixedItemData;
+                    const classTakingData = pickBlockData.reduce((result, e) => {
+                        // 수강중인 과목 삭제안되게
+                        !_.find(fixedItem, function (o) {
+                            return o.timeBlockId === e.timeBlockId;
+                        }) && result.push(e);
+                        return result;
+                    }, []);
+                    // console.log(fixedItem);
+                    // console.log(pickBlockData);
                     const processingDetailList = [];
                     const processingList = schedule.processingData?.reduce((result, e) => {
                         result.push(e.subject.subjectId);
@@ -205,7 +215,7 @@ AreaEvent.prototype.clickUp = function (e, idx, openMatchingModal) {
                         return result;
                     }, []); //매칭 프로세스 상태의 과목값
                     const processingAlertList = [];
-                    const withoutProcessingData = pickBlockData.reduce((result, e) => {
+                    const withoutProcessingData = classTakingData.reduce((result, e) => {
                         _.isEmpty(_.intersection(e.lectureSubjectIds, processingList))
                             ? result.push(e)
                             : processingAlertList.push(_.intersection(e.lectureSubjectIds, processingList));
