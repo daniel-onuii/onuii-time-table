@@ -41,14 +41,22 @@ const App = () => {
         setDataStudent({ timeBlocks: test });
     };
     const processingData = [
-        // {
-        //     id: 6,
-        //     subject: {
-        //         subjectId: 9168,
-        //         subjectName: '국어',
-        //     },
-        //     status: 'PROCESSING',
-        // },
+        {
+            id: 6,
+            subject: {
+                subjectId: 9168,
+                subjectName: '국어',
+            },
+            status: 'PROCESSING',
+        },
+        {
+            id: 4,
+            subject: {
+                subjectId: 9171,
+                subjectName: '과학',
+            },
+            status: 'PROCESSING',
+        },
     ];
 
     return (
