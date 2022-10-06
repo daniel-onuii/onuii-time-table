@@ -33,7 +33,7 @@ const App = () => {
             result.push({
                 timeBlockId: e.block_group_No,
                 lectureVtId: null,
-                lectureSubjectIds: [...e.subject],
+                lectureSubjectId: [...e.subject],
                 tempLectureVtId: null,
             });
             return result;

@@ -104,15 +104,15 @@ function LectureItem({ id, idx, areaHook, interfaceHook }) {
                 return _.inRange(idx, e.startIdx, e.endIdx + 1);
             });
             setLength(getGroupIdx?.newLength);
-            setSeq(_.indexOf(getGroupIdx?.lectureSubjectIds, id));
+            setSeq(_.indexOf(getGroupIdx?.lectureSubjectId, id));
         }
     }, [areaHook.areaGroupData]);
     const $before = _.find(areaHook.areaData, { timeBlockId: idx - 1 });
     const $next = _.find(areaHook.areaData, { timeBlockId: idx + 1 });
     const isEmptyBefore = _.isEmpty($before);
     const isEmptyNext = _.isEmpty($next);
-    const isEqualBefore = _.indexOf($before?.lectureSubjectIds, id) > -1;
-    const isEqualNext = _.indexOf($next?.lectureSubjectIds, id) > -1;
+    const isEqualBefore = _.indexOf($before?.lectureSubjectId, id) > -1;
+    const isEqualNext = _.indexOf($next?.lectureSubjectId, id) > -1;
     const isFirst = isEmptyBefore || !isEqualBefore;
     const isLast = isEmptyNext || !isEqualNext;
     const colorIndex = interfaceHook.target === 'student' ? _.findIndex(interfaceHook?.userData?.lectureData, { lectureId: id }) : '_all';

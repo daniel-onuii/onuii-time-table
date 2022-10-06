@@ -29,7 +29,7 @@ function Area(props) {
 
     const update = (type, items) => {
         const bindLecture = areaSelectHook.lecture.map(e => {
-            return { ...e, lectureSubjectIds: items };
+            return { ...e, lectureSubjectId: items };
         });
         if (type === 'overlap') {
             areaEvent.overlap(bindLecture); //덮어쓰기

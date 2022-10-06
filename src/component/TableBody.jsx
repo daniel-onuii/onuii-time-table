@@ -50,7 +50,7 @@ function TableBody(props) {
             // api 에서 사용할 ids 이름 변경로직인데 graphql로 바로 저장하지않아서 당장은 필요없어짐
             result.push({
                 timeBlockId: e.timeBlockId > 671 ? e.timeBlockId - 672 : e.timeBlockId,
-                lectureSubjectId: _.without(e.lectureSubjectIds, 'all'), //선생님차트 또는 학생 null 데이터때 표시하던 all 더미 값 제거
+                lectureSubjectId: _.without(e.lectureSubjectId, 'all'), //선생님차트 또는 학생 null 데이터때 표시하던 all 더미 값 제거
             });
             return result;
         }, []);
@@ -152,7 +152,7 @@ function TableBody(props) {
                                         {_.range(0, 7).map((e, ii) => {
                                             const idx = table.getBlockId(e, i);
                                             // const level = _.find(distData, { timeBlockId: idx })?.level;
-                                            const lectureData = _.find(areaHook.areaData, { timeBlockId: idx })?.lectureSubjectIds;
+                                            const lectureData = _.find(areaHook.areaData, { timeBlockId: idx })?.lectureSubjectId;
                                             // const maxBlock = _.maxBy(areaSelectHook.lecture, 'timeBlockId');
                                             return (
                                                 <td key={ii} className={`${e >= 6 ? 'weekend' : ''}`}>

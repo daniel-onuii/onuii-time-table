@@ -26,11 +26,11 @@ AreaEvent.prototype.overlap = function (bindLecture) {
 AreaEvent.prototype.add = function (bindLecture, items) {
     const newAreaData = this.areaHook.areaData.reduce((result, e) => {
         const target = _.find(bindLecture, { timeBlockId: e.timeBlockId });
-        const beforLecture = e.lectureSubjectIds ? e.lectureSubjectIds : [];
+        const beforLecture = e.lectureSubjectId ? e.lectureSubjectId : [];
         const addData = _.uniq([...beforLecture, ...items]);
         //과목은 n개까지
         const maxLecture = 1;
-        target ? result.push({ ...target, lectureSubjectIds: addData.slice(0, maxLecture) }) : result.push(e);
+        target ? result.push({ ...target, lectureSubjectId: addData.slice(0, maxLecture) }) : result.push(e);
         return result;
     }, []);
     this.areaHook.setAreaData([...newAreaData, ..._.differenceBy(bindLecture, this.areaHook.areaData, 'timeBlockId')]);
@@ -39,9 +39,9 @@ AreaEvent.prototype.add = function (bindLecture, items) {
 AreaEvent.prototype.pop = function (bindLecture, items) {
     const newAreaData = this.areaHook.areaData.reduce((result, e) => {
         const target = _.find(bindLecture, { timeBlockId: e.timeBlockId });
-        const beforLecture = e.lectureSubjectIds ? e.lectureSubjectIds : [];
+        const beforLecture = e.lectureSubjectId ? e.lectureSubjectId : [];
         const popData = _.without(beforLecture, ...items);
-        target ? !_.isEmpty(popData) && result.push({ ...target, lectureSubjectIds: popData }) : result.push(e);
+        target ? !_.isEmpty(popData) && result.push({ ...target, lectureSubjectId: popData }) : result.push(e);
         return result;
     }, []);
     this.areaHook.setAreaData(newAreaData);
@@ -167,16 +167,14 @@ AreaEvent.prototype.clickUp = function (e, idx, openMatchingModal) {
             };
             const defaultRange = _.range(idx, limitIdx(idx + 4));
             const result = defaultRange.map(e => {
-                return { timeBlockId: e, lectureSubjectIds: [this.interfaceHook.subject] };
+                return { timeBlockId: e, lectureSubjectId: [this.interfaceHook.subject] };
             });
 
             if (this.areaHook.isAreaAppend) {
                 const pickBlockData = _.intersectionBy(this.areaHook.areaData, result, 'timeBlockId');
-                const pickByLectureData = _.filter(pickBlockData, { lectureSubjectIds: [this.interfaceHook.subject] });
-                // const pickByAllLectureData = _.filter(pickBlockData, { lectureSubjectIds: ['all'] });
-                const isTargetOnLecture = _.find(this.areaHook.areaData, { timeBlockId: idx })?.lectureSubjectIds.includes(
-                    this.interfaceHook.subject,
-                ); //선택한 과목과 터치한 영역값의 lecture 일치 여부
+                const pickByLectureData = _.filter(pickBlockData, { lectureSubjectId: [this.interfaceHook.subject] });
+                // const pickByAllLectureData = _.filter(pickBlockData, { lectureSubjectId: ['all'] });
+                const isTargetOnLecture = _.find(this.areaHook.areaData, { timeBlockId: idx })?.lectureSubjectId.includes(this.interfaceHook.subject); //선택한 과목과 터치한 영역값의 lecture 일치 여부
 
                 if (isTargetOnLecture) {
                     this.removeAll(pickByLectureData);
@@ -188,7 +186,7 @@ AreaEvent.prototype.clickUp = function (e, idx, openMatchingModal) {
             //셀 드래그 앤 드롭
             if (selectedInfo.length > 0) {
                 const result = selectedInfo.map(e => {
-                    return { timeBlockId: e.timeBlockId, lectureSubjectIds: [this.interfaceHook.subject] };
+                    return { timeBlockId: e.timeBlockId, lectureSubjectId: [this.interfaceHook.subject] };
                 });
                 if (!this.areaHook.isAreaAppend) {
                     //추가할때
@@ -216,9 +214,9 @@ AreaEvent.prototype.clickUp = function (e, idx, openMatchingModal) {
                     }, []); //매칭 프로세스 상태의 과목값
                     const processingAlertList = [];
                     const withoutProcessingData = classTakingData.reduce((result, e) => {
-                        _.isEmpty(_.intersection(e.lectureSubjectIds, processingList))
+                        _.isEmpty(_.intersection(e.lectureSubjectId, processingList))
                             ? result.push(e)
-                            : processingAlertList.push(_.intersection(e.lectureSubjectIds, processingList));
+                            : processingAlertList.push(_.intersection(e.lectureSubjectId, processingList));
                         return result;
                     }, []); //매칭 프로세스의 과목을 제외한 선택한 배열값
                     this.removeAll(withoutProcessingData);

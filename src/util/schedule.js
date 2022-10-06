@@ -98,7 +98,7 @@ export const schedule = {
             (result, e) => {
                 result.push({
                     timeBlockId: e.timeBlockId,
-                    lectureSubjectIds: _.isEmpty(e.lectureSubjectIds) ? ['all'] : e.lectureSubjectIds,
+                    lectureSubjectId: _.isEmpty(e.lectureSubjectId) ? ['all'] : e.lectureSubjectId,
                 });
                 return result;
             },
@@ -147,7 +147,7 @@ export const schedule = {
             const time = Number(e.lesson_time?.split('_')[1].replace('H', '')) / 15;
             const thisLecture = e.lectureId;
             const includeLectureRowData = _.filter(areaData, function (o) {
-                return _.includes(o.lectureSubjectIds, thisLecture);
+                return _.includes(o.lectureSubjectId, thisLecture);
             });
             const groupData = area.getAreaGroupDataByLecture(includeLectureRowData, thisLecture); //과목별 그룹
             const groupByWeek = _(groupData)

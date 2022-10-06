@@ -35,7 +35,7 @@ const Tooltip = styled.div`
 `;
 function FollowCursor() {
     const dispatch = useDispatch();
-    const { areaObj, isAreaClickDown, isAreaAppend, lectureSubjectIds } = useSelector(state => state.trigger);
+    const { areaObj, isAreaClickDown, isAreaAppend, lectureSubjectId } = useSelector(state => state.trigger);
 
     const handleClickActiveAreaType = e => {
         return () => {
@@ -50,8 +50,8 @@ function FollowCursor() {
                     {isAreaAppend ? (
                         <Tooltip style={{ background: 'red', width: '50px', textAlign: 'center' }}>삭제</Tooltip>
                     ) : (
-                        <Tooltip className={`lecture_${lectureSubjectIds ? `${lectureSubjectIds}` : 'all'}`}>
-                            <span>{lectureSubjectIds == null ? '상관없음' : lecture.getLectureName(lectureSubjectIds)}</span>
+                        <Tooltip className={`lecture_${lectureSubjectId ? `${lectureSubjectId}` : 'all'}`}>
+                            <span>{lectureSubjectId == null ? '상관없음' : lecture.getLectureName(lectureSubjectId)}</span>
                             <br />
                             <span>{`${schedule.getWeekText(areaObj.startOverDayIdx)} ${schedule.getTime(areaObj.startOverIdx)}`}</span> {` ~ `}
                             <span>{`${schedule.getWeekText(areaObj.endOverDayIdx)} ${schedule.getTime(areaObj.endOverIdx)}`}</span>
