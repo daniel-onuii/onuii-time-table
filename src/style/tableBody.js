@@ -137,7 +137,7 @@ tr:last-child td{
 }
 
 .contents table {
-    // pointer-events: none;
+    pointer-events: none;
 }
 
 // .item.equal {
