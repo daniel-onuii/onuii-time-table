@@ -19,6 +19,11 @@ const MainTitle = sstyled('div', {
                 lineHeight: '21.48px',
             },
         },
+        auth: {
+            admin: {
+                fontSize: '14px !important',
+            },
+        },
     },
 });
 const SubTitle = sstyled('div', {
@@ -32,6 +37,11 @@ const SubTitle = sstyled('div', {
                 fontWeight: '500',
                 lineHeight: '19px',
                 lineHeight: '17.9px',
+            },
+        },
+        auth: {
+            admin: {
+                fontSize: '11px !important',
             },
         },
     },
@@ -146,11 +156,17 @@ function LectureItem({ id, idx, areaHook, interfaceHook }) {
             {isFirst && (
                 <span className={`ignoreEnter`}>
                     {_.isNull(lecture.getMainSubject(id)) ? (
-                        <MainTitle justify={{ ...bp }}>{lecture.getLectureName(id)}</MainTitle>
+                        <MainTitle justify={{ ...bp }} auth={interfaceHook.auth}>
+                            {lecture.getLectureName(id)}
+                        </MainTitle>
                     ) : (
                         <React.Fragment>
-                            <MainTitle justify={{ ...bp }}>{lecture.getMainSubject(id)}</MainTitle>
-                            <SubTitle justify={{ ...bp }}>{lecture.getLectureName(id)}</SubTitle>
+                            <MainTitle justify={{ ...bp }} auth={interfaceHook.auth}>
+                                {lecture.getMainSubject(id)}
+                            </MainTitle>
+                            <SubTitle justify={{ ...bp }} auth={interfaceHook.auth}>
+                                {lecture.getLectureName(id)}
+                            </SubTitle>
                         </React.Fragment>
                     )}
                 </span>

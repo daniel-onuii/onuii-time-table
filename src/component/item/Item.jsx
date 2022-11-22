@@ -35,6 +35,15 @@ const Header = sstyled('div', {
                 },
             },
         },
+        auth: {
+            admin: {
+                height: '20px !important',
+                fontSize: '14px !important',
+                '& span': {
+                    top: '1px !important',
+                },
+            },
+        },
     },
 });
 const Contents = sstyled('div', {
@@ -49,6 +58,12 @@ const Contents = sstyled('div', {
                 margin: '0px 5px',
                 background: '#fff',
                 height: 'calc(100% - 35px)',
+            },
+        },
+        auth: {
+            admin: {
+                margin: '0px 2px !important',
+                height: 'calc(100% - 22px) !important',
             },
         },
     },
@@ -66,6 +81,12 @@ const MainTitle = sstyled('div', {
                 lineHeight: '21.48px',
             },
         },
+        auth: {
+            admin: {
+                paddingTop: '5px !important',
+                fontSize: '15px !important',
+            },
+        },
     },
 });
 const SubTitle = sstyled('div', {
@@ -78,6 +99,11 @@ const SubTitle = sstyled('div', {
                 paddingLeft: '6px',
                 paddingTop: '3px',
                 lineHeight: '17.9px',
+            },
+        },
+        auth: {
+            admin: {
+                fontSize: '13px !important',
             },
         },
     },
@@ -110,13 +136,19 @@ const Time = sstyled('div', {
                 },
             },
         },
+        auth: {
+            admin: {
+                paddingTop: '5px !important',
+                fontSize: '13px !important',
+            },
+        },
     },
 });
 
 const Layout = styled.div`
     .lectureItem {
         cursor: pointer;
-        width: calc(80%);
+        width: calc(100%);
         position: absolute;
         top: 0px;
         // box-shadow: 2px 2px 3px grey;
@@ -204,29 +236,35 @@ function Item({ itemHook, interfaceHook, idx, type, areaHook, areaSelectHook }) 
                     }, [])}`,
                 }}
             >
-                <Header justify={{ ...bp }}>
-                    <span>{type === 'fixed' ? '수강중' : '가매칭중'}</span>
+                <Header justify={{ ...bp }} auth={interfaceHook.auth}>
+                    <span>{type === 'fixed' ? '수강중' : '매칭중'}</span>
                 </Header>
-                <Contents justify={{ ...bp }}>
+                <Contents justify={{ ...bp }} auth={interfaceHook.auth}>
                     <span>
                         {/* <b>{itemLectureName}</b> */}
 
                         {_.isNull(lecture.getMainSubject(id)) ? (
-                            <MainTitle justify={{ ...bp }}>{lecture.getLectureName(id)}</MainTitle>
+                            <MainTitle justify={{ ...bp }} auth={interfaceHook.auth}>
+                                {lecture.getLectureName(id)}
+                            </MainTitle>
                         ) : (
                             <React.Fragment>
-                                <MainTitle justify={{ ...bp }}>{lecture.getMainSubject(id)}</MainTitle>
-                                <SubTitle justify={{ ...bp }}>{lecture.getLectureName(id)}</SubTitle>
+                                <MainTitle justify={{ ...bp }} auth={interfaceHook.auth}>
+                                    {lecture.getMainSubject(id)}
+                                </MainTitle>
+                                <SubTitle justify={{ ...bp }} auth={interfaceHook.auth}>
+                                    {lecture.getLectureName(id)}
+                                </SubTitle>
                             </React.Fragment>
                         )}
                     </span>
-                    <Time justify={{ ...bp }}>
+                    <Time justify={{ ...bp }} auth={interfaceHook.auth}>
                         <span>
                             {itemGroupData.map(y => {
                                 return idx == y.startIdx && `${schedule.getTime(y.startTimeIdx)}`;
                             })}
                         </span>
-                        ~
+                        ~{interfaceHook.auth === 'admin' && <br />}
                         <span>
                             {itemGroupData.map(y => {
                                 return idx == y.startIdx && `${schedule.getTime(y.endTimeIdx + 1)}`;

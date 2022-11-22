@@ -1309,6 +1309,30 @@ export const getTimetableS = [
                 lectureSubjectId: [9813],
                 tempLectureVtId: null,
             },
+            {
+                timeBlockId: 98,
+                lectureVtId: 7,
+                lectureSubjectId: [9813],
+                tempLectureVtId: null,
+            },
+            {
+                timeBlockId: 99,
+                lectureVtId: 7,
+                lectureSubjectId: [9813],
+                tempLectureVtId: null,
+            },
+            {
+                timeBlockId: 100,
+                lectureVtId: 7,
+                lectureSubjectId: [9813],
+                tempLectureVtId: null,
+            },
+            {
+                timeBlockId: 101,
+                lectureVtId: 7,
+                lectureSubjectId: [9813],
+                tempLectureVtId: null,
+            },
         ],
     },
 ];

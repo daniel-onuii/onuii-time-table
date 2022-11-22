@@ -66,6 +66,7 @@ const App = () => {
                 <option>test1</option>
                 <option>test2</option>
             </select> */}
+
             <Control setDataStudent={setDataStudent} setDataTeacher={setDataTeacher} setUserInfo={setUserInfo} />
             <textarea onChange={handleChange} value={textArea} />
             <Layout>

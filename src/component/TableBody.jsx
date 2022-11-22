@@ -55,8 +55,23 @@ function TableBody(props) {
             return result;
         }, []);
         const userLectureInfo = interfaceHook?.userData?.lectureData;
-        const checkValidation = !_.isEmpty(userLectureInfo) ? schedule.checkAreaValidation(userLectureInfo, areaHook.areaData) : null;
-        link.sendMessage({ name: 'responseRealTimeBlockData', data: reName, validation: checkValidation }); //areaData 변경될때마다 return interface
+        // const checkValidation = !_.isEmpty(userLectureInfo) ? schedule.checkAreaValidation(userLectureInfo, areaHook.areaData) : null;
+        const checkValidation = () => {
+            if (!_.isEmpty(userLectureInfo)) {
+                const processIds = schedule.processingData.reduce((result, e) => {
+                    result.push(e.subject.subjectId);
+                    return result;
+                }, []);
+                const validList = schedule.checkAreaValidation(userLectureInfo, areaHook.areaData); //매칭중인 과목은 validation 제외
+                const finalValidList = _.filter(validList, function (o) {
+                    return !processIds.includes(o.lectureId);
+                });
+                return finalValidList;
+            } else {
+                return null;
+            }
+        };
+        link.sendMessage({ name: 'responseRealTimeBlockData', data: reName, validation: checkValidation() }); //areaData 변경될때마다 return interface
         areaSelectHook.setMatchingTarget([]); //초기화
         areaHook.setAreaObj({}); //초기화
         //----//
@@ -137,7 +152,7 @@ function TableBody(props) {
     return (
         <Layout>
             <div className={`contents ${interfaceHook.target} ${_.isNull(interfaceHook.subject) ? 'ignoreEnter' : ''}`} ref={tableRef}>
-                <table>
+                <table style={{ pointerEvents: interfaceHook.auth === 'user' && interfaceHook.subject === null ? 'none' : '' }}>
                     <tbody>
                         {timeListData.map((e, i) => {
                             const isOntime = i % 4 === 0; //정시조건
@@ -206,6 +221,15 @@ function TableBody(props) {
                                 </React.Fragment>
                             );
                         })}
+                        {interfaceHook.auth === 'user' && (
+                            <React.Fragment>
+                                <tr style={{ height: '56px', borderTop: '1px solid #DDDDDD' }}>
+                                    <td colSpan={7}>
+                                        <span style={{ color: '#777777' }}>오전 1시 30분까지 선택 가능합니다.</span>
+                                    </td>
+                                </tr>
+                            </React.Fragment>
+                        )}
                     </tbody>
                 </table>
             </div>
