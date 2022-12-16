@@ -169,15 +169,22 @@ AreaEvent.prototype.clickUp = function (e, idx, openMatchingModal) {
             const result = defaultRange.map(e => {
                 return { timeBlockId: e, lectureSubjectId: [this.interfaceHook.subject] };
             });
-
             if (this.areaHook.isAreaAppend) {
                 const pickBlockData = _.intersectionBy(this.areaHook.areaData, result, 'timeBlockId');
                 const pickByLectureData = _.filter(pickBlockData, { lectureSubjectId: [this.interfaceHook.subject] });
+                const fixedItem = this.itemHook.fixedItemData; //item data
+                const classTakingData = pickByLectureData.reduce((result, e) => {
+                    // 수강중인 과목 삭제안되게
+                    !_.find(fixedItem, function (o) {
+                        return o.timeBlockId === e.timeBlockId;
+                    }) && result.push(e);
+                    return result;
+                }, []);
                 // const pickByAllLectureData = _.filter(pickBlockData, { lectureSubjectId: ['all'] });
                 const isTargetOnLecture = _.find(this.areaHook.areaData, { timeBlockId: idx })?.lectureSubjectId.includes(this.interfaceHook.subject); //선택한 과목과 터치한 영역값의 lecture 일치 여부
-
                 if (isTargetOnLecture) {
-                    this.removeAll(pickByLectureData);
+                    // this.removeAll(pickByLectureData);
+                    this.removeAll(classTakingData);
                 }
             } else {
                 this.add(result, [this.interfaceHook.subject]);

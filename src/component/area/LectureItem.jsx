@@ -96,7 +96,7 @@ const Layout = styled.div.attrs(props => ({
     span {
         position: relative;
         // top: 2px;
-        z-index: 1;
+        z-index: 31;
     }
     .corner {
         height: 100%;

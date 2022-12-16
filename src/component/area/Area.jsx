@@ -9,7 +9,7 @@ const HoldLoading = styled.div`
     height: 20px;
     background-image: conic-gradient(orange ${props => props.value}%, white 0%);
     border-radius: 50%;
-    z-index: 1;
+    z-index: 12;
 `;
 function Area(props) {
     const { areaHook, itemHook, areaSelectHook, interfaceHook, children, idx, areaEvent } = props;

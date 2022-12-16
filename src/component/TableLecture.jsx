@@ -163,7 +163,7 @@ function TableLecture(props) {
                         <div className="rail">
                             {lectureData.map((e, i) => {
                                 const isProcessing = processingList?.includes(e.lectureId);
-                                const lessonTime = ` 주 ${e.lesson_time?.split('_')[0].replace('W', '')}회 ${e.lesson_time
+                                const lessonTime = ` 주 ${e.lesson_time?.split('_')[0]?.replace('W', '')}회 ${e.lesson_time
                                     ?.split('_')[1]
                                     ?.replace('H', '')}분`;
                                 const isActive = props.interfaceHook.subject === e.lectureId;
